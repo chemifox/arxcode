@@ -242,7 +242,7 @@ def change_quality(crafting_object, new_quality):
         crafting_object.db.max_spots = int(base) + int(scaling * new_quality)
     crafting_object.db.quality_level = new_quality
     if hasattr(crafting_object, "calc_weapon"):
-        crafting_object.calc_weapon()
+        crafting_object.calc_weapon
     if hasattr(crafting_object, "calc_armor"):
         crafting_object.calc_armor()
 

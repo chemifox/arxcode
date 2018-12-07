@@ -157,7 +157,7 @@ class Wieldable(Wearable):
 
     def at_post_wield(self, wielder):
         """Hook called after wielding succeeds."""
-        self.calc_weapon()
+        self.calc_weapon
         if wielder:
             wielder.combat.setup_weapon(wielder.weapondata)
         self.announce_wield(wielder)
@@ -177,6 +177,7 @@ class Wieldable(Wearable):
         msg = self.db.ready_phrase or "wields %s" % self.name
         wielder.location.msg_contents("%s %s." % (wielder.name, msg), exclude=exclude)
 
+    @property
     def calc_weapon(self):
         """
         If we have crafted armor, return the value from the recipe and
@@ -185,14 +186,24 @@ class Wieldable(Wearable):
         quality = self.quality_level
         recipe = self.recipe
         diffmod = self.db.difficulty_mod or 0
+        attack_stat = self.db.attack_stat
+        damage_stat = self.db.damage_stat
         flat_damage_bonus = self.db.flat_damage_bonus or 0
         if self.db.attack_skill == "huge wpn":
-            diffmod += 1
+            diffmod += 2
         elif self.db.attack_skill == "archery":
             self.ranged_mode()
-            diffmod -= 10
+            diffmod += 1
         elif self.db.attack_skill == "small wpn":
+            diffmod -= 0
+        elif self.db.attack_skill == "abjuration":
+            attack_stat = "intellect"
+            damage_stat = "mana"
             diffmod -= 1
+        elif self.db.attack_skill == "evocation":
+            attack_stat = "intellect"
+            damage_stat = "mana"
+            diffmod += 1
         if not recipe:
             return self.db.damage_bonus or 0, diffmod, flat_damage_bonus
         base = float(recipe.resultsdict.get("baseval", 0))
@@ -217,7 +228,9 @@ class Wieldable(Wearable):
         self.ndb.cached_damage_bonus = damage
         self.ndb.cached_difficulty_mod = diffmod
         self.ndb.cached_flat_damage_bonus = flat_damage_bonus
-        return damage, diffmod, flat_damage_bonus
+        self.db.attack_stat = attack_stat
+        self.db.damage_stat = damage_stat
+        return damage, diffmod, flat_damage_bonus, attack_stat, damage_stat
 
     def calc_armor(self):
         """Sheathed/worn weapons have no armor value or other modifiers"""
@@ -238,7 +251,7 @@ class Wieldable(Wearable):
             return self.db.damage_bonus
         if self.ndb.cached_damage_bonus is not None:
             return self.ndb.cached_damage_bonus
-        return self.calc_weapon()[0]
+        return self.calc_weapon[0]
 
     @damage_bonus.setter
     def damage_bonus(self, value):
@@ -255,7 +268,7 @@ class Wieldable(Wearable):
             return self.db.difficulty_mod or 0
         if self.ndb.cached_difficulty_mod is not None:
             return self.ndb.cached_difficulty_mod
-        return self.calc_weapon()[1]
+        return self.calc_weapon[1]
 
     @property
     def flat_damage(self):
@@ -263,7 +276,7 @@ class Wieldable(Wearable):
             return self.db.flat_damage_bonus or 0
         if self.ndb.cached_flat_damage_bonus is not None:
             return self.ndb.cached_flat_damage_bonus
-        return self.calc_weapon()[2]
+        return self.calc_weapon[2]
 
     @property
     def armor(self):
