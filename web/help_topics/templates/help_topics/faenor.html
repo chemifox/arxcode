@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+
+	<div class="row">
+	<figure class="text-center">
+	<figcaption><h1>The Faenor Kinship</h1></figcaption>
+	<hr />
+	</figure>
+	</div>
+
+        <!-- Page Content -->
+    <div class="container">
+
+      <!-- Portfolio Item Row -->
+      <div class="row">
+
+        <div class="col-md-8">
+          <img class="img-fluid" src="http://placehold.it/750x500" alt="">
+        </div>
+
+        <div class="col-md-4">
+          <h3 class="my-3">Khelgar</h3>
+          <p>On this new, untamed, land, there is a very vast, very dominating legion of mountains that run down
+              the center of the land, a bit to the south. They are tall, and very nearly always capped by snow. The
+              Faenor that decided to settle in this portion of the land were the most pure. Weary of the life
+              they left behind, put off by the viciousness of the other kinships, they secluded themselves in the
+              purity of the fallen snow. Tucked away in the mountain passes and under the softly falling blankets
+              of white, they built their homes. In that cold, quiet place, these elves became lethargic, selfish and
+              even lazy. Having no care for conflict, no desire to meddle in the pain of others, they closed their
+              doors to those they had traveled with, locking out the outside world completely. Of course, such an
+              insular society has its own woes, but those woes are not for the outside world.</p>
+        </div>
+          </div>
+        </div>
+
+<div class="container-fluid">
+  <div class="rowOfBoxes">
+    <div class="oneThird noBorderOnLeft">
+      <h3>Government</h3>
+        <p>A Council of Five Houses, each with a Lord to rule them. All five with equal power, the group giving heed
+            to the House that needs help at that moment. They seek to make their weakest links stronger, rather than
+            breaking them.</p>
+    </div>
+    <div class="oneThird">
+      <h3>Ideology</h3>
+        <p>Purity and peace are kept intact without the involvement of outsiders. Tainted are those who look
+            away from the light.</p>
+    </div>
+    <div class="oneThird">
+      <h3>Inspiration</h3>
+        <p>The Malfoy Family, The Vale and House Arryn, Celtic Mythology, Vikings</p>
+    </div>
+  </div>
+</div>
+	<div class="row text-center">
+		<h1 class="bg-primary">Help Files</h1>
+	</div> <!--button-->
+	<div id="Topics" class="collapse in">
+    {% for category in all_categories %}
+	<div class="row">
+	  <ul class="list-inline text-center">
+      {% for topic in all_topics %}
+        {% if topic.help_category.capitalize == category %}
+          <li class="text-center"><a href="{% url 'help_topics:topic' topic.key %}">{{ topic.key }}</a></li>
+        {% endif %}
+      {% empty %}
+        <li>No topics found for this category.</li>
+      {% endfor %}
+	  </ul>
+	</div><!-- div in for loop -->
+    {% empty %}
+      <li>No categories found.</li>
+    {% endfor %}
+	</div><!-- collapse-in -->
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block content %}
+
+	<div class="row">
+	<figure class="text-center">
+	<figcaption><h1>The Aeran Kinship</h1></figcaption>
+	<hr />
+	</figure>
+	</div>
+<!-- Page Content -->
+    <div class="container">
+
+      <!-- Portfolio Item Row -->
+      <div class="row">
+
+        <div class="col-md-8">
+          <img class="img-fluid" src="http://placehold.it/750x500" alt="">
+        </div>
+
+        <div class="col-md-4">
+          <h3 class="my-3">Lorawin</h3>
+          <p>When they made landfall on the North Eastern shore of Ithir, the Aeran decided to establish
+              their holding here on the rocky sholes and weather-worn sea cliffs. The harshness of this
+              environment weathered this kinship, leaving them clinging to memories of their former lives,
+              longing to sail and travel once more. Though the journey took them many months, they still
+              say that the view from their highest cliff sides gives them a view of the home they left
+              behind on a rare clear day. An oppressive churn of the ocean below their cliff sides has left
+              this kinship cynical and unwilling to adapt. Though they may be stuck here, they make efforts
+              in the calm of summer to keep up their traditions of sailing and exploring the deeps surrounding
+              the untamed lands. Their connection to the sea is unending.</p>
+        </div>
+          </div>
+        </div>
+
+<div class="container-fluid">
+  <div class="rowOfBoxes">
+    <div class="oneThird noBorderOnLeft">
+      <h3>Government</h3>
+        <p>A council of leaders rules this Kinship divided among Civility, War and Spirituality. Leaders groom their
+            successors for many years before they pass on the burden of leadership, making the second in command of
+            each position often equally as powerful as the leader themselves. Family name has very little to do with
+            how one's life progresses here.</p>
+    </div>
+    <div class="oneThird">
+      <h3>Ideology</h3>
+        <p>Only by remembering our sins can we possibly hope for redemption. Hold fast and keep a beacon to the east.</p>
+    </div>
+    <div class="oneThird">
+      <h3>Inspiration</h3>
+        <p>Pirates, Nomadic peoples, House Greyjoy.</p>
+    </div>
+  </div>
+</div>
+	<div class="row text-center">
+		<h1 class="bg-primary">Help Files</h1>
+	</div> <!--button-->
+	<div id="Topics" class="collapse in">
+    {% for category in all_categories %}
+	<div class="row">
+	  <ul class="list-inline text-center">
+      {% for topic in all_topics %}
+        {% if topic.help_category.capitalize == category %}
+          <li class="text-center"><a href="{% url 'help_topics:topic' topic.key %}">{{ topic.key }}</a></li>
+        {% endif %}
+      {% empty %}
+        <li>No topics found for this category.</li>
+      {% endfor %}
+	  </ul>
+	</div><!-- div in for loop -->
+    {% empty %}
+      <li>No categories found.</li>
+    {% endfor %}
+	</div><!-- collapse-in -->
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+
+{% endblock %}

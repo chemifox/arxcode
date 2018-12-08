@@ -8,7 +8,8 @@
 
 from django.conf.urls import url
 from .views import (topic, list_commands, list_topics, list_recipes,
-                    display_org, command_help, gods)
+                    display_org, command_help, gods, aeran, duindar,
+                    lorandi, faenor, thalerith, rules, guides, getting_started, character_creation)
 
 urlpatterns = [
     url(r'^recipes/', list_recipes, name="list_recipes"),
@@ -16,6 +17,15 @@ urlpatterns = [
     url(r'^commands/(?P<cmd_key>[\+@\_\w\s]+)/$', command_help, name="command_help"),
     url(r'^commands/$', list_commands, name="list_commands"),
     url(r'^gods/$', gods, name="gods"),
+    url(r'^aeran/$', aeran, name="aeran"),
+    url(r'^duindar/$', duindar, name="duindar"),
+    url(r'^faenor/$', faenor, name="faenor"),
+    url(r'^lorandi/$', lorandi, name="lorandi"),
+    url(r'^thalerith/$', thalerith, name="thalerith"),
+    url(r'^rules/$', rules, name="rules"),
+    url(r'^guides/$', guides, name="guides"),
+    url(r'^getting_started/$', getting_started, name="getting_started"),
+    url(r'^character_creation/$', character_creation, name="character_creation"),
     url(r'^(?P<object_key>[\w\s]+)/$', topic, name="topic"),
     url(r'^$', list_topics, name="list_topics")
 ]

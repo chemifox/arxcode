@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block content %}
+
+	<div class="row">
+	<figure class="text-center">
+	<figcaption><h1>The Duindar Kinship</h1></figcaption>
+	<hr />
+	</figure>
+	</div>
+
+    <!-- Page Content -->
+    <div class="container">
+
+      <!-- Portfolio Item Row -->
+      <div class="row">
+
+        <div class="col-md-8">
+          <img class="img-fluid" src="http://placehold.it/750x500" alt="">
+        </div>
+
+        <div class="col-md-4">
+          <h3 class="my-3">Isalspire</h3>
+          <p>WA subsect of the elves who landed in these untamed lands, the Duindar, were rather optimistic about
+              their new adventure. They banded together and headed up the rivers and into the nearby forests. A
+              vast network of waterways flowed from the Southern Mountains towards the northern sea, making the
+              perfect canal and waterway for these inventive elves to establish their new home. They used the trees
+              and the water around them to invent machinery and vast networks of connected platforms, shipping routes
+              and other hidden paths in this organized chaos they would call home. Though their choice came with a
+              great downfall. A vast unsteadiness. The springs would see these riverlands completely flooded, toppling
+              trees and ruining the thick undergrowth on a whim. Their winters were bitterly cold without the leaves
+              on the trees and the summers hot, leaving them little to do but evolve to this truly unsteady climate.</p>
+        </div>
+          </div>
+        </div>
+
+<div class="container-fluid">
+  <div class="rowOfBoxes">
+    <div class="oneThird noBorderOnLeft">
+      <h3>Government</h3>
+        <p>A very civil Republic of elves who elect their representatives in to the Senate. The Senate then serves
+            the First Citizen, whose power extends only as a unifying voice for the Senate. Wholey, the people govern
+            themselves through their elected officials.</p>
+    </div>
+    <div class="oneThird">
+      <h3>Ideology</h3>
+        <p>Look past the means to fully embrace the ends. The pursuit and mastery of knowledge will bring us prosperity.</p>
+    </div>
+    <div class="oneThird">
+      <h3>Inspiration</h3>
+        <p>Roman and Greek Empires, Maesters of Westeros, Elves of Lothlórien, Kirin Tor</p>
+    </div>
+  </div>
+</div>
+	<div class="row text-center">
+		<h1 class="bg-primary">Help Files</h1>
+	</div> <!--button-->
+	<div id="Topics" class="collapse in">
+    {% for category in all_categories %}
+	<div class="row">
+	  <ul class="list-inline text-center">
+      {% for topic in all_topics %}
+        {% if topic.help_category.capitalize == category %}
+          <li class="text-center"><a href="{% url 'help_topics:topic' topic.key %}">{{ topic.key }}</a></li>
+        {% endif %}
+      {% empty %}
+        <li>No topics found for this category.</li>
+      {% endfor %}
+	  </ul>
+	</div><!-- div in for loop -->
+    {% empty %}
+      <li>No categories found.</li>
+    {% endfor %}
+	</div><!-- collapse-in -->
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+
+{% endblock %}

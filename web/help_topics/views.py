@@ -15,7 +15,233 @@ def topic(request, object_key):
 
 
 def gods(request):
-    return render(request, 'help_topics/gods.html')
+    user = request.user
+    try:
+        all_topics = []
+        for topic_ob in HelpEntry.objects.filter(db_help_category="Gods"):
+            try:
+                if topic_ob.access(user, 'view', default=True):
+                    all_topics.append(topic_ob)
+            except AttributeError:
+                continue
+        all_topics = sorted(all_topics, key=lambda entry: entry.key.lower())
+        all_categories = list(set([topic_ob.help_category.capitalize() for topic_ob in all_topics
+                                   if topic_ob.access(user, "view")]))
+        all_categories = sorted(all_categories)
+    except IndexError:
+        raise Http404("Error in compiling topic list.")
+    except Exception:
+        pass
+    return render(request, 'help_topics/gods.html', {'all_topics': all_topics,
+                                                     'all_categories': all_categories,
+                                                     'page_title': 'topics'})
+
+
+def aeran(request):
+    user = request.user
+    try:
+        all_topics = []
+        for topic_ob in HelpEntry.objects.filter(db_help_category="Aeran"):
+            try:
+                if topic_ob.access(user, 'view', default=True):
+                    all_topics.append(topic_ob)
+            except AttributeError:
+                continue
+        all_topics = sorted(all_topics, key=lambda entry: entry.key.lower())
+        all_categories = list(set([topic_ob.help_category.capitalize() for topic_ob in all_topics
+                                   if topic_ob.access(user, "view")]))
+        all_categories = sorted(all_categories)
+    except IndexError:
+        raise Http404("Error in compiling topic list.")
+    except Exception:
+        pass
+    return render(request, 'help_topics/aeran.html', {'all_topics': all_topics,
+                                                     'all_categories': all_categories,
+                                                     'page_title': 'topics'})
+
+
+def duindar(request):
+    user = request.user
+    try:
+        all_topics = []
+        for topic_ob in HelpEntry.objects.filter(db_help_category="Duindar"):
+            try:
+                if topic_ob.access(user, 'view', default=True):
+                    all_topics.append(topic_ob)
+            except AttributeError:
+                continue
+        all_topics = sorted(all_topics, key=lambda entry: entry.key.lower())
+        all_categories = list(set([topic_ob.help_category.capitalize() for topic_ob in all_topics
+                                   if topic_ob.access(user, "view")]))
+        all_categories = sorted(all_categories)
+    except IndexError:
+        raise Http404("Error in compiling topic list.")
+    except Exception:
+        pass
+    return render(request, 'help_topics/duindar.html', {'all_topics': all_topics,
+                                                     'all_categories': all_categories,
+                                                     'page_title': 'topics'})
+
+
+def faenor(request):
+    user = request.user
+    try:
+        all_topics = []
+        for topic_ob in HelpEntry.objects.filter(db_help_category="Faenor"):
+            try:
+                if topic_ob.access(user, 'view', default=True):
+                    all_topics.append(topic_ob)
+            except AttributeError:
+                continue
+        all_topics = sorted(all_topics, key=lambda entry: entry.key.lower())
+        all_categories = list(set([topic_ob.help_category.capitalize() for topic_ob in all_topics
+                                   if topic_ob.access(user, "view")]))
+        all_categories = sorted(all_categories)
+    except IndexError:
+        raise Http404("Error in compiling topic list.")
+    except Exception:
+        pass
+    return render(request, 'help_topics/faenor.html', {'all_topics': all_topics,
+                                                     'all_categories': all_categories,
+                                                     'page_title': 'topics'})
+
+
+def lorandi(request):
+    user = request.user
+    try:
+        all_topics = []
+        for topic_ob in HelpEntry.objects.filter(db_help_category="Lorandi"):
+            try:
+                if topic_ob.access(user, 'view', default=True):
+                    all_topics.append(topic_ob)
+            except AttributeError:
+                continue
+        all_topics = sorted(all_topics, key=lambda entry: entry.key.lower())
+        all_categories = list(set([topic_ob.help_category.capitalize() for topic_ob in all_topics
+                                   if topic_ob.access(user, "view")]))
+        all_categories = sorted(all_categories)
+    except IndexError:
+        raise Http404("Error in compiling topic list.")
+    except Exception:
+        pass
+    return render(request, 'help_topics/lorandi.html', {'all_topics': all_topics,
+                                                     'all_categories': all_categories,
+                                                     'page_title': 'topics'})
+
+
+def thalerith(request):
+    user = request.user
+    try:
+        all_topics = []
+        for topic_ob in HelpEntry.objects.filter(db_help_category="Thalerith"):
+            try:
+                if topic_ob.access(user, 'view', default=True):
+                    all_topics.append(topic_ob)
+            except AttributeError:
+                continue
+        all_topics = sorted(all_topics, key=lambda entry: entry.key.lower())
+        all_categories = list(set([topic_ob.help_category.capitalize() for topic_ob in all_topics
+                                   if topic_ob.access(user, "view")]))
+        all_categories = sorted(all_categories)
+    except IndexError:
+        raise Http404("Error in compiling topic list.")
+    except Exception:
+        pass
+    return render(request, 'help_topics/thalerith.html', {'all_topics': all_topics,
+                                                     'all_categories': all_categories,
+                                                     'page_title': 'topics'})
+
+
+def rules(request):
+    user = request.user
+    try:
+        all_topics = []
+        for topic_ob in HelpEntry.objects.filter(db_help_category__in=("Game Rules and Policies", "Staff Policies")):
+            try:
+                if topic_ob.access(user, 'view', default=True):
+                    all_topics.append(topic_ob)
+            except AttributeError:
+                continue
+        all_topics = sorted(all_topics, key=lambda entry: entry.key.lower())
+        all_categories = list(set([topic_ob.help_category.capitalize() for topic_ob in all_topics
+                                   if topic_ob.access(user, "view")]))
+        all_categories = sorted(all_categories)
+    except IndexError:
+        raise Http404("Error in compiling topic list.")
+    except Exception:
+        pass
+    return render(request, 'help_topics/rules.html', {'all_topics': all_topics,
+                                                     'all_categories': all_categories,
+                                                     'page_title': 'topics'})
+
+
+def guides(request):
+    user = request.user
+    try:
+        all_topics = []
+        for topic_ob in HelpEntry.objects.filter(db_help_category="Guides"):
+            try:
+                if topic_ob.access(user, 'view', default=True):
+                    all_topics.append(topic_ob)
+            except AttributeError:
+                continue
+        all_topics = sorted(all_topics, key=lambda entry: entry.key.lower())
+        all_categories = list(set([topic_ob.help_category.capitalize() for topic_ob in all_topics
+                                   if topic_ob.access(user, "view")]))
+        all_categories = sorted(all_categories)
+    except IndexError:
+        raise Http404("Error in compiling topic list.")
+    except Exception:
+        pass
+    return render(request, 'help_topics/guides.html', {'all_topics': all_topics,
+                                                     'all_categories': all_categories,
+                                                     'page_title': 'topics'})
+
+
+def getting_started(request):
+    user = request.user
+    try:
+        all_topics = []
+        for topic_ob in HelpEntry.objects.filter(db_help_category="Game Information"):
+            try:
+                if topic_ob.access(user, 'view', default=True):
+                    all_topics.append(topic_ob)
+            except AttributeError:
+                continue
+        all_topics = sorted(all_topics, key=lambda entry: entry.key.lower())
+        all_categories = list(set([topic_ob.help_category.capitalize() for topic_ob in all_topics
+                                   if topic_ob.access(user, "view")]))
+        all_categories = sorted(all_categories)
+    except IndexError:
+        raise Http404("Error in compiling topic list.")
+    except Exception:
+        pass
+    return render(request, 'help_topics/getting_started.html', {'all_topics': all_topics,
+                                                     'all_categories': all_categories,
+                                                     'page_title': 'topics'})
+
+
+def character_creation(request):
+    user = request.user
+    try:
+        all_topics = []
+        for topic_ob in HelpEntry.objects.filter(db_help_category__in=("Character Creation", "Stats", "Skills")):
+            try:
+                if topic_ob.access(user, 'view', default=True):
+                    all_topics.append(topic_ob)
+            except AttributeError:
+                continue
+        all_topics = sorted(all_topics, key=lambda entry: entry.key.lower())
+        all_categories = list(set([topic_ob.help_category.capitalize() for topic_ob in all_topics
+                                   if topic_ob.access(user, "view")]))
+        all_categories = sorted(all_categories)
+    except IndexError:
+        raise Http404("Error in compiling topic list.")
+    except Exception:
+        pass
+    return render(request, 'help_topics/character_creation.html', {'all_topics': all_topics,
+                                                     'all_categories': all_categories,
+                                                     'page_title': 'topics'})
 
 
 def command_help(request, cmd_key):
@@ -33,7 +259,11 @@ def list_topics(request):
     user = request.user
     try:
         all_topics = []
-        for topic_ob in HelpEntry.objects.all():
+        for topic_ob in HelpEntry.objects.exclude(db_help_category__in=("Gods", "Aeran", "Duindar", "Faenor",
+                                                                        "Lorandi", "Thalerith",
+                                                                        "Game Rules and Policies", "Game Information",
+                                                                        "Character Creation", "Skills", "Stats",
+                                                                        "Guides", "Staff Policies")):
             try:
                 if topic_ob.access(user, 'view', default=True):
                     all_topics.append(topic_ob)

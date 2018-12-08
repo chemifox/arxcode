@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block content %}
+
+	<div class="row">
+	<figure class="text-center">
+	<figcaption><h1>The Thalerith Kinship</h1></figcaption>
+	<hr />
+	</figure>
+	</div>
+
+        <!-- Page Content -->
+    <div class="container">
+
+      <!-- Portfolio Item Row -->
+      <div class="row">
+
+        <div class="col-md-8">
+          <img class="img-fluid" src="http://placehold.it/750x500" alt="">
+        </div>
+
+        <div class="col-md-4">
+          <h3 class="my-3">Nasherat</h3>
+          <p>Undoubtedly the bleakest of the settled kinships, the desert lands offered very little by way of
+              protection to the Thalerith Kin that settled there. In fact, it offered them much more in the
+              way of poison and death. The sun, so hot over head could bleach the bones of a fallen horse in
+              a days time. The venomous snakes and other beasts that roam this land truly have dominion over it.
+              Survival became this kinship’s strongest suit. Instead of succumbing to the superiority of the beasts
+              that lived here, they tamed them, used them to their advantage. Because of their conditions, this
+              kinship of elves adapted to doing most of their hunting, gathering, building and truly living at
+              night. During the day they must take shelter from the sun.</p>
+        </div>
+          </div>
+        </div>
+
+<div class="container-fluid">
+  <div class="rowOfBoxes">
+    <div class="oneThird noBorderOnLeft">
+      <h3>Government</h3>
+        <p>Only the Strong can rule. The Leaders of this kinship have placed themselves there by overthrowing their
+            predecessor. They follow only the strong and fight for everything they have. A warlords rule is held in
+            place by the very strict rank and file of a military. The Flame Speaker has a very subtle, but strong,
+            influence on society here.</p>
+    </div>
+    <div class="oneThird">
+      <h3>Ideology</h3>
+        <p>The world will not be kind to you, it is weak to believe that giving kindness back to it will change
+            anything. Instead, build your bonds inward, as they are the connections that matter.</p>
+    </div>
+    <div class="oneThird">
+      <h3>Inspiration</h3>
+        <p>Dothraki, House Martell, Conan the Barbarian, The Horde, Beastmaster, Middle Eastern</p>
+    </div>
+  </div>
+</div>
+	<div class="row text-center">
+		<h1 class="bg-primary">Help Files</h1>
+	</div> <!--button-->
+	<div id="Topics" class="collapse in">
+    {% for category in all_categories %}
+	<div class="row">
+	  <ul class="list-inline text-center">
+      {% for topic in all_topics %}
+        {% if topic.help_category.capitalize == category %}
+          <li class="text-center"><a href="{% url 'help_topics:topic' topic.key %}">{{ topic.key }}</a></li>
+        {% endif %}
+      {% empty %}
+        <li>No topics found for this category.</li>
+      {% endfor %}
+	  </ul>
+	</div><!-- div in for loop -->
+    {% empty %}
+      <li>No categories found.</li>
+    {% endfor %}
+	</div><!-- collapse-in -->
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+{% endblock %}
