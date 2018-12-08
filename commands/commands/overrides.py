@@ -1491,6 +1491,9 @@ class CmdArxExamine(CmdExamine):
     Append a * before the search string to examine a player.
 
     """
+
+    key = "examine"
+    aliases = ["exa"]
     
     def func(self):
         """Process command"""
