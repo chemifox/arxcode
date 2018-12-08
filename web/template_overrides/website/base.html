@@ -35,25 +35,7 @@
   </head>
 
   <body>
-    <!-- For non-visual user agents: -->
-      <div id="top"><a href="#main-copy" class="doNotDisplay doNotPrint">Skip to main content.</a></div>
-
-    <!-- ##### Header ##### -->
-<!---    <div class="dividingBorderAbove"></div>
-          <div class="fullWidth noBorderOnLeft">
-                <img src="/static/images/IthirBanner2.jpg"/>
-        <!--span>Sites:</span-->
-        <!--a href="http://evennia.com" title="The Python-based MUD server">Evennia.com</a-->
-
- <!---   <div id="header">
-      <div class="subHeader">
-        <h1 class="headerTitle" lang="la">Ithir</h1>
-        <div class="headerSubTitle" title="Slogan">
-                {{game_slogan}}			&nbsp;
-        </div> --->
-
-
-        <br class="doNotDisplay doNotPrint" />
+          <br class="doNotDisplay doNotPrint" />
 
     <div class="row backgroundimag">
         <div class="container">
@@ -96,7 +78,7 @@
                     <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span></a>
                 <div class="dropdown-menu dropdown-info" aria-labelledby="navbarDropdownMenuLink">
                     <ul><a class="dropdown-item" href="/topics/">World</a></ul>
-                    <ul><a class="dropdown-item" href="#">Gods</a></ul>
+                    <ul><a class="dropdown-item" href="/topics/gods/">Gods</a></ul>
                     <ul><b class="dropdown-item">Kinships</b></ul>
                     <ul><a class="dropdown-item" href="#">Aeran</a></ul>
                     <ul><a class="dropdown-item" href="#">Duindir</a></ul>
@@ -137,28 +119,6 @@
         </div>
     </div>
 </div>
-
-<!---
-      <div class="subHeader">
-        <!--span class="doNotDisplay">Navigation:</span-->
-<!---        <a href="/">Home</a> |
-        <a href="/character/{% if user.is_authenticated %}active{% else %}available{% endif %}">Characters</a> |
-        <a href="/topics/">World</a> |
-        <a href="/character/story/">Story</a> |
-		<a href="/dom/cal/list/">Events</a> | --->
-		<!---<a href="/comms/journals/list/">Journals</a> | --->
-<!---        <a href="/comms/boards/">Boards</a>
-        {% if user.is_authenticated and user.is_staff %}
-         | <a href="/admin/">Admin Interface</a>
-         | <a href="/support/">Requests</a>
-        {% endif %}
-        {% if webclient_enabled %}
-         | <a href="/webclient">Play Online</a>
-        {% endif %}
-        
-      </div>
-    </div>
---->
 
     <!-- ##### Side Menu ##### -->
     {% block sidebar %}{% endblock %}

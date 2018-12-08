@@ -14,6 +14,10 @@ def topic(request, object_key):
     return render(request, 'help_topics/topic.html', {'topic': topic_ob, 'page_title': object_key})
 
 
+def gods(request):
+    return render(request, 'help_topics/gods.html')
+
+
 def command_help(request, cmd_key):
     from commands.default_cmdsets import AccountCmdSet, CharacterCmdSet
     from commands.cmdsets.situational import SituationalCmdSet

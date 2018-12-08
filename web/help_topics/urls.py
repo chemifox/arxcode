@@ -8,13 +8,15 @@
 
 from django.conf.urls import url
 from .views import (topic, list_commands, list_topics, list_recipes,
-                    display_org, command_help)
+                    display_org, command_help, gods)
 
 urlpatterns = [
     url(r'^recipes/', list_recipes, name="list_recipes"),
     url(r'^org/(?P<object_id>[\w\s]+)/$', display_org, name="display_org"),
     url(r'^commands/(?P<cmd_key>[\+@\_\w\s]+)/$', command_help, name="command_help"),
     url(r'^commands/$', list_commands, name="list_commands"),
-    url(r'^(?P<object_key>[\w\s]+)/$', topic, name="topic"),  
+    url(r'^gods/$', gods, name="gods"),
+    url(r'^(?P<object_key>[\w\s]+)/$', topic, name="topic"),
     url(r'^$', list_topics, name="list_topics")
 ]
+
