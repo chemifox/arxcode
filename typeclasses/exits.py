@@ -243,7 +243,7 @@ class Exit(LockMixins, NameMixins, ObjectMixins, DefaultExit):
 
         (See also hooks at_before_traverse and at_after_traverse).
         """
-        traversing_object.msg("That way is locked.")
+        traversing_object.msg("You shall not pass.")
 
     def msg(self, text=None, from_obj=None, options=None, **kwargs):
         options = options or {}

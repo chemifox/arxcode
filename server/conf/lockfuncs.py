@@ -253,3 +253,16 @@ def decorator(accessing_obj, accessed_obj, *args, **kwargs):
 
 
 decorators = decorator
+
+
+def reputation(accessing_obj, accessed_obj, *args, **kwargs):
+    """
+     Usage: 'traverse: reputation(Faenor, 30)'
+    """
+    from django.core.exceptions import ObjectDoesNotExist
+    try:
+        org_obj = Organization.objects.get(name__iexact=args[0])
+        return org_obj.reputations.get(player=accessing_obj.dompc).respect >= int(args[1])
+    except (ObjectDoesNotExist, ValueError, TypeError):
+        return False
+
