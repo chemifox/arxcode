@@ -30,8 +30,8 @@ from world.stats_and_skills import (get_partial_match, get_skill_cost,
 __all__ = ("CmdGuestLook", "CmdGuestCharCreate", "CmdGuestPrompt", "CmdGuestAddInput")
 CMD_NOINPUT = syscmdkeys.CMD_NOINPUT
 CMD_NOMATCH = syscmdkeys.CMD_NOMATCH
-_vocations_ = ("noble", "highborn", "soldier", "knight", "priest", "merchant",
-                "scholar", "lawyer", "steward", "hunter", "scout", "archer", "mage", "explorer", "sailor", "scoundrel")
+_vocations_ = ("highborn", "soldier", "knight", "priest", "scholar", "lawyer", "steward", "hunter", "scout", "archer",
+               "mage", "explorer", "sailor", "beastmaster", "evocationist", "abjurationist", "spellblade")
 _stage3_fields_ = ("concept", "gender", "age", "fealty", "family", "patron", "desc", "personality", "background",
                    "marital_status", "quote", "birthday", "social_rank", "skintone", "eyecolor", "haircolor", "height")
 _valid_fealty_ = ("Aeran", "Duindar", "Faenor", "Lorandi", "Thalerith")
@@ -46,12 +46,10 @@ _min_age_ = 50
 _max_age_ = 900
 # We have 12 stats. no more than two at 5. tuple is in the following order:
 # (strength,dexterity,stamina,charm,command,composure,intellect,perception,wits,mana,luck,willpower)
-_voc_start_stats_ = {"noble":          (3, 3, 3,  4, 5, 4,  3, 3, 2,  2, 2, 2),
-                     "highborn":       (2, 2, 2,  5, 4, 5,  3, 3, 4,  2, 2, 2),
+_voc_start_stats_ = {"highborn":       (2, 2, 2,  5, 4, 5,  3, 3, 4,  2, 2, 2),
                      "soldier":        (5, 4, 5,  2, 3, 4,  2, 2, 3,  2, 2, 2),
                      "knight":         (4, 4, 4,  3, 4, 4,  2, 2, 3,  2, 2, 2),
                      "priest":         (2, 2, 2,  4, 5, 4,  3, 3, 2,  3, 3, 3),
-                     "merchant":       (2, 2, 2,  4, 3, 4,  3, 4, 3,  2, 3, 4),
                      "scholar":        (2, 2, 2,  3, 3, 3,  5, 5, 4,  2, 2, 3),
                      "lawyer":         (2, 2, 2,  3, 3, 3,  5, 5, 4,  2, 2, 3),
                      "steward":        (3, 3, 3,  3, 3, 3,  4, 4, 4,  2, 2, 2),
@@ -60,42 +58,47 @@ _voc_start_stats_ = {"noble":          (3, 3, 3,  4, 5, 4,  3, 3, 2,  2, 2, 2),
                      "mage":           (2, 2, 4,  3, 3, 4,  5, 3, 3,  3, 2, 2),
                      "explorer":       (3, 3, 2,  2, 4, 3,  3, 5, 3,  2, 3, 3),
                      "sailor":         (3, 3, 4,  3, 4, 2,  2, 4, 4,  2, 2, 2),
-                     "scoundrel":      (4, 4, 4,  3, 4, 2,  2, 4, 4,  2, 2, 2),
-                     "scout":          (2, 4, 3,  2, 2, 4,  3, 5, 3,  2, 4, 2)}
+                     "scout":          (2, 4, 3,  2, 2, 4,  3, 5, 3,  2, 4, 2),
+                     "beastmaster":    (4, 4, 4,  2, 4, 3,  2, 3, 3,  2, 2, 3),
+                     "evocationist":   (2, 2, 2,  3, 2, 4,  4, 4, 3,  4, 3, 3),
+                     "abjurationist":  (2, 2, 2,  3, 2, 4,  4, 4, 3,  4, 3, 3),
+                     "spellblade":     (4, 4, 3,  2, 2, 2,  4, 3, 3,  4, 2, 3)}
 
 # 20 points for skills
-_voc_start_skills_ = {"noble": {"diplomacy": 3, "leadership": 3, "etiquette": 2,
-                                "law": 1, "ride": 1,
-                                "manipulation": 1, "empathy": 1, "war": 1},
-                      "highborn": {"diplomacy": 1, "etiquette": 3, "manipulation": 2,
-                                   "empathy": 2, "propaganda": 1},
+_voc_start_skills_ = {"highborn": {"diplomacy": 2, "etiquette": 3, "manipulation": 2,
+                                   "empathy": 2, "propaganda": 1, "law": 2, "ride": 1},
                       "soldier": {"medium wpn": 3, "brawl": 1, "dodge": 1,
                                   "archery": 1, "fortitude": 1},
                       "knight": {"medium wpn": 3, "dodge": 1, "war": 1, "etiquette": 1,
                                  "ride": 2, "leadership": 1},
                       "lawyer": {"law": 4, "etiquette": 1, "empathy": 2, "manipulation": 2,
                                  "teaching": 1, "investigation": 1, "linguistics": 1},
-                      "priest": {"theology": 3, "occult": 2, "restoration": 3,
+                      "priest": {"theology": 3, "mysticism": 2, "restoration": 3,
                                  "empathy": 1, "leadership": 1, "propaganda": 2},
-                      "merchant": {"economics": 3, "streetwise": 2, "manipulation": 1},
-                      "scholar": {"restoration": 3, "occult": 2, "agriculture": 1, "economics": 1,
+                      "scholar": {"restoration": 3, "mysticism": 2, "agriculture": 1, "economics": 1,
                                   "teaching": 3, "theology": 1, "law": 1, "etiquette": 1},
                       "steward": {"stewardship": 4, "economics": 1, "etiquette": 2, "law": 2,
-                                  "agriculture": 2},
-                      "scoundrel": {"streetwise": 2, "stealth": 1, "brawl": 1, "athletics": 1, "survival": 2,
-                                   "investigation": 1, "dodge": 1, "occult": 1},
+                                  "agriculture": 2, "diplomacy": 1, "propaganda": 1},
                       "hunter": {"ride": 1, "athletics": 1, "stealth": 2,
-                                "survival": 2, "archery": 1, "empathy": 1, "war": 1},
-                      "archer": {"archery": 3, "stealth": 3, "fortitude": 2,
-                                "ride": 1, "investigation": 1, "empathy": 1, "war": 1},
-                      "mage": {"abjuration": 3, "evocation": 1, "fortitude": 2,
-                                 "riddles": 1, "investigation": 1, "performance": 1, "prestidigitation": 1},
+                                "survival": 2, "archery": 2, "empathy": 1, "war": 1},
+                      "archer": {"archery": 3, "stealth": 1, "fortitude": 1,
+                                "ride": 1, "dodge": 1, "survival": 1},
+                      "mage": {"abjuration": 2, "evocation": 2, "fortitude": 2,
+                                 "riddles": 1, "prestidigitation": 1},
                       "explorer": {"ride": 1, "athletics": 1, "stealth": 2,
-                                 "survival": 2, "archery": 1, "empathy": 1, "investigation": 3},
+                                 "survival": 2, "archery": 1, "investigation": 3},
                       "sailor": {"medium wpn": 3, "dodge": 1,
-                                  "sailing": 3, "fortitude": 1},
+                                  "sailing": 3},
                       "scout": {"ride": 1, "athletics": 1, "stealth": 2,
                                  "fortitude": 2, "archery": 1, "investigation": 2},
+                      "beastmaster": {"animal ken": 3, "ride": 3, "survival": 2,
+                                "empathy": 2, "brawl": 1},
+                      "evocationist": {"evocation": 3, "dodge": 1, "mysticism": 1,
+                                 "athletics": 1, "performance": 1},
+                      "abjurationist": {"abjuration": 3, "dodge": 1, "mysticism": 1,
+                                       "fortitude": 1, "performance": 1},
+                      "spellblade": {"evocation": 2, "medium wpn": 2, "mysticism": 1,
+                                       "athletics": 1, "war": 2}
                       }
 
 
