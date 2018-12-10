@@ -192,6 +192,10 @@ World page of our website. http://ithirmush.org/topics/
 {rAt this time, IthirMUSH is NOT open for Character Creation as we are still in
 the pre-alpha phase of development. Keep checking back for updates.{n
 
+{gIf you are a member of our discord group and have been given permission
+to make your roster or OC character, please use:
+       {w @charcreate <your email address>{n
+
        """
 STAGE1 = \
        """

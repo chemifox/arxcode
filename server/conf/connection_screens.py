@@ -19,7 +19,7 @@ from django.conf import settings
 from evennia import utils
 
 CONNECTION_SCREEN = \
-"""{b=============================================================={n
+"""{w=============================================================={n
              Welcome to {gIthirMUSH{n
 
  If you have an existing account, connect to it by typing:
@@ -32,7 +32,11 @@ CONNECTION_SCREEN = \
  Thanks!
  -Ithir Staff{n
  
-{b=============================================================={n"""
+ {gIf you are a member of our discord group and are here to create
+ your roster or OC character, please log in using the command {wguest{n
+ {gto begin the pre-alpha character creation process.{n
+ 
+{w=============================================================={n"""
 
 ##"""{b=============================================================={n
 ## Welcome to {g%s{n, version %s!
