@@ -177,6 +177,7 @@ class Exit(LockMixins, NameMixins, ObjectMixins, DefaultExit):
         """
         source_location = traversing_object.location
         secret = self.tags.get("secret")
+        portal = self.tags.get("portal")
         mapping = {'secret': secret}
         if traversing_object.move_to(target_location, quiet=quiet, mapping=mapping):
             # if the door was locked, send a message about it unless we were following
@@ -196,6 +197,9 @@ class Exit(LockMixins, NameMixins, ObjectMixins, DefaultExit):
                         invalid_followers.append(follower)
                         continue
                     # only move followers who were in same square
+                    if portal and not follower.tags.get("npc"):
+                        invalid_followers.append(follower)
+                        continue
                     if follower.location == source_location:
                         fname = follower.ndb.following
                         if follower.ndb.followers and fname in follower.ndb.followers:
@@ -216,6 +220,10 @@ class Exit(LockMixins, NameMixins, ObjectMixins, DefaultExit):
                 # make all characters who could not follow stop following us
                 for invalid in invalid_followers:
                     if invalid.ndb.following == traversing_object:
+                        if portal:
+                            invalid.msg("The portal guardian stops you from following. You must pass through the"
+                                        " portal on your own!")
+                            continue
                         invalid.stop_follow()
                     else:
                         traversing_object.ndb.followers.remove(invalid)
