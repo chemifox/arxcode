@@ -7,6 +7,31 @@
 	<hr />
 	</figure>
 	</div>
+
+    	<div class="row text-center">
+		<h1 class="bg-primary">Help Files</h1>
+	</div> <!--button-->
+	<div id="Topics" class="collapse in">
+    {% for category in all_categories %}
+	<div class="row">
+	  <ul class="list-inline text-center">
+      {% for topic in all_topics %}
+        {% if topic.help_category.capitalize == category %}
+          <li class="text-center"><a href="{% url 'help_topics:topic' topic.key %}">{{ topic.key }}</a></li>
+        {% endif %}
+      {% empty %}
+        <li>No topics found for this category.</li>
+      {% endfor %}
+	  </ul>
+	</div><!-- div in for loop -->
+    {% empty %}
+      <li>No categories found.</li>
+    {% endfor %}
+	</div><!-- collapse-in -->
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
 <!-- Page Content -->
     <div class="container">
 
@@ -51,29 +76,6 @@
     </div>
   </div>
 </div>
-	<div class="row text-center">
-		<h1 class="bg-primary">Help Files</h1>
-	</div> <!--button-->
-	<div id="Topics" class="collapse in">
-    {% for category in all_categories %}
-	<div class="row">
-	  <ul class="list-inline text-center">
-      {% for topic in all_topics %}
-        {% if topic.help_category.capitalize == category %}
-          <li class="text-center"><a href="{% url 'help_topics:topic' topic.key %}">{{ topic.key }}</a></li>
-        {% endif %}
-      {% empty %}
-        <li>No topics found for this category.</li>
-      {% endfor %}
-	  </ul>
-	</div><!-- div in for loop -->
-    {% empty %}
-      <li>No categories found.</li>
-    {% endfor %}
-	</div><!-- collapse-in -->
-    <!-- Bootstrap core JavaScript -->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 
 {% endblock %}

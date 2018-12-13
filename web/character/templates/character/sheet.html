@@ -24,7 +24,7 @@
         <div class="row"><div class="text-center"><q><em>{{ character.db.quote }}</em></q></div></div>
     {% endif %}
 	<div class="row">
-	  <br></br>
+	  <br>
     {% if character.portrait %}
 	<div class="col-md-7 text-center">
       {% if character.portrait.alt_text %}
@@ -64,12 +64,13 @@
 
     <p><b>Background:</b> {{ character.db.background|mush_to_html }}</p>
     {% if character.db.relationship_short %}
-      <h2>Relationship Summary</h2>
+     <div align="left">
+    <h2>Relationship Summary</h2>
       {% for type,value in character.db.relationship_short.items %}
         {% if type != 'secret' or show_hidden %}
           <br /><b>{{ type|capfirst }}:</b>
           {% for relname, reldesc in value %}
-            <li>{{ relname|title }} - {{ reldesc }}</li>
+              <li>{{ relname|title }} - {{ reldesc }}</li>
           {% endfor %}
         {% endif %}
       {% empty %}
@@ -86,9 +87,10 @@
     {% if character.db.gm_notes %}
         {% if request.user.is_staff %}
             <h2 class="text-center">GM Notes</h2>
-            {{  character.db.gm_notes }}
+            <li>{{  character.db.gm_notes }}</li>
         {% endif %}
     {% endif %}
+        </div>
     <style>
     td { text-align:center }
 	th { text-align:center}
@@ -192,8 +194,8 @@
       <br></br>
     <div class="row">
         <div>
-            <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#Impressions">
-            <h1>First Impressions</h1></button>
+            <button type="button" class="btn btn-success" data-toggle="collapse" data-target="#Impressions">
+            <h2>First Impressions</h2></button>
             <div id="Impressions" class="collapse">
                 <table class="table table-hover">
                 <tr bgcolor="#336666">
