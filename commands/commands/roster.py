@@ -897,6 +897,21 @@ def display_secrets(caller, character):
     return
 
 
+def display_gmnotes(caller, character):
+    """
+    Display secrets
+    """
+    show_gm = caller.check_permstring("admin")
+    gmnotes = character.db.gm_notes
+    if show_gm:
+        caller.msg("{wGM Notes for %s:{n" % character.key.capitalize())
+        caller.msg("%s\n" % gmnotes)
+    if not gmnotes:
+        caller.msg("No GM Notes to display.")
+    return
+
+
+
 # noinspection PyUnusedLocal
 def display_timeline(caller, character):
     """
@@ -981,6 +996,7 @@ class CmdSheet(ArxPlayerCommand):
                 display_skills(caller, charob)
                 display_abilities(caller, charob)            
                 display_secrets(caller, charob)
+                display_gmnotes(caller,charob)
                 self.display_visions(charob)
             display_relationships(caller, charob, show_hidden)          
             bground = charob.db.background
@@ -1013,6 +1029,9 @@ class CmdSheet(ArxPlayerCommand):
                 return
             if 'secrets' in switches or 'secret' in switches:
                 display_secrets(caller, charob)
+                return
+            if 'gmnotes' in switches or 'gmnote' in switches:
+                display_gmnotes(caller, charob)
                 return
             if 'visions' in switches or 'vision' in switches:
                 self.display_visions(charob)
