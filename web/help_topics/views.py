@@ -179,7 +179,7 @@ def guides(request):
     user = request.user
     try:
         all_topics = []
-        for topic_ob in HelpEntry.objects.filter(db_help_category="Guides"):
+        for topic_ob in HelpEntry.objects.filter(db_help_category__in=("Guides", "Staff")):
             try:
                 if topic_ob.access(user, 'view', default=True):
                     all_topics.append(topic_ob)
@@ -263,7 +263,7 @@ def list_topics(request):
                                                                         "Lorandi", "Thalerith",
                                                                         "Game Rules and Policies", "Game Information",
                                                                         "Character Creation", "Skills", "Stats",
-                                                                        "Guides", "Staff Policies")):
+                                                                        "Guides", "Staff Policies", "Staff")):
             try:
                 if topic_ob.access(user, 'view', default=True):
                     all_topics.append(topic_ob)
