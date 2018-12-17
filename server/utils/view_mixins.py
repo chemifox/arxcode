@@ -1,6 +1,8 @@
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-def adjust_pagination(context, page, begin_pages=2, end_pages=2, before_current_pages=4, after_current_pages=4, page_name="page_obj"):
+
+def adjust_pagination(context, page, begin_pages=2, end_pages=2, before_current_pages=4, after_current_pages=4,
+                      page_name="page_obj"):
     # Digg-like pages
     before = max(page.number - before_current_pages - 1, 0)
     after = page.number + after_current_pages
@@ -43,6 +45,7 @@ def adjust_pagination(context, page, begin_pages=2, end_pages=2, before_current_
     
     return context
 
+
 class LimitPageMixin(object):
     """
     Will adjust the pages created by paginator to have a range,
@@ -63,6 +66,7 @@ class LimitPageMixin(object):
     end_pages=2
     before_current_pages=4
     after_current_pages=4
+
     def get_context_data(self, **kwargs):
         context = super(LimitPageMixin, self).get_context_data(**kwargs)
         if self.default_page_name:

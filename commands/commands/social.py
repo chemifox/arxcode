@@ -20,7 +20,7 @@ from evennia.utils.utils import make_iter
 from evennia.scripts.models import ScriptDB
 
 from commands.commands.roster import format_header
-from server.utils.exceptions import PayError
+from server.utils.exceptions import PayError, CommandError
 from server.utils.prettytable import PrettyTable
 from server.utils.arx_utils import inform_staff, time_from_now
 from typeclasses.characters import Character
@@ -1048,7 +1048,7 @@ class CmdMessenger(ArxCommand):
                 if num < 1:
                     raise ValueError
                 msg = old[num - 1]
-                caller.msg("\n{wMessage to:{n %s" % ", ".join(str(ob) for ob in msg.receivers))
+                caller.msg("\n{wMessage to:{n %s" % ", ".join(ob.key for ob in msg.receivers))
                 self.disp_messenger(msg)
                 return
             except TypeError:
@@ -2535,6 +2535,14 @@ class CmdRandomScene(ArxCommand):
         return self.caller.player_ob.db.requested_validation or []
 
     @property
+    def masked_validated_list(self):
+        """Yet another fucking special case made necessary by fucking masks"""
+        if self.caller.player_ob.db.masked_validated_list is None:
+            self.caller.player_ob.db.masked_validated_list = {}
+        return self.caller.player_ob.db.masked_validated_list
+
+
+    @property
     def newbies(self):
         """A list of new players we want to encourage people to RP with
 
@@ -2641,7 +2649,8 @@ class CmdRandomScene(ArxCommand):
             msg += "\n{yReminder: Please only /claim those you have interacted with significantly in a scene.{n"
         if claimlist:
             msg += "\n{wThose you have already RP'd with this week:{n "
-            msg += list_to_string([ob.key for ob in claimlist])
+            masked = dict(self.masked_validated_list)
+            msg += list_to_string([ob.key if ob not in masked else masked[ob] for ob in validated])
         if validated:
             msg += "\n{wThose you have validated scenes for this week:{n "
             msg += list_to_string([ob.key for ob in validated])
@@ -2712,7 +2721,8 @@ class CmdRandomScene(ArxCommand):
     def validate_scene(self):
         """Grants a request to validate a randomscene."""
         scene_requests = self.caller.db.scene_requests or {}
-        targ = scene_requests.pop(self.args.lower(), (None, ""))[0]
+        name = self.args.lower()
+        targ = scene_requests.pop(name, (None, ""))[0]
         self.caller.db.scene_requests = scene_requests
         if not targ:
             self.msg("No character by that name has sent you a request.")
@@ -2729,6 +2739,8 @@ class CmdRandomScene(ArxCommand):
         self.msg("Validating their scene. Both of you will receive xp for it later.")
         validated.append(targ)
         self.caller.player_ob.db.validated_list = validated
+        if targ.key.lower() != name:
+            self.masked_validated_list[targ] = name
 
     def view_requests(self):
         """Views current requests for validation."""
@@ -2932,50 +2944,46 @@ class CmdIAmHelping(ArxPlayerCommand):
         Usage:
             +iamhelping <player>=<AP>
 
-    Allows you to donate AP to other players with some restrictions to
+Allows you to donate AP to other players (with some restrictions) to
     represent helping them out with whatever they're up to: gathering supplies
     for a crafter, acting as a menial servant/helping their servants manage
-    their affairs, discreetly having annoying npcs killed, etc. This has a
-    poor conversion rate, so it's much more effective to assist them
-    directly with investigations, crisis actions, etc, with the accustomed
-    commands.
-
-    Current rate of exchange is 3 to 1.
+    their affairs, discreetly having annoying npcs killed, etc. It's much more
+    effective to assist directly with investigations, crisis actions, etc,
+    using those respective commands. Rate of AP conversion is 3 to 1.
     """
     key = "+iamhelping"
     help_category = "Social"
+    ap_conversion = 3
 
     def func(self):
         """Executes the +iamhelping command"""
-        if not self.args:
-            self.msg("You have %s AP remaining." % self.caller.roster.action_points)
-            return
-        targ = self.caller.search(self.lhs)
-        if not targ:
-            return
         try:
-            val = int(self.rhs)
-        except (ValueError, TypeError):
-            self.msg("AP needs to be a number.")
-            return
-        receive_amt = val/3
-        if receive_amt < 1:
-            self.msg("Must transfer at least 1 AP to them.")
-            return
-        if targ.roster.action_points + receive_amt > 100:
-            self.msg("That would put them over 100 AP.")
-            return
-        if not self.caller.pay_action_points(val):
-            self.msg("You do not have enough AP.")
-            return
-        if self.caller.roster.current_account == targ.roster.current_account:
-            self.msg("You cannot give AP to an alt.")
-            return
-        targ.pay_action_points(-receive_amt)
-        self.msg("You have given %s %s AP." % (targ, receive_amt))
-        msg = "%s has given you %s AP." % (self.caller, receive_amt)
-        targ.inform(msg, category=msg)
-
+            if not self.args:
+                self.msg("You have %s AP remaining." % self.caller.roster.action_points)
+                return
+            targ = self.caller.search(self.lhs)
+            if not targ:
+                return
+            try:
+                val = int(self.rhs)
+            except (ValueError, TypeError):
+                raise CommandError("AP needs to be a number.")
+            if self.caller.roster.current_account == targ.roster.current_account:
+                raise CommandError("You cannot give AP to an alt.")
+            receive_amt = val/self.ap_conversion
+            if receive_amt < 1:
+                raise CommandError("Must transfer at least %s AP." % self.ap_conversion)
+            max_ap = targ.roster.max_action_points
+            if targ.roster.action_points + receive_amt > max_ap:
+                raise CommandError("That would put them over %s AP." % max_ap)
+            if not self.caller.pay_action_points(val):
+                raise CommandError("You do not have enough AP.")
+            targ.pay_action_points(-receive_amt)
+            self.msg("You have given %s %s AP." % (targ, receive_amt))
+            msg = "%s has given you %s AP." % (self.caller, receive_amt)
+            targ.inform(msg, category=msg)
+        except CommandError as err:
+            self.msg(err)
 
 class CmdRPHooks(ArxPlayerCommand):
     """

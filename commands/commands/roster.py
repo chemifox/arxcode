@@ -1218,12 +1218,6 @@ class CmdRelationship(ArxPlayerCommand):
     @relationship - Displays information on a relationship.
 
     Usage:
-        @relationship <name>[=<name>]
-        @relationship/list <name>
-        @relationship/new <name>=<description>
-        @relationship/change <name>=<description>
-        @relationship/newprivate <name>=<description>
-        @relationship/changeprivate <name>=<description>
         @relationship/short <relationship type>=<name>,<desc>
         @relationship/changeshort <oldtype>,<newtype>=<name>,<desc>
         @relationship/delshort <name>
@@ -1251,8 +1245,8 @@ class CmdRelationship(ArxPlayerCommand):
     To create a new relationship or update an existing one, use
     @relationship/change.
     """
-    key = "@relationship"
-    aliases = ["+relationship", "@relationships", "+relationships"]
+    key = "relationship"
+    aliases = ["relationships"]
     help_category = "Social"
     locks = "cmd:all()"
     typelist = ['parent', 'sibling', 'friend', 'enemy', 'frenemy', 'family', 'client', 'patron', 'protege',
@@ -1416,8 +1410,8 @@ class CmdRelationship(ArxPlayerCommand):
             rels = charob.db.relationship_short
             if not rels:
                 caller.msg("No relationships in tree to change - use /short to add instead.")
-                return         
-            oldtype, newtype = lhslist[0].lower(), lhslist[1].lower()
+                return
+                oldtype, newtype = lhslist[0].lower(), lhslist[1]
             if newtype not in self.typelist:
                 caller.msg("Relationship must be one of the following: %s" % ", ".join(self.typelist))
                 return

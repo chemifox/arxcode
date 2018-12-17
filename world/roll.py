@@ -1,8 +1,8 @@
 """
-A Roll class is all the informations about a roll that is made. Crits,
+A Roll class is all the information about a roll that is made. Crits,
 karma spent, or any number of other modifiers is saved to decide what
 message will be sent, if any. While it could be a simulated roll made
-by a GM, a character's roll will be stored in character.ndb.last_roll 
+by a GM, a character's roll will be stored in character.ndb.last_roll
 attribute.
 """
 from random import randint
@@ -17,7 +17,7 @@ DEFAULT_KEEP = 2
 class Roll(object):
     # This is the number that the roll needs to be >= for an extra die
     EXPLODE_VAL = 10
-    
+
     def __init__(self, caller=None, stat=None, skill=None, difficulty=15, stat_list=None,
                  skill_list=None, skill_keep=True, stat_keep=False, quiet=True, announce_room=None,
                  keep_override=None, bonus_dice=0, divisor=1, average_lists=False, can_crit=True,
@@ -95,7 +95,7 @@ class Roll(object):
         if self.average_lists or self.average_skill_list:
             skillval //= len(self.skills)
         # keep dice is either based on some combination of stats or skills, or supplied by caller
-        keep_dice = DEFAULT_KEEP + self.bonus_keep
+        keep_dice = DEFAULT_KEEP
         if self.stat_keep:
             keep_dice += statval
         if self.skill_keep:
@@ -104,6 +104,7 @@ class Roll(object):
             keep_dice += skillval
         if self.keep_override:
             keep_dice = self.keep_override
+        keep_dice += self.bonus_keep
         # the number of 'dice' we roll is equal to stat + skill
         num_dice = int(statval) + int(skillval) + self.bonus_dice
         rolls = [randint(1, 10) for _ in range(num_dice)]
@@ -144,7 +145,7 @@ class Roll(object):
         # end result is the sum of our kept dice minus the difficulty of what we were
         # attempting. Positive number is a success, negative is a failure.
         return self.result
-        
+
     def explode_check(self, num):
         """
         Recursively call itself and return the sum for exploding rolls.
@@ -152,7 +153,7 @@ class Roll(object):
         if num < self.EXPLODE_VAL:
             return num
         return num + self.explode_check(randint(1, 10))
-    
+
     def check_crit_mult(self):
         try:
             if not self.can_crit:
