@@ -340,22 +340,18 @@ class CmdRetainers(ArxPlayerCommand):
     command to set their name and description. They can be summoned
     in-game through the use of the +guards command while in your home.
 
-    Retainers may be five types: champion, assistant, spy, animal, or
-    small animal. Small animals are essentially pets that may be trained
-    to perform tasks such as carrying messages, but no combat ability.
-    Champions are guards and protectors. Non-small animals are assumed to
-    be any large animal that can serve as a guardian or a mount. Assistants
-    provide personal assistance in everyday tasks and adventures outside
-    of combat. Spies may assist in criminal or sneaky activities.
+    Retainers may be two types: animal, or small animal. Small
+    animals are essentially pets that may be trained to perform tasks such
+    as carrying messages, but no combat ability. Animals are assumed
+    to be any large animal that can serve as a guardian or a mount.
 
     @retainers are upgraded through transfer of XP and the expenditure
     of resources. XP transferred to @retainers is multiplied by three,
     making it far easier (but much more expensive) to have skilled
     retainers. Changing the name, desc, or cosmetic traits of a retainer
-    is free. The cost of a new retainer is 100 resources, with champions
-    and large animals requiring military, assistants using economic, and
-    spies requiring social. Small animals, due to their limited use, only
-    cost 25 social resources.
+    is free. The cost of a new large animal retainer is 100 military
+    resources. Small animals, due to their limited use, only cost 25 social
+     resources.
 
     /delete will remove a retainer that you own forever.
     """
@@ -365,7 +361,7 @@ class CmdRetainers(ArxPlayerCommand):
     help_category = "Dominion"
     # cost of a new retainer in resources
     new_retainer_cost = 100
-    retainer_types = ("champion", "assistant", "spy", "animal", "small animal")
+    retainer_types = ("animal", "small animal")
     valid_traits = ("species", "gender", "age", "haircolor", "eyecolor",
                     "skintone", "height")
     valid_categories = ("skill", "stat", "ability", "level", "armor", "weapon")
@@ -408,14 +404,12 @@ class CmdRetainers(ArxPlayerCommand):
             caller.msg("The type of retainer must be one of the following: %s" % ", ".join(self.retainer_types))
             return
         cost = self.new_retainer_cost
-        if atype == "champion" or atype == "animal":
+        if atype == "animal":
             rtype = "military"
-        elif atype == "spy" or atype == "small animal":
+        elif atype == "small animal":
             rtype = "social"
             if atype == "small animal":
                 cost /= 4
-        elif atype == "assistant":
-            rtype = "economic"
         else:
             rtype = "military"
 

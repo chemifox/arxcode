@@ -101,8 +101,9 @@ class Npc(Character):
         self.db.sleep_status = "awake"
         self.db.automate_combat = True
         self.db.damage = 0
+        self.tags.add("npc")
         self.at_init()
-        self.db.tag = "npc"
+
     
     def resurrect(self, *args, **kwargs):
         """
