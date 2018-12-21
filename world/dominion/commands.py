@@ -2432,6 +2432,136 @@ max_proteges = {
     }
 
 
+class CmdPatronage(ArxPlayerCommand):
+    """
+    @patron
+
+    Usage:
+        @patronage
+        @patronage <player>
+        @patronage/addprotege <player>
+        @patronage/dismiss <player>
+        @patronage/accept
+        @patronage/reject
+        @patronage/abandon
+
+    Displays and manages patronage.
+    """
+    key = "@patronage"
+    locks = "cmd:all()"
+    help_category = "Dominion"
+
+    @staticmethod
+    def display_patronage(dompc):
+        patron = dompc.patron
+        proteges = dompc.proteges.all()
+        msg = "{wPatron and Proteges for {c%s{n:\n" % str(dompc)
+        msg += "{wPatron:{n %s\n" % ("{c%s{n" % patron if patron else "None")
+        msg += "{wProteges:{n %s" % ", ".join("{c%s{n" % str(ob) for ob in proteges)
+        return msg
+
+    def check_social_rank_difference(self, target):
+        """Determines if social rank is great enough"""
+        our_rank = self.caller.char_ob.db.social_rank or 10
+        targ_rank = target.db.social_rank or 0
+        if our_rank < 3:
+            diff = 3
+        elif our_rank < 6:
+            diff = 2
+        else:
+            diff = 1
+        if our_rank + diff > targ_rank:
+            self.msg("Your social rank must be at least %d higher than your target." % diff)
+            return False
+        return True
+
+    def func(self):
+        caller = self.caller
+        try:
+            dompc = self.caller.Dominion
+        except AttributeError:
+            dompc = setup_utils.setup_dom_for_char(self.caller.db.char_ob)
+        if not self.args and not self.switches:        
+            caller.msg(self.display_patronage(dompc), options={'box': True})
+            return
+        if self.args:
+            player = caller.search(self.args)
+            if not player:
+                return
+            char = player.char_ob
+            if not char:
+                caller.msg("No character found for %s." % player)
+                return
+            try:
+                tdompc = player.Dominion
+            except AttributeError:
+                tdompc = setup_utils.setup_dom_for_char(char)
+            if not self.switches:
+                caller.msg(self.display_patronage(tdompc), options={'box': True})
+                return
+            if "addprotege" in self.switches:
+                if not player.is_connected:
+                    caller.msg("They must be online to add them as a protege.")
+                    return
+                if tdompc.patron:
+                    caller.msg("They already have a patron.")
+                    return
+                num = dompc.proteges.all().count()
+                psrank = caller.db.char_ob.db.social_rank
+                max_p = max_proteges.get(psrank, 0)
+                if num >= max_p:
+                    caller.msg("You already have the maximum number of proteges for your social rank.")
+                    return
+                if not self.check_social_rank_difference(char):
+                    return
+                player.ndb.pending_patron = caller
+                msg = "{c%s {wwants to become your patron. " % caller.key.capitalize()
+                msg += " Use @patronage/accept to accept {wthis offer, or @patronage/reject to reject it.{n"
+                player.msg(msg)
+                caller.msg("{wYou have extended the offer of patronage to {c%s{n." % player.key.capitalize())
+                return
+            if "dismiss" in self.switches:
+                if tdompc not in dompc.proteges.all():
+                    caller.msg("They are not one of your proteges.")
+                    return
+                dompc.proteges.remove(tdompc)
+                caller.msg("{c%s {wis no longer one of your proteges.{n" % char)
+                player.msg("{c%s {wis no longer your patron.{n" % caller.key.capitalize())
+                return
+            caller.msg("Unrecognized switch.")
+            return
+        pending = caller.ndb.pending_patron
+        if 'accept' in self.switches:
+            if not pending:
+                caller.msg("You have no pending invitation.")
+                return
+            dompc.patron = pending.Dominion
+            dompc.save()
+            caller.msg("{c%s {wis now your patron.{n" % pending.key.capitalize())
+            pending.msg("{c%s {whas accepted your patronage, and is now your protege.{n" % caller.key.capitalize())
+            caller.ndb.pending_patron = None
+            return
+        if 'reject' in self.switches:
+            if not pending:
+                caller.msg("You have no pending invitation.")
+                return
+            caller.msg("You decline %s's invitation." % pending.key.capitalize())
+            pending.msg("%s has declined your patronage." % caller.key.capitalize())
+            caller.ndb.pending_patron = None
+            return
+        if 'abandon' in self.switches:
+            old = dompc.patron          
+            if old:
+                dompc.patron = None
+                dompc.save()
+                old.player.msg("{c%s {rhas abandoned your patronage, and is no longer your protege.{n" % dompc)
+                caller.msg("{rYou have abandoned {c%s{r's patronage, and are no longer their protege.{n" % old)
+            else:
+                caller.msg("You don't have a patron.")
+            return
+        caller.msg("Unrecognized switch.")
+        return
+
 
 # Character/IC commands------------------------------
 # command to generate money/resources for ourself/org

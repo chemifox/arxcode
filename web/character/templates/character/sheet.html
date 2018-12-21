@@ -63,10 +63,10 @@
     <p><b>Personality:</b> {{ character.db.personality|mush_to_html }}</p>
 
     <p><b>Background:</b> {{ character.db.background|mush_to_html }}</p>
-    {% if character.db.relationship_short %}
+    {% if character.db.relationship_sheet %}
      <div align="left">
     <h2>Relationship Summary</h2>
-      {% for type,value in character.db.relationship_short.items %}
+      {% for type,value in character.db.relationship_sheet.items %}
         {% if type != 'secret' or show_hidden %}
           <br /><b>{{ type|capfirst }}:</b>
           {% for relname, reldesc in value %}

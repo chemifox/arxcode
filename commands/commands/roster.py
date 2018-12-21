@@ -835,11 +835,11 @@ def display_abilities(caller, character):
 
 def display_relationships(caller, character, show_hidden=False):
     """
-    Display short version of relationships. Long will
+    Display sheet version of relationships. Long will
     be done by @relationship command separately.
     """
     if hasattr(character, 'get_fancy_name'):
-        name = character.get_fancy_name(short=False, display_mask=False)
+        name = character.get_fancy_name(sheet=False, display_mask=False)
     else:
         name = character.key
     if not name:
@@ -853,10 +853,10 @@ def display_relationships(caller, character, show_hidden=False):
             caller.msg("{wProteges:{n %s" % ", ".join(str(ob) for ob in proteges))
     caller.msg("\n{wSocial circle for {c%s{n:\n------------------------------------" % name)
     
-    # relationship_short is a dict of types of relationships to a list of tuple of
+    # relationship_sheet is a dict of types of relationships to a list of tuple of
     # character name and a very brief (2-3 word) description enclosed in parens.
     # More detailed relationships will be in character.db.relationships
-    relationships = character.db.relationship_short
+    relationships = character.db.relationship_sheet
     if not relationships:
         caller.msg("No relationships found.")
         return
@@ -1218,9 +1218,9 @@ class CmdRelationship(ArxPlayerCommand):
     @relationship - Displays information on a relationship.
 
     Usage:
-        @relationship/short <relationship type>=<name>,<desc>
-        @relationship/changeshort <oldtype>,<newtype>=<name>,<desc>
-        @relationship/delshort <name>
+        @relationship/sheet <relationship type>=<name>,<desc>
+        @relationship/changesheet <oldtype>,<newtype>=<name>,<desc>
+        @relationship/delsheet <name>
 
     Displays information on a relationship with another character,
     written from your character's IC point of view. Descriptions
@@ -1230,17 +1230,17 @@ class CmdRelationship(ArxPlayerCommand):
     time. Dates of relationship changes will be noted in a character's
     timeline to identify significant events for character development.
     Every relationship that you add should also have a short
-    relationship added to it via @relationship/short, with 'secret'
+    relationship added to it via @relationship/sheet, with 'secret'
     being the type for secret relationships. Those are not publicly
     viewable by other players.
 
     To list the relationships of other players, use the /list switch.
     To list your own, simply use @relationship with no arguments.
 
-    For @relationship/short, this builds the {w@sheet/social{n tree
+    For @relationship/sheet, this builds the {w@sheet/social{n tree
     on a character's sheet, such as friends, family, acquaintances,
     and enemies. For example:
-    @relationship/short friend=percy,war buddy
+    @relationship/sheet friend=percy,war buddy
 
     To create a new relationship or update an existing one, use
     @relationship/change.
@@ -1255,8 +1255,8 @@ class CmdRelationship(ArxPlayerCommand):
 
     # noinspection PyUnusedLocal
     def get_help(self, caller, cmdset):
-        """Returns docstr plus the types of shortrels"""
-        msg = self.__doc__ + "\n\nShort relationship types: %s" % ", ".join(self.typelist)
+        """Returns docstr plus the types of sheetrels"""
+        msg = self.__doc__ + "\n\nSheet relationship types: %s" % ", ".join(self.typelist)
         return msg
 
     def func(self):
@@ -1352,7 +1352,7 @@ class CmdRelationship(ArxPlayerCommand):
             return
         lhs = self.lhs
         rhs = self.rhs
-        if (not lhs or not rhs) and 'delshort' not in switches:
+        if (not lhs or not rhs) and 'delsheet' not in switches:
             caller.msg("Usage: @relationship/switches <name>=<description>")
             return
         # lhs will be used for keys, so need to make sure always lower case
@@ -1369,36 +1369,36 @@ class CmdRelationship(ArxPlayerCommand):
             msg = charob.messages.add_relationship(desc, targ, white)
             caller.msg("Entry added to %s:\n%s" % (jname, msg))
             caller.msg("Relationship note added. If the 'type' of relationship has changed, "
-                       "such as a friend becoming an enemy, please adjust it with /changeshort.")
+                       "such as a friend becoming an enemy, please adjust it with /changesheet.")
             if white:
                 charob.msg_watchlist("A character you are watching, {c%s{n, has updated their white journal." % caller)
             return
-        if 'short' in switches:
+        if 'sheet' in switches:
             rhslist = self.rhslist
             rel_types = [ob.lower() for ob in self.typelist]
             if lhs not in rel_types:
                 caller.msg("The type of relationship must be in: %s." % ", ".join(self.typelist))
                 return
             if len(rhslist) < 2:
-                caller.msg("Usage: @relationship/short <type>=<name>,<desc>")
+                caller.msg("Usage: @relationship/sheet <type>=<name>,<desc>")
                 return
             name = rhslist[0].title()
             desc = ", ".join(rhslist[1:])
             name = name.rstrip()
             desc = desc.lstrip()
             # if there's no relationship tree yet, initialize it as an empty dict
-            if not charob.db.relationship_short:
-                charob.db.relationship_short = {}
+            if not charob.db.relationship_sheet:
+                charob.db.relationship_sheet = {}
             # if that type of relationship doesn't exist, add it
-            if not charob.db.relationship_short.get(lhs):
-                charob.db.relationship_short[lhs] = [(name, desc)]
-                caller.msg("Short relationship added to tree.")
+            if not charob.db.relationship_sheet.get(lhs):
+                charob.db.relationship_sheet[lhs] = [(name, desc)]
+                caller.msg("Sheet relationship added to tree.")
                 return
             # it exists, so add our name/desc tuple to the list
-            charob.db.relationship_short[lhs].append((name, desc))
-            caller.msg("Short relationship added to tree.")
+            charob.db.relationship_sheet[lhs].append((name, desc))
+            caller.msg("Sheet relationship added to tree.")
             return
-        if 'changeshort' in switches:
+        if 'changesheet' in switches:
             lhslist = lhs.split(",")
             if not lhslist or len(lhslist) != 2:
                 caller.msg("Must have both old type and new type of relationship specified before '='.")
@@ -1407,9 +1407,9 @@ class CmdRelationship(ArxPlayerCommand):
             if len(rhslist) < 2:
                 caller.msg("Must have both name and description specified after '='.")
                 return
-            rels = charob.db.relationship_short
+            rels = charob.db.relationship_sheet
             if not rels:
-                caller.msg("No relationships in tree to change - use /short to add instead.")
+                caller.msg("No relationships in tree to change - use /sheet to add instead.")
                 return
                 oldtype, newtype = lhslist[0].lower(), lhslist[1]
             if newtype not in self.typelist:
@@ -1438,9 +1438,9 @@ class CmdRelationship(ArxPlayerCommand):
             rels[newtype].append((name, desc))
             caller.msg("Relationship tree changed.")
             return
-        if 'delshort' in switches:
+        if 'delsheet' in switches:
             args = self.args.lower()
-            rels = charob.db.relationship_short
+            rels = charob.db.relationship_sheet
             if not rels:
                 caller.msg("No relationships to delete.")
                 return
@@ -1701,10 +1701,8 @@ class CmdAdmRelationship(ArxPlayerCommand):
     Changes a player's relationship
 
     Usage:
-        @admin_relationship player,target=description
-        @admin_relationship/private player,target=description
-        @admin_relationship/short player,target=type,desc
-        @admin_relationship/deleteshort player,target=type 
+        @admin_relationship/sheet player,target=type,desc
+        @admin_relationship/deletesheet player,target=type
 
     Adds a white journal or black journal (with /private switch)
     relationship of player's character to target's character. To
@@ -1721,7 +1719,7 @@ class CmdAdmRelationship(ArxPlayerCommand):
         caller = self.caller
         try:
             player = caller.search(self.lhslist[0])
-            if "short" in self.switches or "deleteshort" in self.switches:
+            if "sheet" in self.switches or "deletesheet" in self.switches:
                 targ = self.lhslist[1].capitalize()
             else:
                 targ = caller.search(self.lhslist[1])
@@ -1738,35 +1736,35 @@ class CmdAdmRelationship(ArxPlayerCommand):
         if not charob or not targ:
             caller.msg("Character objects not found.")
             return
-        if "short" in self.switches:
+        if "sheet" in self.switches:
             try:
                 rtype = self.rhslist[0]
                 desc = self.rhslist[1]
             except IndexError:
-                caller.msg("Need both type and desc for short rels.")
+                caller.msg("Need both type and desc for sheet rels.")
                 return
-            relshort = charob.db.relationship_short or {}
-            rel = relshort.get(rtype) or []
+            relsheet = charob.db.relationship_sheett or {}
+            rel = relsheet.get(rtype) or []
             rel.append((targ, desc))
-            relshort[rtype] = rel
-            charob.db.relationship_short = relshort
-            caller.msg("%s' short rel to %s set to %s: %s." % (charob, targ, rtype, desc))
+            relsheet[rtype] = rel
+            charob.db.relationship_sheet = relsheet
+            caller.msg("%s' sheet rel to %s set to %s: %s." % (charob, targ, rtype, desc))
             return
-        if "deleteshort" in self.switches or "delshort" in self.switches:
+        if "deletesheet" in self.switches or "delsheet" in self.switches:
             rtype = self.rhs
-            relshort = charob.db.relationship_short or {}
-            rel = relshort.get(rtype) or []
+            relsheet = charob.db.relationship_sheet or {}
+            rel = relsheet.get(rtype) or []
             if not rel:
                 caller.msg("Nothing found for %s." % rtype)
                 return
             rel = [ob for ob in rel if ob[0].lower() != targ.lower()]
             if not rel:
-                del relshort[rtype]
+                del relsheet[rtype]
                 caller.msg("Removing %s from dict." % rtype)
             else:
-                relshort[rtype] = rel
+                relsheet[rtype] = rel
                 caller.msg("Removed instances of %s from dict." % targ)
-            charob.db.relationship_short = relshort
+            charob.db.relationship_sheet = relsheet
             return          
         desc = self.rhs
         white = "private" not in self.switches
