@@ -266,6 +266,10 @@ dd {
     text-align: left;
 }
 
+#main-copy q {
+    color: #8c8c8c;
+}
+
 #main-copy b {
   color: #FFFFFF;
   line-height: .25em;
