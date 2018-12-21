@@ -104,7 +104,7 @@ class Container(LockMixins, DefaultObject):
         """Called once, when object is first created (after basetype_setup)."""
         self.locks.add("usekey: chestkey(%s)" % self.id)
         self.db.container = True
-        self.db.max_volume = 1
+        self.db.max_volume = 100
         self.at_init()
 
     def grantkey(self, char):

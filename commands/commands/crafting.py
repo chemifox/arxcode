@@ -82,7 +82,7 @@ def create_book(recipe, roll, proj, caller):
 
 def create_container(recipe, roll, proj, caller):
     scaling = float(recipe.resultsdict.get("scaling", 0))
-    base = int(recipe.resultsdict.get("baseval", 2))
+    base = int(recipe.resultsdict.get("baseval", 100))
     quality = get_quality_lvl(roll, recipe.difficulty)
     obj = create_obj(CONTAINER, proj[1], caller, caller, quality)
     obj.db.max_volume = base + int(scaling * quality)
@@ -96,7 +96,7 @@ def create_container(recipe, roll, proj, caller):
 
 def create_wearable_container(recipe, roll, proj, caller):
     scaling = float(recipe.resultsdict.get("scaling", 0))
-    base = int(recipe.resultsdict.get("baseval", 2))
+    base = int(recipe.resultsdict.get("baseval", 100))
     quality = get_quality_lvl(roll, recipe.difficulty)
     obj = create_obj(WEARABLE_CONTAINER, proj[1], caller, caller, quality)
     obj.db.max_volume = base + int(scaling * quality)
