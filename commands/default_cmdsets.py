@@ -206,7 +206,7 @@ class AccountCmdSet(cmdset_account.AccountCmdSet):
         self.add(domcommands.CmdOrganization())
         self.add(domcommands.CmdArmy())
         self.add(agent_commands.CmdAgents())
-        self.add(domcommands.CmdPatronage())
+#        self.add(domcommands.CmdPatronage())
         self.add(agent_commands.CmdRetainers())
 
     @check_errors
