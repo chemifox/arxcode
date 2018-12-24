@@ -348,10 +348,15 @@ dd {
   clear: both;
 }
 
-.quarter, .oneThird, .half, .twoThirds, .fullWidth {
+.quarter, .oneThird, .half, .twoThirds, .fullWidth, .oneFifth {
   margin: 1em 0;
   float: left;
   border-left: 1px solid rgb(45, 45, 45);
+}
+
+.oneFifth {
+  width: 20%;
+  padding: 0 1.9%;
 }
 
 .quarter {
@@ -550,3 +555,4 @@ dd {
 .table-hover thead tr:hover th, .table-hover tbody tr:hover td {
     background-color: #A9A9A9;
 }
+
