@@ -94,7 +94,7 @@ _voc_start_skills_ = {"highborn": {"diplomacy": 2, "etiquette": 3, "manipulation
                       "beastmaster": {"animal ken": 3, "ride": 3, "survival": 2,
                                 "empathy": 2, "brawl": 1},
                       "evocationist": {"evocation": 3, "dodge": 1, "mysticism": 1,
-                                 "athletics": 1, "performance": 1},
+                                 "athletics": 2, "performance": 1},
                       "abjurationist": {"abjuration": 3, "dodge": 1, "mysticism": 1,
                                        "fortitude": 1, "performance": 1},
                       "spellblade": {"evocation": 2, "medium wpn": 2, "mysticism": 1,
