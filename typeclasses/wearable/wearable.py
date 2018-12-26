@@ -7,7 +7,7 @@ defined as an attribute.
 from typeclasses.objects import Object
 from time import time
 from typeclasses.containers.container import Container
-# from world.fashion.mixins import FashionableMixins
+from world.fashion.mixins import FashionableMixins
 from typeclasses.exceptions import EquipError
 
 
@@ -34,12 +34,12 @@ class Wearable(Object):
             self.at_post_remove(wearer)
         modi = self.modusornamenta_set.all()
         for mo in modi:
-#            outfit = mo.fashion_outfit
+            outfit = mo.fashion_outfit
             mo.delete()
-#            if outfit.pk:
-#                outfit.invalidate_outfit_caches()
-#                outfit.check_existence()
-#        self.invalidate_snapshots_cache()
+            if outfit.pk:
+                outfit.invalidate_outfit_caches()
+                outfit.check_existence()
+        self.invalidate_snapshots_cache()
         super(Wearable, self).softdelete()
 
     def at_before_move(self, destination, **kwargs):
@@ -131,12 +131,12 @@ class Wearable(Object):
         self.ndb.cached_resilience = resilience
         return armor, penalty, resilience
 
-#    def check_fashion_ready(self):
-#        super(Wearable, self).check_fashion_ready()
-#        if not self.is_worn:
-#            from world.fashion.exceptions import FashionError
-#            raise FashionError("Please wear %s before trying to model it as fashion." % self)
-#        return True
+    def check_fashion_ready(self):
+        super(Wearable, self).check_fashion_ready()
+        if not self.is_worn:
+            from world.fashion.exceptions import FashionError
+            raise FashionError("Please wear %s before trying to model it as fashion." % self)
+        return True
 
     @property
     def armor(self):

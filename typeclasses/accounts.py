@@ -362,7 +362,7 @@ class Account(InformMixin, MsgMixins, DefaultAccount):
     def retainers(self):
         """Returns queryset of retainer agents"""
         try:
-            return self.assets.agents.filter(unique=True)
+            return self.assets.agents.filter(unique=True, agent_objects__dbobj__isnull=False).distinct()
         except AttributeError:
             return []
 
@@ -370,7 +370,7 @@ class Account(InformMixin, MsgMixins, DefaultAccount):
     def agents(self):
         """Returns queryset of any agents we own"""
         try:
-            return self.assets.agents.all()
+            return self.assets.agents.filter(unique=True, agent_objects__dbobj__isnull=False).distinct()
         except AttributeError:
             return []
 
