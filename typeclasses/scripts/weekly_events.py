@@ -122,11 +122,11 @@ class WeeklyEvents(RunDateMixin, Script):
         # awarding votes we counted
         self.award_scene_xp()
         # self.award_vote_xp()
-        #self.post_top_rpers()
-        #self.post_top_prestige()
+        # self.post_top_rpers()
+        # self.post_top_prestige()
         # dominion stuff
         self.do_dominion_events()
-        #self.do_investigations()
+        # self.do_investigations()
         self.cleanup_stale_attributes()
         self.post_inactives()
         self.db.pose_counter = (self.db.pose_counter or 0) + 1
@@ -141,8 +141,8 @@ class WeeklyEvents(RunDateMixin, Script):
 
     def do_dominion_events(self):
         """Does all the dominion weekly events"""
-#        for owner in AssetOwner.objects.all():
-#            owner.prestige_decay()
+        for owner in AssetOwner.objects.all():
+            owner.prestige_decay()
 
         for owner in AssetOwner.objects.filter(
                         Q(organization_owner__isnull=False) |

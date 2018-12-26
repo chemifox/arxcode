@@ -698,10 +698,10 @@ class AssetOwner(SharedMemoryModel):
             target = self.organization_owner
         return target
 
-#    def prestige_decay(self):
-#        """Decreases our fame for the week"""
-#        self.fame -= int(self.fame * PRESTIGE_DECAY_AMOUNT)
-#        self.save()
+    def prestige_decay(self):
+        """Decreases our fame for the week"""
+        self.fame -= int(self.fame * PRESTIGE_DECAY_AMOUNT)
+        self.save()
 
     def do_weekly_adjustment(self, week, inform_creator=None):
         """
@@ -731,7 +731,7 @@ class AssetOwner(SharedMemoryModel):
         # WeeklyTransactions
         for income in self.incomes.filter(do_weekly=True):
             amount += income.process_payment(report)
-            # income.post_repeat()
+            income.post_repeat()
         if org:
             # record organization's income
             amount += self.organization_owner.amount
