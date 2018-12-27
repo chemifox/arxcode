@@ -3503,21 +3503,19 @@ class CmdWork(ArxPlayerCommand):
     Does work for a given organization to generate resources
 
     Usage:
-        work <organization>,<type>[=protege to use]
-        work/invest <organization>,<type>,<amount>[=protege to use]
+        work <organization>,<type>
+        work/invest <organization>,<type>,<amount>
         work/score <organization>
 
-    Spends 15 action points to have work done for an organization,
-    either by yourself or by one of your proteges, to generate
-    resources.
+    Spends 15 action points to have work done for an organization
+    to generate resources.
 
     The stat/skill used for the roll is based on the resource type.
     Economic: intellect + economics
     Military: command + war
     Social: charm + diplomacy
 
-    Social clout of you and your protege lowers the difficulty and
-    increases results, and the roller is whoever has higher skill.
+    Social clout lowers the difficulty and increases results.
     """
     key = "work"
     help_category = "Dominion"

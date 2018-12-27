@@ -1704,10 +1704,10 @@ class CmdAdmRelationship(ArxPlayerCommand):
         @admin_relationship/sheet player,target=type,desc
         @admin_relationship/deletesheet player,target=type
 
-    Adds a white journal or black journal (with /private switch)
-    relationship of player's character to target's character. To
-    change or delete relationships, just delete/change the appropriate
-    Msg() object in django admin window.
+    Adds a sheet relationship to a character. To make the relationship
+    hidden from other players, use the 'secret' type. To change or
+    delete relationships, just delete/change the appropriate Msg()
+    object in django admin window.
     """
     key = "@admin_relationship"
     aliases = ["@admin_relationships"]
@@ -1743,7 +1743,7 @@ class CmdAdmRelationship(ArxPlayerCommand):
             except IndexError:
                 caller.msg("Need both type and desc for sheet rels.")
                 return
-            relsheet = charob.db.relationship_sheett or {}
+            relsheet = charob.db.relationship_sheet or {}
             rel = relsheet.get(rtype) or []
             rel.append((targ, desc))
             relsheet[rtype] = rel
