@@ -121,7 +121,7 @@ def setup_voc(char, args):
 STAT_POINTS = 12
 SKILL_POINTS = 20
 CONCEPT_MAX_LEN = 30
-DESC_MIN_LEN = 0
+DESC_MIN_LEN = 200
 DESC_MAX_LEN = 1000
 
 XP_BONUS_BY_SRANK = {2: 0,
@@ -965,7 +965,7 @@ class CmdGuestAddInput(ArxPlayerCommand):
     @staticmethod
     def do_stage_5(caller, args):
         """Handle submission/written application"""
-        if not args or len(args) < 10:
+        if not args or len(args) < 78:
             caller.msg("Please write a more detailed application for your character. " +
                        "Your application should state how you intend to RP your character, " +
                        "your preferences in stories, the type of RP you want to seek out or " +
