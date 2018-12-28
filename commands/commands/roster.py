@@ -871,9 +871,9 @@ def display_relationships(caller, character, show_hidden=False):
                 entrylist = []
                 for entry in sorted(rel_value):
                     name, desc = entry
-                    entrystr = "%s (%s)" % (name.title(), desc)
+                    entrystr = "{g%s{n - %s" % (name.title(), desc)
                     entrylist.append(entrystr)
-                value_str = ", ".join(entrylist)
+                value_str = "%r%r ".join(entrylist)
                 disp += value_str
                 caller.msg(disp)
     if not showed_matches:
