@@ -19,16 +19,16 @@
         </form>
     </div>
     <div class="row">
-        <h3 class="text-center">{{story.name}}</h3>
+        <h1 class="text-center">{{story.name}}</h1>
         <p>{{story.synopsis|mush_to_html}}</p>
     </div>
     {% for chapter in object_list %}
     <div class="row">
-        <h1 class="text-center">Chapter {{chapter.name}}</h1>
+        <h2 class="text-center">Chapter: {{chapter.name}}</h2>
         <p>{{chapter.synopsis|mush_to_html}}</p>
         {% with episodes=chapter.episodes.all %}
         {% if episodes %}
-        <h2 class="text-center">Episodes</h2>
+        <h3 class="text-center">Episodes</h3>
         <ul class="list-inline text-center">
             {% for episode in episodes %}
             <li><a href="{% url 'character:episode' episode.id %}">{{ episode.name }}</a></li>
