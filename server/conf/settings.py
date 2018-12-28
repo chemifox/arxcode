@@ -17,7 +17,7 @@ USE_TZ = True
 ######################################################################
 if SEND_GAME_INDEX:
     GAME_INDEX_LISTING = {
-        'game_status': 'pre-alpha',
+        'game_status': 'alpha',
         # Optional, comment out or remove if N/A
         'game_website': 'http://ithirmush.org',
         'short_description': 'High fantasy MUSH in an original setting',

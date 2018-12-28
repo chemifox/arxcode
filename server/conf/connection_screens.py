@@ -20,33 +20,21 @@ from evennia import utils
 
 CONNECTION_SCREEN = \
 """{w=============================================================={n
-             Welcome to {gIthirMUSH{n
+
+                    {gWelcome to Ithir{n
+                    
+ Ithir is a high fantasy MUSH in an original setting. Please
+ visit our website at http://ithirmush.org for more info.
+                                    
 
  If you have an existing account, connect to it by typing:
-      {wconnect <username> <password>{n
+      {gconnect <username> <password>{n
       
- {rWe are not currently ready for active characters. Please come
- back at the end of December when we will be opening for our alpha
- phase of development.
+ To join the game by creating a character or choosing one
+ from our roster of characters, first login as a guest by
+ typing '{gguest{n' and then use either the {g@roster{n command,
+ or the '{g@charcreate <email>{n' command.
  
- Thanks!
- -Ithir Staff{n
- 
- {gIf you are a member of our discord group and are here to create
- your roster or OC character, please log in using the command {wguest{n
- {gto begin the pre-alpha character creation process.{n
+ Enter {whelp{n for more info. {wlook{n will re-show this screen.
  
 {w=============================================================={n"""
-
-##"""{b=============================================================={n
-## Welcome to {g%s{n, version %s!
-##
-## If you have an existing account, connect to it by typing:
-##      {wconnect <username> <password>{n
-## If you need to create an account, type (without the <>'s):
-##      {wcreate <username> <password>{n
-##
-## If you have spaces in your username, enclose it in quotes.
-## Enter {whelp{n for more info. {wlook{n will re-show this screen.
-##{b=============================================================={n""" \
-## % (settings.SERVERNAME, utils.get_evennia_version())
