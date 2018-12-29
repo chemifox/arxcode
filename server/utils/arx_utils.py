@@ -75,7 +75,7 @@ def get_date():
     """
     from typeclasses.scripts import gametime
     time = gametime.gametime(format=True)
-    month, day, year = time[1] + 1, time[3] + 1, time[0] + 1050
+    month, day, year = time[1] + 1, time[3] + 1, time[0] + 50
     day += (time[2] * 7)
     date = ("%s/%s/%s PA" % (month, day, year))
     return date
