@@ -733,7 +733,7 @@ class CmdArxSay(CmdSay):
         # Feedback for the object doing the talking.
         langstring = ""
         current = self.caller.languages.current_language
-        if current and current.lower() != "arvani":
+        if current and current.lower() != "elvish":
             langstring = " in %s" % current.capitalize()
             options.update({'language': current, 'msg_content': speech})
         self.caller.msg('You say%s, "%s{n"' % (langstring, speech), from_obj=self.caller, options=options)
