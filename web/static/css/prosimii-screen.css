@@ -243,7 +243,7 @@ dd {
   font-weight: normal;
   font-size: 125%;
   margin: 0;
-  padding: 20px;
+  padding: 5px;
   text-align: center;
 }
 
@@ -260,7 +260,7 @@ dd {
 
 #main-copy p {
     color: #8c8c8c;
-  line-height: 1.75em;
+  line-height: 1.25em;
   margin: 1em 0 1.5em 0;
   padding-left: 5%;
     text-align: left;

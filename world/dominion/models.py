@@ -3214,7 +3214,7 @@ class Organization(InformMixin, SharedMemoryModel):
         """The modifier for an org based on their total influence"""
         from math import sqrt
         influence = getattr(self, "%s_influence" % resource_name)
-        influence /= 3000
+        influence /= 1000
         if not influence:
             return 0
         sign = 1 if influence >= 0 else -1
@@ -3224,8 +3224,8 @@ class Organization(InformMixin, SharedMemoryModel):
         """Gets our percentage progress toward next modifier"""
         influence = getattr(self, "%s_influence" % resource_name)
         goal_level = self.get_modifier_from_influence(resource_name) + 1
-        influence_required = pow(goal_level, 2) * 3000
-        base = pow(goal_level - 1, 2) * 3000
+        influence_required = pow(goal_level, 2) * 1000
+        base = pow(goal_level - 1, 2) * 1000
         influence_required -= base
         influence -= base
         return round(influence/float(influence_required), 2) * 100

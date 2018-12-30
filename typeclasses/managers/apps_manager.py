@@ -119,7 +119,7 @@ class AppsManager(Object):
                 caller.msg("Email failed for unknown reason.")
                 return False
         if not approve:
-            message = "Thank you for applying to play a character on IthirArxMUSH. This email is to "
+            message = "Thank you for applying to play a character on IthirMUSH. This email is to "
             message += "inform you that unfortunately your application to play %s has been declined.\n\n" % found_app[1].key.capitalize()
             message += "Please refer to the following message for context - it may be just that the GMs "
             message += "feel more information is needed in an application, or that they feel your take on "

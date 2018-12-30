@@ -3,8 +3,8 @@
 {% block content %}
 
     <div class="text-left">
-    <a href="{% url 'dominion:list_task_stories' %}" class="btn btn-primary" role="button">Rumors/Stories</a>
-    <a href="{%  url 'dominion:create_event' %}" class="btn btn-primary" role="button">Create New Event</a>
+    <a href="{% url 'dominion:list_task_stories' %}" class="btn btn-success" role="button">Rumors/Stories</a>
+    <a href="{%  url 'dominion:create_event' %}" class="btn btn-success" role="button">Create New Event</a>
     </div>
 
     <form method="get" action="." class="navbar-form">
@@ -31,6 +31,7 @@
     </tr>
     {% for obj in view.unfinished %}
         <tr>
+        <tr bgcolor="#999999">
         <td width="25%"><a href="{% url 'dominion:display_event' obj.id %}">{{ obj.name|mush_to_html }}</a></td>
         <td width="25%">{{ obj.date }}</td>
         <td width="25%">{{ obj.location.key|mush_to_html }}</td>
@@ -49,6 +50,7 @@
     </tr>
     {% for obj in object_list %}
         <tr>
+        <tr bgcolor="#999999">
         <td width="25%"><a href="{% url 'dominion:display_event' obj.id %}">{{ obj.name|mush_to_html }}</a></td>
         <td width="25%">{{ obj.date }}</td>
         <td width="25%">{{ obj.location.key|mush_to_html }}</td>

@@ -1411,7 +1411,7 @@ class CmdRelationship(ArxPlayerCommand):
             if not rels:
                 caller.msg("No relationships in tree to change - use /sheet to add instead.")
                 return
-                oldtype, newtype = lhslist[0].lower(), lhslist[1]
+            oldtype, newtype = lhslist[0].lower(), lhslist[1]
             if newtype not in self.typelist:
                 caller.msg("Relationship must be one of the following: %s" % ", ".join(self.typelist))
                 return

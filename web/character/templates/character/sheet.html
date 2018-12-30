@@ -205,6 +205,7 @@
                 {% if show_hidden %}
                     {% for impression in character.roster.public_impressions_of_me %}
                         <tr>
+                          <tr bgcolor="#999999">
                         <td width="20%">{{ impression.writer }}</td>
                         <td width="80%">{{ impression.summary }}</td>
                         </tr>
