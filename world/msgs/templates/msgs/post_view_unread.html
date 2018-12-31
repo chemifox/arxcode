@@ -4,8 +4,8 @@
 {% for post in posts %}
 <div class="container">
 	<h2>{{ post.board }}: {{ post.subject }}</h2>
-	<div class="newsData">Posted by <b>{{ post.poster }}</b> on {{ post.date }}</div>
-	<div class="well"><span style="font-family: monospace;">{{ post.text|mush_to_html|urlize }}</span></div>
+	<p class="newsData">Posted by <b>{{ post.poster }}</b> on {{ post.date }}</p>
+	<p class="well">{{ post.text|mush_to_html|urlize }}</p>
 </div>
 {% endfor %}
 {% endblock %}
