@@ -1921,10 +1921,10 @@ class CmdPraise(ArxPlayerCommand):
         praise/all <character>[=<message>]
         praise/org <org>[,<num praises>][=<message>]
 
-    Praises a character, increasing their prestige. Your number
-    of praises per week are based on your social rank and skills.
-    Using praise with no arguments lists your praises. Costs 1 AP
-    regardless of how many praises are used.
+    Praises a character, give them the recognition they deserve!
+    Your number of praises per week are based on your social rank
+    and skills. Using praise with no arguments lists your praises.
+    Costs 1 AP regardless of how many praises are used.
 
     Praises for orgs work a little differently. It may only be used
     for an organization sponsoring an event while you are in attendance,
