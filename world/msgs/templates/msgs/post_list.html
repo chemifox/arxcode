@@ -16,10 +16,11 @@
 		</tr>
         {% for post in posts %}
         <tr>
-            <td>
-                {% if post.unread %}<b>{% endif %}
+            <tr bgcolor="#999999">
+                <td>{% if post.unread %}<b>{% endif %}
                 <a href="{% url 'msgs:post_view' board_id=board.id post_id=post.id %}">{{ post.subject }}</a>
                 {% if post.unread %}</b>{% endif %}
+                </td>
             </td>
             <td>{{ post.poster }}</td>
             <td>{{ post.date }}</td>
@@ -28,3 +29,4 @@
     </table>
 </div>
 {% endblock %}
+

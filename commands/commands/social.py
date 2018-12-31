@@ -3113,14 +3113,14 @@ class CmdFirstImpression(ArxCommand):
     requires you to be in the same room, as a small reminder that this
     should take place after an RP scene.
 
-    The summary should be an IC account. If it is private, it is treated
-    as a black journal entry only to yourself. If it is not private, but
-    marked without the 'all' switch, it is treated as a privately conferred
-    note. If both players choose to share/publish it, it is treated as
-    a white journal. You can choose not to send an inform of what you wrote
-    if you use the /private switch, or choose not to send an inform at all
-    with the /quiet switch. Using /all will mean everyone can see it. If no
-    switches are used, only the receiver can see it.
+    The summary should be an IC account. If it is set to private, only you
+    and staff will be able to see it. If it is not private, but marked
+    without the 'all' switch, it is treated as a privately conferred
+    note. If both players choose to share/publish it, it will become public.
+    You can choose not to send an inform of what you wrote if you use the
+    /private switch, or choose not to send an inform at all with the /quiet
+    switch. Using /all will mean everyone can see it. If no switches are used,
+    only the receiver can see it.
 
     /toggleprivate and /share determines who can view the first
     impression you write. A private first impression isn't viewable

@@ -8,7 +8,9 @@
 {% endblock %}
 
 {% block content %}
-<h1 id="alt-layout">{{news_entry.topic.name}}: {{news_entry.title}}</h1>
-    <p class="newsDate">By {{news_entry.author.username}} on {{news_entry.date_posted}}</p>
-	<div class="well">{{news_entry.body|linebreaks}}</div>
+    <div class="container">
+        <h1 id="alt-layout">{{news_entry.topic.name}}: {{news_entry.title}}</h1>
+        <p class="newsDate">By {{news_entry.author.username}} on {{news_entry.date_posted}}</p>
+	    <div class="well">{{news_entry.body|linebreaks}}</div>
+    </div>
 {% endblock %}

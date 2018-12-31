@@ -872,7 +872,7 @@ class PraiseOrCondemn(SharedMemoryModel):
         """Adjusts the prestige of the target after they're praised."""
         self.target.adjust_prestige(self.value)
         msg = "%s has %s you. " % (self.praiser, self.verb)
-        msg += "Your prestige has been adjusted by %s." % self.value
+        #msg += "Your prestige has been adjusted by %s." % self.value
         self.target.inform(msg, category=self.verb.capitalize())
 
 
@@ -933,13 +933,13 @@ class CharitableDonation(SharedMemoryModel):
                 val = affection
                 msg += "You gain %s affection with %s.\n" % (val, self.organization)
             self.organization.assets.adjust_prestige(prest)
-            msg += "%s has gained %s prestige.\n" % (self.organization, prest)
+            #msg += "%s has gained %s prestige.\n" % (self.organization, prest)
         if caller != character:
-            caller.msg("You donated and they gain %s prestige." % prest)
-            msg += "You gain %s prestige." % prest
+            #caller.msg("You donated and they gain %s prestige." % prest)
+            #msg += "You gain %s prestige." % prest
             player.inform(msg)
         else:
-            msg += "You gain %s prestige." % prest
+            #msg += "You gain %s prestige." % prest
             player.msg(msg)
         return prest
 
@@ -4849,7 +4849,7 @@ class Member(SharedMemoryModel):
             current = getattr(self.organization, "%s_influence" % resource_type)
             setattr(self.organization, "%s_influence" % resource_type, current + org_amount)
             self.organization.save()
-        msg += "\nYou and %s both gain %d prestige." % (self.organization, prestige)
+        #msg += "\nYou and %s both gain %d prestige." % (self.organization, prestige)
         self.player.assets.adjust_prestige(prestige)
         self.organization.assets.adjust_prestige(prestige)
         msg += "\nYou have increased the %s influence of %s by %d." % (resource_type, self.organization, org_amount)

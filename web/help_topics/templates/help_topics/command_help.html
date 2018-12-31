@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 {% load app_filters %}
 {% block content %}
+    <div class="container">
     {% for match in matches %}
   <h1><center>{{ match.key }}</center></h1>
   <p>{{ match|doc_str|mush_to_html|urlize }}</p>
     {% endfor %}
+    </div>
 {% endblock %}

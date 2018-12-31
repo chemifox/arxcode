@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load app_filters %}
 {% block content %}
-
+<div class="container">
     <div class="text-left">
     <a href="{% url 'dominion:list_task_stories' %}" class="btn btn-success" role="button">Rumors/Stories</a>
     <a href="{%  url 'dominion:create_event' %}" class="btn btn-success" role="button">Create New Event</a>
@@ -89,6 +89,7 @@
                 {% endif %}
             </ul>
     </div>
+        </div>
     {% endif %}
 
 
