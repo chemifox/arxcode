@@ -928,8 +928,7 @@ class CmdMessenger(ArxCommand):
         unread = caller.messages.pending_messengers
         read = caller.messages.messenger_history
         if not (read or unread):
-            caller.msg("You have no messengers waiting for you, and have never received any messengers." +
-                       " {wEver{n. At all. Not {rone{n.")
+            caller.msg("You have no messengers waiting for you.")
         if read:
             caller.msg("You have {w%s{n old messages you can re-read." % len(read))
         if unread:
@@ -2512,7 +2511,7 @@ class CmdRandomScene(ArxCommand):
     help_category = "Social"
     NUM_SCENES = 3
     NUM_DAYS = 3
-    DAYS_FOR_NEWBIE_CHECK = 14
+    DAYS_FOR_NEWBIE_CHECK = 0
 
     @property
     def scenelist(self):
@@ -3250,8 +3249,8 @@ class CmdFirstImpression(ArxCommand):
                     return
                 impression.receiver_share = True
                 impression.save()
-                # self.caller.adjust_xp(1)
-                # self.msg("You have marked %s's impression of you public, and received 1 xp." % targ)
+                self.caller.adjust_xp(0)
+                self.msg("You have marked %s's impression of you public." % targ)
                 return
             try:
                 impression = self.imps_by_me.get(to_account=hist)
@@ -3276,8 +3275,8 @@ class CmdFirstImpression(ArxCommand):
                     return
                 impression.writer_share = True
                 impression.save()
-                # self.caller.adjust_xp(1)
-                # self.msg("You have marked your impression as publicly viewable and gained 1 xp.")
+                self.caller.adjust_xp(0)
+                self.msg("You have marked your impression as publicly viewable.")
                 return
             return
         # check if the target has written a first impression of us. If not, we'll need to be in the same room
