@@ -621,7 +621,7 @@ class Character(UseEquipmentMixins, NameMixins, MsgMixins, ObjectMixins, Default
     @property
     def max_guards(self):
         try:
-            return 15 - (self.db.social_rank or 10)
+            return 5
         except TypeError:
             return 5
 

@@ -118,20 +118,22 @@ def setup_voc(char, args):
     if args in CRAFTING_ABILITIES:
         char.db.abilities = {args: 3}
 
+
 STAT_POINTS = 12
 SKILL_POINTS = 20
 CONCEPT_MAX_LEN = 30
 DESC_MIN_LEN = 200
 DESC_MAX_LEN = 1000
 
-XP_BONUS_BY_SRANK = {2: 0,
-                     3: 20,
-                     4: 40,
+XP_BONUS_BY_SRANK = {1: 60,
+                     2: 60,
+                     3: 60,
+                     4: 60,
                      5: 60,
-                     6: 80,
-                     7: 120,
-                     8: 160,
-                     9: 200,
+                     6: 60,
+                     7: 60,
+                     8: 60,
+                     9: 60,
                      }
 
 XP_BONUS_BY_POP = 1

@@ -112,23 +112,15 @@ class CmdAdmDomain(ArxPlayerCommand):
                 return
             if len(self.rhslist) > 1:
                 region = self.rhslist[0]
-                srank = self.rhslist[1]
             else:
                 region = self.rhs
-                srank = char.db.social_rank
             # Get our social rank and region from rhs arguments
             try:
-                srank = int(srank)
                 region = Region.objects.get(name__iexact=region)
-            except ValueError:
-                caller.msg("Character's Social rank must be a number. It was %s." % srank)
-                return
             except Region.DoesNotExist:
                 caller.msg("No region found of name %s." % self.rhslist[0])
                 caller.msg("List of regions: %s" % ", ".join(str(region) for region in Region.objects.all()))
                 return
-            # we will only create an npc liege if our social rank is 4 or higher
-            create_liege = srank > 3
             # The player has no Dominion object, so we must create it.
             if not hasattr(player, 'Dominion'):
                 caller.msg("Creating a new domain of rank %s for %s." % (srank, char))

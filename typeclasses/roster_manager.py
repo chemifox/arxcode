@@ -227,8 +227,7 @@ class RosterManager(Object):
         return True
         
     def search_by_filters(self, list_of_filters, roster_type = "active",
-                          concept="None", fealty="None", social_rank = "None",
-                          family="None"):
+                          concept="None", fealty="None", family="None"):
         """
         Looks through the active characters and returns all who match
         the filters specified. Filters include: male, female, young, adult,
@@ -262,22 +261,22 @@ class RosterManager(Object):
 
             if filter == "young":
                 for char in char_list:
-                    if char.db.age > 20:
+                    if char.db.age > 99:
                         match_set.discard(char)
 
             if filter == "adult":
                 for char in char_list:
-                    if  char.db.age >= 40 or char.db.age < 21:
+                    if  char.db.age >= 100 or char.db.age < 399:
                         match_set.discard(char)
 
             if filter == "mature":
                 for char in char_list:
-                    if char.db.age < 40 or char.db.age >= 60:
+                    if char.db.age < 400 or char.db.age >= 600:
                         match_set.discard(char)
 
             if filter == "elder":
                 for char in char_list:
-                    if char.db.age < 60:
+                    if char.db.age < 700:
                         match_set.discard(char)
 
             if filter == "concept":
@@ -288,14 +287,6 @@ class RosterManager(Object):
             if filter == "fealty":
                 for char in char_list:
                     if fealty.lower() not in char.db.fealty.lower():
-                        match_set.discard(char)
-
-            if filter == "social rank":
-                for char in char_list:
-                    try:
-                        if int(social_rank) != int(char.db.social_rank):
-                            match_set.discard(char)
-                    except:
                         match_set.discard(char)
 
             if filter == "married":

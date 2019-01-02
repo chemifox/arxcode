@@ -121,7 +121,6 @@ class EffectTrigger(SharedMemoryModel):
 
     PRESTIGE_RANK = 0
     PRESTIGE_VALUE = 1
-    SOCIAL_RANK = 2
     TAG_NAME = 3
     ORG_NAME_AND_RANK_RANGE = 4
     CURRENT_HEALTH_PERCENTAGE = 5
@@ -129,7 +128,6 @@ class EffectTrigger(SharedMemoryModel):
     CONDITIONAL_CHECK_CHOICES = (
         (PRESTIGE_RANK, "Prestige Rank"),
         (PRESTIGE_VALUE, "Prestige Value"),
-        (SOCIAL_RANK, "Social Rank"),
         (ORG_NAME_AND_RANK_RANGE, "Org Name and Rank Range"),
         (CURRENT_HEALTH_PERCENTAGE, "Current Health %"),
         (CHANGE_AMOUNT, "Change Amount")
@@ -209,11 +207,6 @@ class EffectTrigger(SharedMemoryModel):
                 if prest < self.min_value or prest > self.max_value:
                     triggered = False
             except (AttributeError, ValueError, TypeError):
-                triggered = False
-        elif self.conditional_check == self.SOCIAL_RANK:
-            # see if their social rank doesn't fall within the range
-            s_rank = target.db.social_rank
-            if not s_rank or s_rank > self.max_value or s_rank < self.min_value:
                 triggered = False
         elif self.conditional_check == self.TAG_NAME:
             # see if the target doesn't have the right tag

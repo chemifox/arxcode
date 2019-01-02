@@ -2031,8 +2031,7 @@ class CmdPraise(ArxPlayerCommand):
         """Calculates how many praises character has"""
         char = self.caller.char_ob
         clout = char.social_clout
-        s_rank = char.db.social_rank or 10
-        return clout + ((8 - s_rank) / 2)
+        return clout + 10
 
     @property
     def current_used(self):
