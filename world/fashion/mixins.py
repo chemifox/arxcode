@@ -46,9 +46,9 @@ class FashionableMixins(object):
             ret += "\n%s" % mod
         return ret
 
-    def invalidate_snapshots_cache(self):
-        """Clears cached snapshots"""
-        self.ndb.snapshots_cache = None
+#    def invalidate_snapshots_cache(self):
+#        """Clears cached snapshots"""
+#        self.ndb.snapshots_cache = None
 
     @property
     def item_worth(self):

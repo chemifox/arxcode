@@ -39,7 +39,7 @@ class Wearable(Object):
             if outfit.pk:
                 outfit.invalidate_outfit_caches()
                 outfit.check_existence()
-        self.invalidate_snapshots_cache()
+#       self.invalidate_snapshots_cache()
         super(Wearable, self).softdelete()
 
     def at_before_move(self, destination, **kwargs):

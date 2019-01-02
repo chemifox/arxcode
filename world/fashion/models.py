@@ -137,9 +137,9 @@ class FashionOutfit(FashionCommonMixins):
             self.delete()
 
     def delete(self, *args, **kwargs):
-        for item in self.fashion_items.all():
-            if item.pk:
-                item.invalidate_snapshots_cache()
+#        for item in self.fashion_items.all():
+#            if item.pk:
+#                item.invalidate_snapshots_cache()
         super(FashionOutfit, self).delete(*args, **kwargs)
 
     def add_fashion_item(self, item, slot=None):
@@ -429,10 +429,10 @@ class FashionSnapshot(FashionCommonMixins):
         self.invalidate_fashion_caches()
         super(FashionSnapshot, self).delete(*args, **kwargs)
 
-    def invalidate_fashion_caches(self):
-        if self.outfit:
-            self.outfit.invalidate_outfit_caches()
-        self.fashion_item.invalidate_snapshots_cache()
+#    def invalidate_fashion_caches(self):
+#        if self.outfit:
+#            self.outfit.invalidate_outfit_caches()
+#        self.fashion_item.invalidate_snapshots_cache()
 
     def roll_for_prestige(self):
         """

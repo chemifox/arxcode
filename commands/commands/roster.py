@@ -947,10 +947,6 @@ class CmdSheet(ArxPlayerCommand):
     Usage:
         @sheet <character name>
         @sheet/social <character name>
-        @sheet/relationships <character name>
-        @sheet/relationships <character>=<other character>
-        @sheet/privaterels <character name>
-        @sheet/privaterels <character name>=<other character>
         @sheet/secrets
         @sheet/visions
         @sheet/actions <character>=<#>
@@ -1061,51 +1057,7 @@ class CmdSheet(ArxPlayerCommand):
             elif "recognition" in switches:
                 display_recognition(caller, charob)
             return
-        if 'relationships' in self.switches or 'privaterels' in self.switches:
-            targ = None
-            if self.rhs:
-                targ = caller.search(self.rhs)
-                if not targ:
-                    return
-                targ = targ.char_ob
-            if not self.lhs:
-                char = caller
-            else:
-                char = caller.search(self.lhs)
-            if not char:
-                return
-            char = char.char_ob
-            if not char:
-                caller.msg("No character found.")
-                return
-            journal = char.messages.white_relationships if 'privaterels' not in self.switches else \
-                char.messages.black_relationships
-            jname = "White Journal" if 'privaterels' not in self.switches else "Black Journal"
-            if not targ:
-                # we just display the most recent relationship status for each character
-                caller.msg("Relationships you are permitted to read in {c%s{n's %s:" % (char, jname))
-                for name in journal:
-                    msglist = journal[name]
-                    msglist = [msg for msg in msglist if msg.access(caller, 'read')]
-                    if not msglist:
-                        continue
-                    msg = msglist[0]
-                    caller.msg("\nMost recent relationship note on %s:" % name)
-                    caller.msg(char.messages.disp_entry(msg))
-                    # add viewer to receivers
-                    msg.receivers = caller
-                return
-            caller.msg("Relationship notes you are permitted to read for {c%s{n in {c%s{n's %s:" % (targ, char, jname))
-            msglist = [_msg for _msg in journal.get(targ.key.lower(), []) if _msg.access(caller, 'read')]
-            if not msglist:
-                caller.msg("No entries for %s." % targ)
-                return
-            for msg in msglist:
-                caller.msg("\n" + char.messages.disp_entry(msg))
-                msg.receivers = caller
-            return
-        caller.msg("Usage: @sheet/switches <character>")
-        return
+
 
     def get_character(self, check_storyactions=False):
         """
