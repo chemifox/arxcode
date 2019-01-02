@@ -97,7 +97,8 @@
     td { text-align:center }
 	th { text-align:center}
     </style>
-    
+
+    <div class="container">
     <table class="table table-bordered">
     <caption><h2 class="text-center">Stats</h2></caption>
       <thead>
@@ -145,6 +146,7 @@
         </tr>
       </tbody>
     </table>
+    </div>
 
     <h2 class="text-center">Skills</h2>
     <ul class="list-inline text-center">
@@ -179,25 +181,26 @@
 	-->
     <div class="row">
         <div class="col-sm-3 text-center">
-            <h1 class="text-center"><a href="{% url 'character:gallery' character.id %}"><span class="label label-success">Gallery</span></a></h1>
+            <h3 class="text-center"><a href="{% url 'character:gallery' character.id %}"><span class="label label-success">Gallery</span></a></h3>
             </div>
         <div class="col-sm-3 text-center">
-            <h1 class="text-center"><a href="{% url 'character:character_story' character.id %}"><span class="label label-success">Past Actions</span></a></h1>
+            <h3 class="text-center"><a href="{% url 'character:character_story' character.id %}"><span class="label label-success">Past Actions</span></a></h3>
             </div>
         {% if show_hidden %}
             <div class="col-sm-3 text-center">
-                <h1 class="text-center"><a href="{% url 'character:list_flashbacks' character.id %}">
-                    <span class="label label-success">Flashbacks</span></a></h1></div>
+                <h3 class="text-center"><a href="{% url 'character:list_flashbacks' character.id %}">
+                    <span class="label label-success">Flashbacks</span></a></h3></div>
             <div class="col-sm-3 text-center">
-                <h1 class="text-center"><a href="{% url 'character:list_clues' character.id %}">
-                    <span class="label label-success">Clues</span></a></h1></div>
+                <h3 class="text-center"><a href="{% url 'character:list_clues' character.id %}">
+                    <span class="label label-success">Clues</span></a></h3></div>
         {% endif %}
     </div>
       <br></br>
-    <div class="row">
+
+    <div class="container">
         <div>
             <button type="button" class="btn btn-success" data-toggle="collapse" data-target="#Impressions">
-            <h2>First Impressions</h2></button>
+            <h3>First Impressions</h3></button>
             <div id="Impressions" class="collapse">
                 <table class="table table-hover">
                 <tr bgcolor="#336666">
