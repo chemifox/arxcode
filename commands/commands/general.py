@@ -1749,6 +1749,10 @@ class CmdTimeZone(ArxCommand):
     +timezone/list will display the list of available timezones in a numbered list.
     +timezone/set will set the timezone to the designated number from the list
 
+    Example:
+        Setting US/Eastern timezone
+        +timezone/set 4
+
     """
     key = "+timezone"
     locks = "cmd:all()"
@@ -1778,7 +1782,7 @@ class CmdTimeZone(ArxCommand):
                 return
             choice = int(self.args)
             if choice < 0 or choice > len(zonelist):
-		caller.msg("Choice: %s " % choice)
+                caller.msg("Choice: %s " % choice)
                 caller.msg("Please select from timezones in list.  See +timezone/list")
                 return
             choice = choice - 1
