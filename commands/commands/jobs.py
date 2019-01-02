@@ -123,14 +123,16 @@ class CmdJob(ArxPlayerCommand):
                                          "{wPlayer",
                                          "{wRequest",
                                          "{wPriority",
-                                         "{wQueue"])
+                                         "{wQueue",
+                                         "{wAssigned"])
         for ticket in joblist:
             if ticket.priority == 1:
                 prio = "{r%s{n" % ticket.priority
             else:
                 prio = "{w%s{n" % ticket.priority
             q = Queue.objects.get(id=ticket.queue_id)
-            table.add_row([str(ticket.id), str(ticket.submitting_player.key), str(ticket.title)[:20], prio, q.slug])
+            table.add_row([str(ticket.id), str(ticket.submitting_player.key), str(ticket.title)[:20], prio, q.slug,
+                           str(ticket.assigned_to)])
         self.msg("{wOpen Tickets:{n\n%s" % table)
 
     def func(self):

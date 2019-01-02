@@ -236,9 +236,8 @@ class CmdBBReadOrPost(ArxPlayerCommand):
        @bb/sticky <board # or name>/<post #>
        @bb/edit <board # or name>/<post #>=<message> - edit
        @bb/post <board # or name>/<title>=<message> - make a post
-       @bb/catchup - alias for +bbnew/markread command
-       @bb/new - alias for the +bbnew command
-
+       @bbnew - retrieve all unread posts
+       @bbnew all[=<board num>] - retrieve all posts
 
     Bulletin Boards are intended to be OOC discussion groups divided
     by topic for news announcements, requests for participants in
