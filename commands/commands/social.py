@@ -2646,9 +2646,8 @@ class CmdRandomScene(ArxCommand):
         else:
             msg += "\n{yReminder: Please only /claim those you have interacted with significantly in a scene.{n"
         if claimlist:
-            msg += "\n{wThose you have already RP'd with this week:{n "
-            masked = dict(self.masked_validated_list)
-            msg += list_to_string([ob.key if ob not in masked else masked[ob] for ob in validated])
+            msg += "\n{wThose you have already RP'd with:{n "
+            msg += list_to_string([ob.key for ob in claimlist])
         if validated:
             msg += "\n{wThose you have validated scenes for this week:{n "
             msg += list_to_string([ob.key for ob in validated])
