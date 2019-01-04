@@ -135,6 +135,8 @@ class Account(InformMixin, MsgMixins, DefaultAccount):
         self.attributes.remove("pending_messages")
         if self.assigned_to.filter(status=1, priority__lte=5):
             self.msg("{yYou have unresolved tickets assigned to you. Use @job/mine to view them.{n")
+        #some day this will be a function that knows when there are apps in the queue
+            #self.msg("{cThere are new apps to review.{n")
         self.check_motd()
         self.check_petitions()
         # in this mode we should have only one character available. We

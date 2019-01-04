@@ -4985,9 +4985,7 @@ class Member(SharedMemoryModel):
         except Reputation.DoesNotExist:
             rep = None
         msg = "\n{wRank{n: %s" % self.rank
-        msg += "\n{wSupport Pool Share{n: %s/%s" % (poolshare - used, poolshare)
         msg += "\n{wTotal Work{n: %s" % self.work_total
-        msg += "\n{wTasks Completed{n: %s, {wTotal Rating{n: %s" % (tasks.count(), sum(task.total for task in tasks))
         if rep:
             msg += "\n{wReputation{n: {wAffection{n: %s, {wRespect:{n %s" % (rep.affection, rep.respect)
         return msg

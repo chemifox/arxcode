@@ -280,7 +280,8 @@ def list_topics(request):
     # organizations also
     from django.db.models import Q
     all_orgs = Organization.objects.filter(Q(secret=False) & Q(members__deguilded=False) &
-                                           Q(members__player__player__isnull=False)).distinct().order_by('name')
+                                           Q(members__player__player__isnull=False)).distinct().order_by('category',
+                                                                                                         'id')
     secret_orgs = []
     # noinspection PyBroadException
     try:

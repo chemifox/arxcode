@@ -314,7 +314,7 @@ class CmdRequest(ArxPlayerCommand):
     """
     key = "+request"
     aliases = ["@request", "+requests", "@requests", "+911", "+ineedanadult",
-               "bug", "typo", "+featurerequest", "+prprequest"]
+               "bug", "typo", "+featurerequest", "+prprequest", "prprequest", "featurerequest"]
     help_category = "Admin"
     locks = "cmd:all()"
 
