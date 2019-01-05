@@ -173,7 +173,7 @@ class CmdInventory(ArxCommand):
             soc = player.Dominion.assets.social
             mil = player.Dominion.assets.military
             msg += "\n{wResources           {wSocial Scores"
-            msg += "\n{wEconomic:{n %-10s"         "{wSocial Clout:{n   %-10s" % (econ, char.social_clout)
+            msg += "\n{wEconomic:{n %-10s"         "{wInfluence:{n   %-10s" % (econ, char.social_clout)
             msg += "\n{wMilitary:{n %-10s" % (mil)
             msg += "\n{wSocial:{n   %s" % (soc)
             mats = player.Dominion.assets.materials.filter(amount__gte=1)

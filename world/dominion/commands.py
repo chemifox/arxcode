@@ -3507,7 +3507,7 @@ class CmdWork(ArxPlayerCommand):
     Military: command + war
     Social: charm + diplomacy
 
-    Social clout lowers the difficulty and increases results.
+    Influence lowers the difficulty and increases results.
     """
     key = "work"
     help_category = "Dominion"

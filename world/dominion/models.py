@@ -4762,7 +4762,7 @@ class Member(SharedMemoryModel):
         """
         resource_type = resource_type.lower()
         clout = self.char.social_clout
-        msg = "Your social clout "
+        msg = "Your Influence "
         protege_clout = 0
         if protege:
             protege_clout = protege.player.char_ob.social_clout
@@ -4822,7 +4822,7 @@ class Member(SharedMemoryModel):
         """
         resource_type = resource_type.lower()
         clout = self.char.social_clout
-        msg = "Your social clout "
+        msg = "Your Influence "
         protege_clout = 0
         if protege:
             protege_clout = protege.player.char_ob.social_clout
