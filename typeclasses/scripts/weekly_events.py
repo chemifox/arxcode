@@ -25,7 +25,7 @@ from web.character.models import Investigation, RosterEntry
 
 EVENT_SCRIPT_NAME = "Weekly Update"
 # VOTES_BOARD_NAME = 'Votes'
-PRESTIGE_BOARD_NAME = 'Prestige Changes'
+PRESTIGE_BOARD_NAME = 'Weekly Praises'
 TRAINING_CAP_PER_WEEK = 10
 
 PLAYER_ATTRS = ("votes", 'claimed_scenelist', 'random_scenelist', 'validated_list', 'praises', 'condemns',
@@ -123,7 +123,7 @@ class WeeklyEvents(RunDateMixin, Script):
         self.award_scene_xp()
         # self.award_vote_xp()
         # self.post_top_rpers()
-        # self.post_top_prestige()
+        self.post_top_prestige()
         # dominion stuff
         self.do_dominion_events()
         # self.do_investigations()
@@ -549,7 +549,7 @@ class WeeklyEvents(RunDateMixin, Script):
 
         sorted_praises = sorted(praises.items(), key=lambda x: get_total_from_list(x[1]), reverse=True)
         sorted_praises = sorted_praises[:20]
-        table = EvTable("{wName{n", "{wValue{n", "{wMsg{n", border="cells", width=78)
+        table = EvTable("{wName{n", "{wMsg{n", border="cells", width=78)
         for tup in sorted_praises:
             praise_messages = [ob.message for ob in tup[1] if ob.message]
             selected_message = ""
@@ -562,34 +562,8 @@ class WeeklyEvents(RunDateMixin, Script):
         prestige_msg = "{wMost Praised this week{n".center(72)
         prestige_msg = "%s\n%s" % (prestige_msg, str(table).lstrip())
         prestige_msg += "\n\n"
-        try:
-            # sort by our prestige change amount
-            sorted_changes = sorted(total_values.items(), key=lambda x: abs(x[1]), reverse=True)
-            sorted_changes = sorted_changes[:20]
-            table = EvTable("{wName{n", "{wPrestige Change Amount{n", "{wPrestige Rank{n", border="cells", width=78)
-            rank_order = list(AssetOwner.objects.filter(player__player__roster__roster__name="Active").distinct())
-            rank_order = sorted(rank_order, key=lambda x: x.prestige, reverse=True)
-            for tup in sorted_changes:
-                # get our prestige ranking compared to others
-                owner = tup[0]
-                try:
-                    rank = rank_order.index(owner) + 1
-                except ValueError:
-                    # they rostered mid-week or whatever, skip them
-                    continue
-                # get the amount that our prestige has changed. add + for positive
-                amt = tup[1]
-                if amt > 0:
-                    amt = "+%s" % amt
-                table.add_row(owner, amt, rank)
-            prestige_msg += "\n\n"
-            prestige_msg += "{wTop Prestige Changes{n".center(72)
-            prestige_msg = "%s\n%s" % (prestige_msg, str(table).lstrip())
-        except (AttributeError, ValueError, TypeError):
-            import traceback
-            traceback.print_exc()
-        board.bb_post(poster_obj=self, msg=prestige_msg, subject="Weekly Praises/Condemns", poster_name="Prestige")
-        inform_staff("Praises/condemns tally complete. Posted on %s." % board)
+        board.bb_post(poster_obj=self, msg=prestige_msg, subject="Weekly Praises", poster_name="Praises")
+        inform_staff("Praises tally complete. Posted on %s." % board)
 
     def record_awarded_values(self):
         """Makes a record of all values for this week for review, if necessary"""
