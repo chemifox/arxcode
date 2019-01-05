@@ -58,15 +58,13 @@ def list_characters(caller, character_list, roster_type="Active Characters", ros
                                              "{wAge",
                                              "{wFealty{n",
                                              "{wConcept{n",
-                                             "{wSR{n",
                                              "{wIdle{n"])
         else:
             table = prettytable.PrettyTable(["{wName #",
                                              "{wSex",
                                              "{wAge",
                                              "{wFealty{n",
-                                             "{wConcept{n",
-                                             "{wSR{n"])
+                                             "{wConcept{n"])
         for char in character_list:
             try:
                 if use_keys:
@@ -83,7 +81,6 @@ def list_characters(caller, character_list, roster_type="Active Characters", ros
             age = "-"
             house = "-"
             concept = "-"
-            srank = "-"
             afk = "-"
             # check if the name matches anything in the hidden characters list
             hide = False
@@ -117,17 +114,14 @@ def list_characters(caller, character_list, roster_type="Active Characters", ros
                 concept = charob.db.concept
                 if not concept or hide:
                     concept = "-"
-                srank = charob.db.social_rank
-                if not srank or hide:
-                    srank = "-"
                 if not titles or hide:
                     name = "{c" + name + "{n"
                 if display_afk:
                     afk = utils.time_format(charob.idle_time)
             if display_afk:
-                table.add_row([name, sex, age, house, concept[:25], srank, afk])
+                table.add_row([name, sex, age, house, concept[:25], afk])
             else:
-                table.add_row([name, sex, age, house, concept[:30], srank])
+                table.add_row([name, sex, age, house, concept[:30]])
         message += "\n%s" % table                
     message += "\n"
     arx_more.msg(caller, message, justify_kwargs=False)
@@ -334,11 +328,10 @@ class CmdRosterList(ArxPlayerCommand):
         family = filter_dict.get('family', "None")
         fealty = filter_dict.get('fealty', "None")
         concept = filter_dict.get('concept', "None")
-        social_rank = filter_dict.get('social rank', "None")
         if 'all' in switches:
-            match_list = roster.search_by_filters(lhslist, "active", concept, fealty, social_rank, family)
+            match_list = roster.search_by_filters(lhslist, "active", concept, fealty, family)
             list_characters(caller, match_list, "Active Characters", roster, False)
-        match_list = roster.search_by_filters(lhslist, "available", concept, fealty, social_rank, family)
+        match_list = roster.search_by_filters(lhslist, "available", concept, fealty, family)
         list_characters(caller, match_list, "Available Characters", roster, False)
         return
 
@@ -590,9 +583,6 @@ def display_header(caller, character, show_hidden=False):
     else:
         quote = '"' + quote + '"'
         quote = quote.center(60)
-    srank = character.db.social_rank
-    if not srank:
-        srank = "Unknown"
     concept = character.db.concept
     if not concept:
         concept = "Unknown"
@@ -637,14 +627,14 @@ def display_header(caller, character, show_hidden=False):
 {w%(longname)s{n
 %(quote)s
 {w==================================================================={n
-{wSocial Rank:{n %(srank)-20s {wConcept:{n %(concept)-20s
+{wConcept:{n %(concept)-20s
 {wFealty:{n %(fealty)-25s {wFamily:{n %(family)-20s
 {wGender:{n %(gender)-25s {wAge:{n %(age)-20s
 {wBirthday:{n %(birth)-23s {wPatron:{n %(patron)-20s
 {wVocation:{n %(vocation)-23s {wHeight:{n %(height)-20s
 {wEye Color:{n %(eyecolor)-22s {wHair Color:{n %(haircolor)-20s
 {wSkin Tone:{n %(skintone)-22s {wMarital Status:{n %(marital_status)-20s
-        """ % {'longname': longname, 'quote': utils.fill(quote), 'srank': srank,
+        """ % {'longname': longname, 'quote': utils.fill(quote),
                'concept': concept, 'fealty': fealty, 'family': family,
                'gender': gender, 'age': age, 'birth': birth, 'patron': patron,
                'vocation': vocation, 'height': height, 'eyecolor': eyecolor,

@@ -64,7 +64,7 @@ class ArxRosterManager(models.Manager):
 
     @staticmethod
     def search_by_filters(list_of_filters, roster_type="active",
-                          concept="None", fealty="None", social_rank="None",
+                          concept="None", fealty="None",
                           family="None"):
         """
         Looks through the active characters and returns all who match
@@ -110,13 +110,6 @@ class ArxRosterManager(models.Manager):
             if char_filter == "fealty":
                 for char in char_list:
                     if not char.db.fealty or fealty.lower() not in char.db.fealty.lower():
-                        match_set.discard(char)
-            if char_filter == "social rank":
-                for char in char_list:
-                    try:
-                        if int(social_rank) != int(char.db.social_rank):
-                            match_set.discard(char)
-                    except (TypeError, ValueError, AttributeError):
                         match_set.discard(char)
             if char_filter == "married":
                 for char in char_list:

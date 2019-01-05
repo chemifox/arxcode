@@ -34,16 +34,9 @@ def setup_assets(dompc, amt):
     return AssetOwner.objects.create(player=dompc, vault=amt)
 
 
-def starting_money(srank):
-    try:
-        srank = int(srank)
-        if srank > 10 or srank < 1:
-            raise TypeError
-    except TypeError:
-        print "Invalid Social rank. Using rank 10 as a default."
-        srank = 10
-    val = 11 - srank
-    return val * val * val
+def starting_money():
+    smoney = 1000
+    return smoney
 
 
 def get_domain_resources(area):
@@ -472,7 +465,7 @@ def setup_dom_for_char(character, create_dompc=True, create_assets=True,
     if not srank:
         srank = character.db.social_rank
     if create_assets:
-        amt = starting_money(srank)
+        amt = starting_money()
         setup_assets(dompc, amt)
     # if region is provided, we will setup a domain unless explicitly told not to
     if create_domain and region:       
@@ -515,7 +508,7 @@ def setup_dom_for_npc(name, srank, gender='male', region=None, ruler=None,
     else:
         male = True
     domnpc, _ = PlayerOrNpc.objects.get_or_create(npc_name=name)
-    setup_assets(domnpc, starting_money(srank))
+    setup_assets(domnpc, starting_money())
     if create_domain and region:
         setup_domain(domnpc, region, srank, male, ruler)
 

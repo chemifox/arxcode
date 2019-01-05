@@ -33,7 +33,7 @@ CMD_NOMATCH = syscmdkeys.CMD_NOMATCH
 _vocations_ = ("highborn", "soldier", "knight", "priest", "scholar", "lawyer", "steward", "hunter", "scout", "archer",
                "mage", "explorer", "sailor", "beastmaster", "evocationist", "abjurationist", "spellblade")
 _stage3_fields_ = ("concept", "gender", "age", "fealty", "family", "patron", "desc", "personality", "background",
-                   "marital_status", "quote", "birthday", "social_rank", "skintone", "eyecolor", "haircolor", "height")
+                   "marital_status", "quote", "birthday", "skintone", "eyecolor", "haircolor", "height")
 _valid_fealty_ = ("Aeran", "Duindar", "Faenor", "Lorandi", "Thalerith")
 _valid_patron_ = ("Acharon", "Aereth", "Baridon", "Brundir", "Estril", "Gala", "Garwen", "Glanor", "Loran", "Rithor",
                   "Torth")
@@ -124,17 +124,6 @@ SKILL_POINTS = 20
 CONCEPT_MAX_LEN = 30
 DESC_MIN_LEN = 200
 DESC_MAX_LEN = 1000
-
-XP_BONUS_BY_SRANK = {1: 60,
-                     2: 60,
-                     3: 60,
-                     4: 60,
-                     5: 60,
-                     6: 60,
-                     7: 60,
-                     8: 60,
-                     9: 60,
-                     }
 
 XP_BONUS_BY_POP = 1
 
@@ -261,9 +250,6 @@ struggling with cynicism and his own past might use the '{w@add{n' command to
 command to define why that concept is accurate for him and just what makes
 the character tick by completing the other fields below.
 
-Characters who start at a lower social rank will receive bonus xp after
-character creation which they can use in any manner they choose.
-
 To add a field '{w@add/{c<field> <value>{n' For example, '{w@add/age{n 250'
 would set the character's age to 250.
 
@@ -289,9 +275,7 @@ cost 10 skill points.
 
 If you have selected one of the pre-defined vocations for a character
 rather than creating a new one, all stats/skills will already be assigned,
-though you may move points around as you wish. Characters of lower social
-rank will still receive a bonus to XP after character creation regardless
-of their chosen vocation, however.
+though you may move points around as you wish. 
 
 When you are finished, use {g'add/submit {w<application>'{n to submit your
 finished character. Before submission, you can still add or change fields
@@ -727,8 +711,7 @@ class CmdGuestAddInput(ArxPlayerCommand):
                        "{w@add/patron{n, ex: {w@add/patron Estril{n\n" +
                        "{w@add/desc{n, ex: {w@add/desc A severe girl with blue eyes...{n\n" +
                        "{w@add/concept{n, ex: {w@add/concept Humorless Handmaiden{n\n" +
-                       "{w@add/background{n, ex: {w@add/background She was of humble birth..." +
-                       "{w@add/social_rank{n, ex: {w@add/social_rank 8")
+                       "{w@add/background{n, ex: {w@add/background She was of humble birth...")
             return
         # if switches is a list, convert it to a string
         if not isinstance(switches, string_types):
@@ -789,18 +772,6 @@ class CmdGuestAddInput(ArxPlayerCommand):
         if 'secrets' in switches:
             # secrets is a list
             args = [args]
-        if 'social_rank' in switches:
-            args = args.strip()
-            if not args.isdigit():
-                caller.msg("Social rank must be a number.")
-                return
-            args = int(args)
-            if args < 1 or args > 5:
-                caller.msg("Social rank must be between 2 and 9.")
-                return
-            bonus = XP_BONUS_BY_SRANK.get(args, 0)
-            caller.msg("For starting at a social rank of " +
-                       "%s, you will receive %s bonus experience after character creation." % (args, bonus))
         if 'personality' in switches:
             if not (DESC_MAX_LEN > len(args) > DESC_MIN_LEN):
                 caller.msg("Personality length must be between %s and %s characters." % (DESC_MIN_LEN, DESC_MAX_LEN))
@@ -994,21 +965,18 @@ class CmdGuestAddInput(ArxPlayerCommand):
         char.attributes.remove("skill_points")
         char.attributes.remove("stat_points")
         char.player_ob.attributes.remove("tutorial_stage")
-        # set initial starting xp based on social rank
-        srank = char.db.social_rank or 0
         # noinspection PyBroadException
         try:
-            xp_bonus = XP_BONUS_BY_SRANK.get(srank, 0)
-#            xp_bonus += award_bonus_by_fealty(char.db.fealty)
+            xp_bonus = 60
             xp_bonus += award_bonus_by_age(char.db.age)
+            # xp_bonus += award_bonus_by_fealty(char.db.fealty)
             char.db.xp = xp_bonus
         except Exception:
             import traceback
             traceback.print_exc()
             caller.msg("Something went wrong when awarding starting xp. Logging error.")
-        xp_msg = "Based on your character's social rank of %s and their fealty, you will " % srank
-        xp_msg += "enter the game with %s xp. You will be able to spend them " % char.db.xp
-        xp_msg += "with the {wxp/spend{n command."
+        xp_msg = "Based on your character's fealty, you will enter the game with %s xp." % char.db.xp
+        xp_msg += "You will be able to spend them with the {wxp/spend{n command."
         caller.msg(xp_msg)
 
         message = "{wNewly created character application by [%s] for %s" % (caller.key.capitalize(),
@@ -1036,7 +1004,7 @@ class CmdGuestAddInput(ArxPlayerCommand):
         inform_staff(message)
         try:
             from world.dominion.setup_utils import starting_money
-            money = starting_money(srank) or 0
+            money = starting_money()
             char.db.currency = money/10
         except (ValueError, TypeError, AttributeError):
             import traceback

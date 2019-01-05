@@ -26,7 +26,6 @@
 		<td><a href="{% url 'help_topics:topic' 'age'%}">Age</a></td>
 		<td><a href ="{% url 'help_topics:topic' 'concept' %}">Concept</a></td>
 		<td><a href="{% url 'help_topics:topic' 'kinship' %}">Kinship</a></td>
-		<td><a href="{% url 'help_topics:topic' 'social_rank' %}">Social Rank</a></td>
 		{% if show_hidden %}
 		<td><b>Alts</b></td>
 		{% endif %}
@@ -42,7 +41,6 @@
 		<td><b>{{ char.db.age }}</b></td>
 		<td><b>{{char.db.concept}}</b></td>
 		<td><b>{{char.db.fealty}}</b></td>
-		<td><b>{{char.db.social_rank}}</b></td>
 		{% if show_hidden %}
 		<td>{% for alt in char.roster.alts %}{% if alt.character.get_absolute_url %}<a href="{{ alt.character.get_absolute_url }}">{{alt}}</a>{% else %}{{ alt }}{% endif %}{% endfor %}</td>
 		{% endif %}

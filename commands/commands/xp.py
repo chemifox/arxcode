@@ -524,13 +524,12 @@ class CmdAdjustSkill(ArxPlayerCommand):
                 char.db.xp = 0
             if "reset" in self.switches:
                 try:
-                    from commands.commands.guest import setup_voc, XP_BONUS_BY_SRANK
+                    from commands.commands.guest import setup_voc
                     rhs = self.rhs.lower()
                     setup_voc(char, rhs)
                     char.db.vocation = rhs
                     total_xp = char.db.total_xp or 0
                     total_xp = int(total_xp)
-                    xp = XP_BONUS_BY_SRANK[char.db.social_rank]
                     xp += total_xp
                     char.db.xp = xp
                     caller.msg("%s has had their skills and stats set up as a %s." % (char, rhs))

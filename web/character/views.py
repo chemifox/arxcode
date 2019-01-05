@@ -155,7 +155,6 @@ def character_list(request):
             return character
         character = {
             'name': char.key,
-            'social_rank': char.db.social_rank,
             'fealty': char.db.fealty,
             'house': char.db.family,
             'relations': get_relations(char),
