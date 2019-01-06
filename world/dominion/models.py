@@ -3292,11 +3292,26 @@ class Organization(InformMixin, SharedMemoryModel):
                 if not self.secret and charob.secret:
                     c_name += "(Secret)"
                 return c_name
+
             if len(chars) > 1:
-                msg += "{w%s{n (Rank %s): %s\n" % (title, rank,
-                                                   ", ".join(char_name(char) for char in chars))
+                msg += "{w%s{n (Rank %s):" % (title, rank)
+                firstchar = True
+                for char in chars:
+                    if (char.desc != "True"):
+                        if firstchar:
+                            msg += " %s (%s)" % (char_name(char), char.desc)
+                            firstchar = False
+                        else:
+                            msg += ", %s (%s)" % (char_name(char), char.desc)
+                    elif firstchar:
+                        msg += " %s" % (char_name(char))
+                        firstchar = False
+                    else:
+                        msg += ", %s" % (char_name(char))
+                msg += "\n"
             elif len(chars) > 0:
                 char = chars[0]
+                chardesc = char.desc
                 name = char_name(char)
                 char = char.player.player.char_ob
                 gender = char.db.gender or "Male"
@@ -3304,7 +3319,10 @@ class Organization(InformMixin, SharedMemoryModel):
                     title = male_title
                 else:
                     title = female_title
-                msg += "{w%s{n (Rank %s): %s\n" % (title, rank, name)
+                if (chardesc != "True"):
+                    msg += "{w%s{n (Rank %s): %s (%s)\n" % (title, rank, name, chardesc)
+                else:
+                    msg += "{w%s{n (Rank %s): %s\n" % (title, rank, name)
         return msg
 
     def display_public(self, show_all=False):

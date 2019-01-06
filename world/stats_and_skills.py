@@ -30,14 +30,14 @@ GENERAL_SKILLS = ("riddles", "legerdemain", "ride", "investigation",
                   "agriculture", "economics", "teaching", "war", "survival",
                   "animal ken", "artwork", "sailing", "prestidigitation")
 CRAFTING_SKILLS = ('sewing', 'smithing', 'tanning', 'alchemy', 'woodworking')
-VALID_SKILLS = COMBAT_SKILLS + SOCIAL_SKILLS + GENERAL_SKILLS + CRAFTING_SKILLS
+VALID_SKILLS = COMBAT_SKILLS + SOCIAL_SKILLS + GENERAL_SKILLS
 
 CRAFTING_ABILITIES = ('tailor', 'weaponsmith', 'armorsmith', 'leatherworker', 'apothecary',
                       'carpenter', 'jeweler')
 FIGHTING_ABILITIES = ('duelist', 'berserker', 'ninja', 'blademaster', 'adept')
 MAGICAL_ABILITIES = ('abyssal', 'dreamer', 'bloodmage', 'primal', 'celestial')
 CUNNING_ABILITIES = ('assassin', 'spy', 'thief', 'mummer')
-VALID_ABILITIES = CRAFTING_ABILITIES + FIGHTING_ABILITIES + MAGICAL_ABILITIES + CUNNING_ABILITIES
+VALID_ABILITIES = FIGHTING_ABILITIES + MAGICAL_ABILITIES + CUNNING_ABILITIES
 DOM_SKILLS = ("population", "income", "farming", "productivity",
               "upkeep", "loyalty", "warfare")
 _parent_abilities_ = {'sewing': ['tailor'], 'smithing': ['weaponsmith', 'armorsmith', 'jeweler'],

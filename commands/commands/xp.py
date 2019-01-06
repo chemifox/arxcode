@@ -55,9 +55,8 @@ class CmdUseXP(ArxCommand):
         caller.msg("\n{wDominion skill names:{n")
         caller.msg(", ".join(skill for skill in stats_and_skills.DOM_SKILLS))
         caller.msg("\n{wAbility names:{n")
-        crafting = stats_and_skills.CRAFTING_ABILITIES
         abilities = caller.db.abilities or {}
-        abilities = set(abilities.keys()) | set(crafting)
+        abilities = set(abilities.keys()):
         if caller.check_permstring("builder"):
             caller.msg(", ".join(ability for ability in stats_and_skills.VALID_ABILITIES))
         else:
