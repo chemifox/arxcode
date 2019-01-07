@@ -192,7 +192,7 @@ class CmdAllowBuilding(ArxCommand):
 
     Flags your current room as permitting characters to build there.
     The name provided can either be a character or organization name.
-    Cost is 100 economic resources unless specified otherwise. Max
+    Cost is 25 economic resources unless specified otherwise. Max
     rooms that anyone can build off here is set by the 'expansion_cap'
     attribute, defaults to 1 if not defined. Tracked separately for
     each org/player, so any number of people could build 1 room off
@@ -412,7 +412,7 @@ class CmdManageRoom(ArxCommand):
         +manageroom/boot <character>=<exit>
 
     Flags your current room as permitting characters to build there.
-    Cost is 100 economic resources unless specified otherwise.
+    Cost is 25 economic resources unless specified otherwise.
 
     To set a seasonal description for your room, use /springdesc, /summerdesc,
     etc. /desc will always be shown as a fallback otherwise.
