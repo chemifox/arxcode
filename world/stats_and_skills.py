@@ -53,7 +53,7 @@ NEW_STAT_COST = 100
 # this multiplier is times the new rank of the skill you're going for
 # so going from 2 to 3 will be 30 for non-combat, 60 for combat
 NON_COMBAT_SKILL_COST_MULT = 10
-COMBAT_SKILL_COST_MULT = 20
+COMBAT_SKILL_COST_MULT = 10
 # being taught will give you a 20% discount
 TEACHER_DISCOUNT = 0.8
 

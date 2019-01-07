@@ -56,7 +56,7 @@ class CmdUseXP(ArxCommand):
         caller.msg(", ".join(skill for skill in stats_and_skills.DOM_SKILLS))
         caller.msg("\n{wAbility names:{n")
         abilities = caller.db.abilities or {}
-        abilities = set(abilities.keys()):
+        abilities = set(abilities.keys())
         if caller.check_permstring("builder"):
             caller.msg(", ".join(ability for ability in stats_and_skills.VALID_ABILITIES))
         else:

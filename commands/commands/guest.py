@@ -269,9 +269,7 @@ everything looks. To add or remove skills or stats, use '{wadd/stat{n' or
 
 To see a list of skills, enter '{whelp skills{n', with a help file of each
 under '{whelp {c<skill name>{n'. Stats cost 1 point regardless of their
-current rank, while skills cost 1 point per rank for non-combat skills, and
-2 points per rank for combat skills. So to raise melee from 4 to 5 would
-cost 10 skill points.
+current rank, while skills cost 1 point per rank.
 
 If you have selected one of the pre-defined vocations for a character
 rather than creating a new one, all stats/skills will already be assigned,
@@ -448,9 +446,7 @@ class CmdGuestLook(ArxPlayerCommand):
                 caller.msg("""
 To see a list of skills, enter '{whelp skills{n', with a description of each
 under '{whelp {c<skill name>{n'. Stats cost 1 point regardless of their current
-rank, while skills cost 1 point per rank for non-combat skills, and 2
-points per rank for combat skills. So to raise melee from 4 to 5 would
-cost 10 skill points.""")
+rank, while skills cost 1 point per rank.""")
                 caller.msg("Please use {w@add/stat{n or {w@add/skill{n to change any stat or skill, " +
                            "or {w@add/submit <any notes you wish to add about your application>{n " +
                            "to finish.")
