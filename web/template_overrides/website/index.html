@@ -25,7 +25,7 @@
       <h1>Latest News</h1>
       {% for entry in news_entries %}
          <a href="/news/show/{{entry.id}}" class="newsHeading">{{entry.topic.name}}: {{entry.title}}</a>
-         <p class="newsDate">By {{entry.author.username}} on {{entry.date_posted|time}}</p>
+         <p class="newsDate">By {{entry.author.username}} on {{entry.date_posted|date:"SHORT_DATE_FORMAT"}} {{entry.date_posted|time}}</p>
          <p class="newsSummary">{{entry.body|truncatewords:20}}</p>
       {% endfor %}
 

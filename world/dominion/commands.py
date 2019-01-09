@@ -1809,9 +1809,9 @@ class CmdOrganization(ArxPlayerCommand):
     @org/briefing and @org/theorybriefing work off of the list of clues
     and theories associated with the org, which you can see by viewing
     the org information itself with @org <name> -- if, for instance,
-    you checked @org Valardin and saw a clue there called 'Honor in
-    the Oathlands', you could do @org/briefing <yourname>/Honor in the
-    Oathlands=Valardin to learn that clue yourself, or the name of
+    you checked @org Thalerith and saw a clue there called 'Honor in
+    Nasherat', you could do @org/briefing <yourname>/Honor in
+    Nasherat=Thalerith to learn that clue yourself, or the name of
     another player to brief them on the clue.
     """
     key = "@org"

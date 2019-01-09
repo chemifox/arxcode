@@ -609,9 +609,7 @@ class CmdRetainers(ArxPlayerCommand):
                 base *= 2
             xpcost = base
             rescost = base
-            if atype == self.retainer_types[1]:  # assistant
-                restype = "economic"
-            if atype == self.retainer_types[2]:  # spy
+            if atype == self.retainer_types[1]:  # small animals
                 restype = "social"
         if category == "skill":
             xpcost, rescost, restype = agent.get_skill_cost(attrname)
