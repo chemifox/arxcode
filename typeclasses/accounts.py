@@ -143,6 +143,7 @@ class Account(InformMixin, MsgMixins, DefaultAccount):
         # try to auto-connect to it by calling the @ic command
         # (this relies on player.db._last_puppet being set)
         self.execute_cmd("@bbsub/quiet story updates")
+        self.execute_cmd("@bbsub/quiet news")
         try:
             from commands.commands.bboards import get_unread_posts
             get_unread_posts(self)

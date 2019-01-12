@@ -2008,8 +2008,6 @@ class CmdPraise(ArxPlayerCommand):
         current_used += to_use
         from world.dominion.models import PraiseOrCondemn
         from server.utils.arx_utils import get_week
-        if not caller.pay_action_points(1):
-            raise self.PraiseError("You cannot muster the energy to praise someone at this time.")
         amount = self.do_praise_roll(base) * to_use
         praise = PraiseOrCondemn.objects.create(praiser=caller.Dominion, target=targ, number_used=to_use,
                                                 message=self.rhs or "", week=get_week(), value=amount)

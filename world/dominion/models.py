@@ -79,19 +79,19 @@ from world.stats_and_skills import do_dice_check
 from pytz import timezone
 
 # Dominion constants
-BASE_WORKER_COST = 0.10
-SILVER_PER_BUILDING = 225.00
+BASE_WORKER_COST = 0
+SILVER_PER_BUILDING = 100.00
 FOOD_PER_FARM = 100.00
 # default value for a global modifier to Dominion income, can be set as a ServerConfig value on a per-game basis
-DEFAULT_GLOBAL_INCOME_MOD = -0.25
+DEFAULT_GLOBAL_INCOME_MOD = 0
 # each point in a dominion skill is a 5% bonus
 BONUS_PER_SKILL_POINT = 0.10
 # number of workers for a building to be at full production
-SERFS_PER_BUILDING = 20.0
+SERFS_PER_BUILDING = 100.0
 # population cap for housing
 POP_PER_HOUSING = 1000
-BASE_POP_GROWTH = 0.01
-DEATHS_PER_LAWLESS = 0.0025
+BASE_POP_GROWTH = 0
+DEATHS_PER_LAWLESS = 0
 LAND_SIZE = 10000
 LAND_COORDS = 9
 LIFESTYLES = {
@@ -103,7 +103,7 @@ LIFESTYLES = {
     5: (1500, 7000),
     6: (5000, 10000),
     }
-PRESTIGE_DECAY_AMOUNT = 0.2
+PRESTIGE_DECAY_AMOUNT = 0
 
 PAGEROOT = "http://ithirmush.org"
 
@@ -1118,24 +1118,24 @@ class Land(SharedMemoryModel):
         # 'farm' also refers to fishing for coast
         high_farm = (Land.COAST, Land.LAKES, Land.PLAINS, Land.GRASSLAND, Land.FLOOD_PLAINS)
         if self.terrain in min_farm:
-            return 25
+            return 100
         if self.terrain in low_farm:
-            return 50
+            return 100
         if self.terrain in high_farm:
-            return 125
+            return 100
         return 100
 
     def _get_mining_mod(self):
         high_mine = (Land.HILL, Land.MOUNTAIN)
         if self.terrain in high_mine:
-            return 125
+            return 100
         return 100
 
     def _get_lumber_mod(self):
         # may add more later. comma is necessary to make it a tuple, otherwise not iterable
         high_lumber = (Land.FOREST,)
         if self.terrain in high_lumber:
-            return 125
+            return 100
         return 100
     farm_mod = property(_get_farming_mod)
     mine_mod = property(_get_mining_mod)
