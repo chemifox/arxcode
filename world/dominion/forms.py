@@ -11,6 +11,7 @@ from world.dominion.models import RPEvent, Organization, PlayerOrNpc, PlotRoom
 from datetime import datetime
 from pytz import timezone
 
+
 class RPEventCommentForm(forms.Form):
     """Form for commenting on an existing RPEvent"""
     journal_text = forms.CharField(widget=forms.Textarea)

@@ -842,7 +842,7 @@ class CmdAdmOrganization(ArxPlayerCommand):
                     caller.msg("%s is already a member." % match)
                     return
                 secret = org.secret
-                member = dompc.memberships.create(organization=org, rank=rank, secret=secret)
+                member = dompc.memberships.create(organization=org, rank=rank, secret=secret, desc="True")
                 caller.msg("%s added to %s at rank %s." % (dompc, org, rank))
                 member.setup()
                 return
@@ -2066,7 +2066,7 @@ class CmdOrganization(ArxPlayerCommand):
                 member.save()
             except Member.DoesNotExist:
                 secret = org.secret
-                member = caller.Dominion.memberships.create(organization=org, secret=secret)
+                member = caller.Dominion.memberships.create(organization=org, secret=secret, desc="True")
             caller.msg("You have joined %s." % org.name)
             org.msg("%s has joined %s." % (caller, org.name))
             inform_staff("%s has joined {c%s{n." % (caller, org))

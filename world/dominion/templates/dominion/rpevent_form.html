@@ -2,6 +2,7 @@
 {% load app_filters %}
 {% load crispy_forms_tags %}
 {% block content %}
+    <div class="container">
     {% if form.errors %}
         {{ form.errors }}
     {% endif %}
@@ -9,4 +10,5 @@
     {{ form|crispy }}
     <input class="btn btn-success" type="submit" value="Submit" />
 </form>
+    </div>
 {% endblock %}
