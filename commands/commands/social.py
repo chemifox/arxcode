@@ -1294,10 +1294,9 @@ class CmdCalendar(ArxPlayerCommand):
     in the format of 'MM/DD/YY HR:MN'. /private toggles whether the
     event is public or private (defaults to public). To spend extravagant
     amounts of money in hosting an event for prestige, set the /largesse
-    level. To see the valid largesse types with their costs and prestige
-    values, do '@cal/largesse'. Prestige is divided among hosts present,
-    or if no hosts are present goes fully to the main host. Private events
-    give half prestige. All times are in EST.
+    level. To see the valid largesse types with their costs, do
+    '@cal/largesse'. All times are in PST by default. It will show in
+    your own timezone if you have your +timezone set.
 
     To mark an event as a player-run-plot, use /addgm to designate a
     player as the storyteller for the event. Please only use this for a
@@ -1647,11 +1646,11 @@ class CmdCalendar(ArxPlayerCommand):
         costs = dict(RPEvent.LARGESSE_VALUES)
         lhs = self.lhs.lower()
         if not lhs:
-            table = PrettyTable(['{wLevel{n', '{wCost{n', '{wPrestige{n'])
+            table = PrettyTable(['{wLevel{n', '{wCost{n'])
             choices = dict(RPEvent.LARGESSE_CHOICES)
             for key in costs:
                 name = choices[key]
-                table.add_row([name, costs[key][0], costs[key][1]])
+                table.add_row([name, costs[key][0]])
             self.msg(table, options={'box': True})
             return
         if lhs not in largesse_types:
