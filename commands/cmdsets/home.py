@@ -55,7 +55,6 @@ class CmdManageHome(ArxCommand):
         +home/passmsg <message people see when entering>
         +home/lockmsg <message those who can't enter see>
         +home/rmkey <character>
-        +home/lifestyle <rating>
 
     Controls your home. /passmsg is for use of the 'pass' command to
     go through a locked door. /lockmsg is for those who are denied
@@ -67,17 +66,17 @@ class CmdManageHome(ArxCommand):
     locks = "cmd:all()"
     help_category = "Home"
 
-    def display_lifestyles(self):
-        """Displays table of Dominion lifestyles with the character's current selection"""
-        caller = self.caller
-        table = PrettyTable(["{wRating{n", "{wCost{n", "{wPrestige{n"])
-        caller.msg("{wLifestyles:{n")
-        for rating in LIFESTYLES:
-            num = str(rating)
-            if caller.player_ob.Dominion.lifestyle_rating == rating:
-                num += '{w*{n'
-            table.add_row([num, LIFESTYLES[rating][0], LIFESTYLES[rating][1]])
-        caller.msg(str(table), options={'box': True})
+#    def display_lifestyles(self):
+#        """Displays table of Dominion lifestyles with the character's current selection"""
+#        caller = self.caller
+#        table = PrettyTable(["{wRating{n", "{wCost{n", "{wPrestige{n"])
+#        caller.msg("{wLifestyles:{n")
+#        for rating in LIFESTYLES:
+#            num = str(rating)
+#            if caller.player_ob.Dominion.lifestyle_rating == rating:
+#                num += '{w*{n'
+#            table.add_row([num, LIFESTYLES[rating][0], LIFESTYLES[rating][1]])
+#        caller.msg(str(table), options={'box': True})
     
     def func(self):
         """Execute command."""
@@ -130,20 +129,20 @@ class CmdManageHome(ArxCommand):
                 r_exit.db.success_traverse = self.args
             caller.msg("{wThe message those who enter will now see is{n: %s" % self.args)
             return
-        if "lifestyle" in self.switches or "lifestyles" in self.switches:
-            if caller not in owners:
-                caller.msg("You may only set the lifestyle rating for an owner.")
-                return
-            try:
-                LIFESTYLES[int(self.args)]
-            except (KeyError, TypeError, ValueError):
-                caller.msg("%s is not a valid lifestyle." % self.args)
-                self.display_lifestyles()
-                return
-            caller.player_ob.Dominion.lifestyle_rating = int(self.args)
-            caller.player_ob.Dominion.save()
-            caller.msg("Your lifestyle rating has been set to %s." % self.args)
-            return
+#        if "lifestyle" in self.switches or "lifestyles" in self.switches:
+#            if caller not in owners:
+#                caller.msg("You may only set the lifestyle rating for an owner.")
+#                return
+#            try:
+#                LIFESTYLES[int(self.args)]
+#            except (KeyError, TypeError, ValueError):
+#                caller.msg("%s is not a valid lifestyle." % self.args)
+#                self.display_lifestyles()
+#                return
+#            caller.player_ob.Dominion.lifestyle_rating = int(self.args)
+#            caller.player_ob.Dominion.save()
+#            caller.msg("Your lifestyle rating has been set to %s." % self.args)
+#            return
         player = caller.player.search(self.lhs)
         if not player:
             return
@@ -976,9 +975,6 @@ class CmdBuyFromShop(CmdCraft):
     Usage:
         +shop
         +shop/filter <word in item name>
-        +shop/buy <item number>
-        +shop/look <item number>
-        +shop/viewdesigns [<key>]
         +shop/name <name>
         +shop/desc <description>
         +shop/altdesc <description>
@@ -989,7 +985,7 @@ class CmdBuyFromShop(CmdCraft):
         +shop/changename <object>=<new name>
         +shop/refine <object>[=<additional silver to spend>,AP to spend>]
         +shop/addadorn <object>=<material type>,<amount>
-        +shop/craft
+        +shop/craft <recipe name>
 
     Allows you to buy objects from a shop. +shop/craft allows you to use a 
     crafter's skill to create an item. Similarly, +shop/refine lets you use a 

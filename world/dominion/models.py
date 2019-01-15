@@ -333,8 +333,7 @@ class PlayerOrNpc(SharedMemoryModel):
             assets.adjust_prestige(prestige)
             payname = "You" if payer == assets else str(payer)
             if report:
-                report.lifestyle_msg = "%s paid %s for your lifestyle and you gained %s prestige.\n" % (payname, cost,
-                                                                                                        prestige)
+                report.lifestyle_msg = "%s paid %s for your lifestyle.\n" % (payname, cost)
         if assets.vault > cost:
             pay_and_adjust(assets)
             return True

@@ -1768,12 +1768,13 @@ class CmdTimeZone(ArxCommand):
                     'US/Mountain',
                     'US/Central',
                     'US/Eastern',
-                    'Europe/Paris']
+                    'Europe/Paris',
+                    'Europe/London']
         if "list" in self.switches:
             number = 1
             caller.msg("Available Time Zones:")
             for zone in zonelist:
-                caller.msg("%s - %s" % (number,zone))
+                caller.msg("%s - %s" % (number, zone))
                 number += 1
             return
         if "set" in self.switches:
