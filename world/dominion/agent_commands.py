@@ -319,7 +319,7 @@ class CmdRetainers(ArxPlayerCommand):
     Usage:
         @retainers
         @retainers/create <name>,<type>
-        @retainers/train <owner>=<retainer name>
+        @retainers/train <owner>=<retainer name>,<ap>
         @retainers/transferxp <id #>=<xp>[,retainer ID]
         @retainers/buyability <id #>=<ability>
         @retainers/buyskill <id #>=<skill>
