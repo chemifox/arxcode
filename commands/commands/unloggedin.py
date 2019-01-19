@@ -33,9 +33,9 @@ MULTISESSION_MODE = settings.MULTISESSION_MODE
 CONNECTION_SCREEN_MODULE = settings.CONNECTION_SCREEN_MODULE
 
 # Create throttles for too many connections, account-creations and login attempts
-CONNECTION_THROTTLE = Throttle(limit=5, timeout=1 * 60)
+CONNECTION_THROTTLE = Throttle(limit=50, timeout=1 * 60)
 CREATION_THROTTLE = Throttle(limit=2, timeout=10 * 60)
-LOGIN_THROTTLE = Throttle(limit=10, timeout=5 * 60)
+LOGIN_THROTTLE = Throttle(limit=50, timeout=1 * 60)
 
 GUEST = "typeclasses.guest.Guest"
 
@@ -331,7 +331,7 @@ class CmdUnconnectedConnect(COMMAND_DEFAULT_CLASS):
         if isinstance(address, tuple):
             address = address[0]
         if CONNECTION_THROTTLE.check(address):
-            # timeout is 5 minutes.
+            # timeout is 1 minute.
             session.msg("|RYou made too many connection attempts. Try again in a few minutes.|n")
             return
 
