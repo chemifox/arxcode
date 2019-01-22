@@ -169,7 +169,7 @@ class RPEventCreateForm(forms.ModelForm):
         msg += "{wDescription:{n %s\n" % self.data.get('desc')
         date = self.data.get('date')
         if date:
-            date = time_now(aware=True)
+            date = date.astimezone(timezone(zone))
             msg += "{wDate:{n %s %s\n" % (date.strftime("%x %H:%M"), zone)
         else:
             msg += "{wDate:{n %s\n" % date
