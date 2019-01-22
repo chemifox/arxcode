@@ -1618,9 +1618,8 @@ class CmdCalendar(ArxPlayerCommand):
             date = datetime.strptime(self.lhs, "%m/%d/%y %H:%M")
         except ValueError:
             raise self.CalCmdError("Date did not match 'mm/dd/yy hh:mm' format. You entered: %s" % self.lhs)
-        now = time_now(aware=True)
         """Convert date from player to server time"""
-        now = timezone(SERVERTZ).localize(now)
+        now = time_now(aware=True)
         zone = char.character.db.timezone
         displaytime = timezone(zone).localize(date)
         if displaytime < now:
