@@ -9,6 +9,7 @@ from django.conf import settings
 from .arx_utils import inform_staff
 from datetime import datetime
 from web.helpdesk.models import Ticket, Queue, FollowUp
+from server.utils.arx_utils import time_now
 
 
 def create_ticket(caller, message, priority=5, queue=settings.REQUEST_QUEUE_ID,
@@ -29,7 +30,7 @@ def create_ticket(caller, message, priority=5, queue=settings.REQUEST_QUEUE_ID,
             room = None
         ticket = Ticket(title=optional_title,
                         queue=q,
-                        db_date_created=datetime.now(),
+                        db_date_created=time_now(aware=True),
                         submitter_email=email,
                         submitting_player=caller,
                         submitting_room=room,
@@ -60,7 +61,7 @@ def add_followup(caller, ticket, message, mail_player=True):
     is set to True, the submitter is not emailed the response.
     """
     try:
-        new_followup = FollowUp(user_id=caller.id, date=datetime.now(), ticket=ticket, comment=message, public=False)
+        new_followup = FollowUp(user_id=caller.id, date=time_now(aware=True), ticket=ticket, comment=message, public=False)
         new_followup.save()
     except Exception as err:
         inform_staff("ERROR: Error when attempting to add followup to ticket: %s" % err)
@@ -83,7 +84,7 @@ def resolve_ticket(caller, ticket_id, message):
         else:
             ticket.resolution = message
         ticket.assigned_to_id = caller.id
-        ticket.modified = datetime.now()
+        ticket.modified = time_now(aware=True)
         ticket.status = ticket.CLOSED_STATUS
         ticket.save()
     except Exception as err:

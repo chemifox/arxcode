@@ -21,6 +21,7 @@ from .scripts import Script
 from .script_mixins import RunDateMixin
 from server.utils.arx_utils import inform_staff, cache_safe_update
 from web.character.models import Investigation, RosterEntry
+from server.utils.arx_utils import time_now
 
 
 EVENT_SCRIPT_NAME = "Weekly Update"
@@ -86,7 +87,7 @@ class WeeklyEvents(RunDateMixin, Script):
         self.interval = 3600
         self.persistent = True
         self.start_delay = True
-        self.attributes.add("run_date", datetime.now() + timedelta(days=7))
+        self.attributes.add("run_date", time_now(aware=True) + timedelta(days=7))
 
     @property
     def inform_creator(self):
@@ -129,6 +130,7 @@ class WeeklyEvents(RunDateMixin, Script):
         # self.do_investigations()
         self.cleanup_stale_attributes()
         self.post_inactives()
+        self.count_poses()
         self.db.pose_counter = (self.db.pose_counter or 0) + 1
         if self.db.pose_counter % 4 == 0:
             self.db.pose_counter = 0
@@ -269,7 +271,7 @@ class WeeklyEvents(RunDateMixin, Script):
     def check_freeze():
         """Checks if a character should be frozen now"""
         try:
-            date = datetime.now()
+            date = time_now(aware=True)
             Account.objects.filter(last_login__isnull=True).update(last_login=date)
             offset = timedelta(days=-14)
             date = date + offset
@@ -281,7 +283,7 @@ class WeeklyEvents(RunDateMixin, Script):
 
     def post_inactives(self):
         """Makes a board post of inactive characters"""
-        date = datetime.now()
+        date = time_now(aware=True)
         cutoffdate = date - timedelta(days=30)
         qs = Account.objects.filter(roster__roster__name="Active", last_login__isnull=False).filter(
             last_login__lte=cutoffdate)
@@ -307,7 +309,8 @@ class WeeklyEvents(RunDateMixin, Script):
         table = EvTable("{wName{n", "{wNum Poses{n", border="cells", width=78)
         for ob in low_activity:
             table.add_row(ob.key, ob.db.previous_posecount)
-        board.bb_post(poster_obj=self, msg=str(table), subject="Inactive by Poses List")    
+        board.bb_post(poster_obj=self, msg=str(table), subject="Inactive by Poses List")
+        inform_staff("List of Inactive Characters by pose count list posted.")
     # Various 'Beats' -------------------------------------------------
 
 #    def process_journals(self, player):

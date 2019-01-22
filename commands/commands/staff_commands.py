@@ -21,6 +21,7 @@ from server.utils.exceptions import CommandError
 from web.character.models import Clue
 from world.dominion.models import Organization, RPEvent
 from typeclasses.characters import Character
+from server.utils.arx_utils import time_now
 
 PERMISSION_HIERARCHY = [p.lower() for p in settings.PERMISSION_HIERARCHY]
 
@@ -933,7 +934,7 @@ class CmdGMEvent(ArxCommand):
                 self.msg("You have not created an event yet. Use /create then /start it.")
                 return
             name, desc = form[0], form[1]
-            date = datetime.now()
+            date = time_now(aware=True)
             loc = self.caller.location
             events = self.caller.player_ob.Dominion.events_gmd.filter(finished=False, gm_event=True, location=loc)
             if events:
@@ -951,7 +952,7 @@ class CmdGMEvent(ArxCommand):
             return
         if "stop" in self.switches:
             from datetime import datetime
-            now = datetime.now()
+            now = time_now(aware=True)
             events = self.caller.player_ob.Dominion.events_gmd.filter(finished=False, gm_event=True, date__lte=now)
             if not events:
                 self.msg("You are not currently GMing any events.")
@@ -1016,7 +1017,7 @@ class CmdGMNotes(ArxPlayerCommand):
     def list_no_gming(self):
         """Displays list of Characters who haven't had a vision or been on a GM event"""
         from datetime import datetime, timedelta
-        date = datetime.now() - timedelta(days=7)
+        date = time_now(aware=True) - timedelta(days=7)
         chars = Character.objects.filter(roster__player__last_login__gte=date, roster__roster__name="Active").exclude(
             receiver_object_set__db_tags__db_key__iexact="visions").exclude(
             roster__player__Dominion__events_attended__gm_event=True).exclude(

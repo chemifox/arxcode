@@ -14,6 +14,7 @@ from web.character.models import (Investigation, Clue, InvestigationAssistant, C
                                   RevelationDiscovery, Revelation, SearchTag, get_random_clue, MysteryDiscovery)
 from world.dominion.models import Agent, RPEvent
 from world.stats_and_skills import VALID_STATS, VALID_SKILLS
+from server.utils.arx_utils import time_now
 
 
 class InvestigationFormCommand(ArxCommand):
@@ -1356,7 +1357,7 @@ class CmdListRevelations(ArxPlayerCommand):
             if revelation.player_can_discover(character):
                 discovered.append(revelation)
 
-        date = datetime.now()
+        date = time_now(aware=True)
         for revelation in discovered:
             msg = "\nYou have discovered a revelation: %s\n%s" % (str(revelation), revelation.desc)
             message = "You had a revelation which had been missed!"

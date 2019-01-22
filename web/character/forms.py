@@ -6,6 +6,8 @@ from django import forms
 from django.db.models import Q
 
 from .models import Photo, Flashback, RosterEntry
+from server.utils.arx_utils import time_now
+
 
 
 class PhotoModelChoiceField(forms.ModelChoiceField):
@@ -114,6 +116,6 @@ class FlashbackCreateForm(forms.ModelForm):
         from datetime import datetime
         obj = super(FlashbackCreateForm, self).save(commit=False)
         obj.owner = self.owner
-        obj.db_date_created = datetime.now()
+        obj.db_date_created = time_now(aware=True)
         obj.save()
         return obj

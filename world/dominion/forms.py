@@ -7,6 +7,7 @@ from django.db.models import Q
 from server.conf.production_settings import SERVERTZ
 from typeclasses.rooms import ArxRoom
 from world.dominion.models import RPEvent, Organization, PlayerOrNpc, PlotRoom
+from server.utils.arx_utils import time_now
 
 from datetime import datetime
 from pytz import timezone
@@ -73,7 +74,7 @@ class RPEventCreateForm(forms.ModelForm):
         #from datetime import datetime
 	#from pytz import timezone
         date = self.cleaned_data['date']
-        now = timezone(SERVERTZ).localize(datetime.now())
+        now = time_now(aware=True)
 	if date < now:
             self.add_error("date", "You cannot add a date for the past.")
         return date
@@ -168,7 +169,7 @@ class RPEventCreateForm(forms.ModelForm):
         msg += "{wDescription:{n %s\n" % self.data.get('desc')
         date = self.data.get('date')
         if date:
-            date = date.astimezone(timezone(zone))
+            date = time_now(aware=True)
             msg += "{wDate:{n %s %s\n" % (date.strftime("%x %H:%M"), zone)
         else:
             msg += "{wDate:{n %s\n" % date

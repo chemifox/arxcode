@@ -17,6 +17,7 @@ from django.db.models import Q
 from web.character.models import Roster
 from server.utils import arx_more
 from typeclasses.bulletin_board.bboard import BBoard
+from server.utils.arx_utils import time_now
 
 
 # limit symbol import for API
@@ -143,7 +144,7 @@ def change_email(player, email, caller=None):
     except PlayerAccount.DoesNotExist:
         entry.current_account = PlayerAccount.objects.create(email=email)
     entry.save()
-    date = datetime.now()
+    date = time_now(aware=True)
     if not AccountHistory.objects.filter(account=entry.current_account, entry=entry):
         AccountHistory.objects.create(entry=entry, account=entry.current_account, start_date=date)
 
@@ -487,7 +488,7 @@ class CmdAdminRoster(ArxPlayerCommand):
                     history = AccountHistory.objects.filter(account=current, entry=entry).last()
                 entry.current_account = None
                 entry.action_points = 100
-                date = datetime.now()
+                date = time_now(aware=True)
                 history.end_date = date
                 if not history.gm_notes and self.rhs:
                     history.gm_notes = self.rhs

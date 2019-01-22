@@ -169,7 +169,7 @@ class EventManager(Script):
                 pass
         self.db.active_events.append(event.id)
         self.db.idle_events[event.id] = 0
-        now = time_now()
+        now = time_now(aware=True)
         if now < event.date:
             # if we were forced to start early, update our date
             event.date = now

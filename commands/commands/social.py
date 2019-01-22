@@ -33,6 +33,7 @@ from world.dominion.models import (RPEvent, Agent, CraftingMaterialType, Craftin
 from world.msgs.models import Journal, Messenger
 from world.msgs.managers import reload_model_as_proxy
 from world.stats_and_skills import do_dice_check
+from server.utils.arx_utils import time_now
 
 
 def char_name(character_object, verbose_where=False, watch_list=None):
@@ -749,7 +750,7 @@ class CmdJournal(ArxCommand):
             except IndexError:
                 caller.msg("No entry by that number.")
                 return
-            now = datetime.now()
+            now = time_now(aware=True)
             if (now - entry.db_date_created).days > 2:
                 caller.msg("It has been too long to edit that message.")
                 return
@@ -1617,7 +1618,7 @@ class CmdCalendar(ArxPlayerCommand):
             date = datetime.strptime(self.lhs, "%m/%d/%y %H:%M")
         except ValueError:
             raise self.CalCmdError("Date did not match 'mm/dd/yy hh:mm' format. You entered: %s" % self.lhs)
-        now = datetime.now()
+        now = time_now(aware=True)
         """Convert date from player to server time"""
         now = timezone(SERVERTZ).localize(now)
         zone = char.character.db.timezone
@@ -2545,7 +2546,7 @@ class CmdRandomScene(ArxCommand):
             List: valid_choices queryset filtered by new players and
                   returned as a list instead.
         """
-        newness = datetime.now() - timedelta(days=self.DAYS_FOR_NEWBIE_CHECK)
+        newness = time_now(aware=True) - timedelta(days=self.DAYS_FOR_NEWBIE_CHECK)
         newbies = self.valid_choices.filter(Q(roster__accounthistory__start_date__gte=newness) &
                                             Q(roster__accounthistory__end_date__isnull=True)
                                             ).distinct().order_by('db_key')
@@ -2573,7 +2574,7 @@ class CmdRandomScene(ArxCommand):
             queryset: Queryset of Character objects
 
         """
-        last_week = datetime.now() - timedelta(days=self.NUM_DAYS)
+        last_week = time_now(aware=True) - timedelta(days=self.NUM_DAYS)
         return Character.objects.filter(Q(roster__roster__name="Active") &
                                         ~Q(roster__current_account=self.caller.roster.current_account) &
                                         Q(roster__player__last_login__isnull=False) &

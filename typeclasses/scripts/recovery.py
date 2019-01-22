@@ -3,6 +3,7 @@ Script for characters healing.
 """
 
 from .scripts import Script
+from server.utils.arx_utils import time_now
 
 
 class Recovery(Script):
@@ -75,12 +76,12 @@ class Recovery(Script):
         self.db.highest_heal = amt
         # check our heal time to see if we can do another recovery test
         last_healed = self.db.last_healed
-        if last_healed and last_healed > (datetime.now() - timedelta(hours=8)):
+        if last_healed and last_healed > (time_now(aware=True) - timedelta(hours=8)):
             # not enough time has passed so we'll just increase their health by the difference
             if healer:
                 healer.msg("They have been healed recently, but you're able to improve them somewhat.")
             self.obj.change_health(diff)
             return
         # enough time has passed, so we give them a full recovery test
-        self.db.last_healed = datetime.now()
+        self.db.last_healed = time_now(aware=True)
         self.obj.recovery_test(diff_mod=-diff)

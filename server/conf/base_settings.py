@@ -33,7 +33,7 @@ PERMISSION_HIERARCHY = ["Guest",  # note-only used if GUEST_ENABLED=True
 SERVERNAME = "Ithir"
 GAME_SLOGAN = "Return to Glory"
 TIME_ZONE = 'America/Los_Angeles'
-USE_TZ = False
+USE_TZ = True
 TELNET_PORTS = [3000]
 IDMAPPER_CACHE_MAXSIZE = 2000
 EVENNIA_ADMIN = False

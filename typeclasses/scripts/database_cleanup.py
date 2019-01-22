@@ -7,6 +7,7 @@ import traceback
 from server.utils.arx_utils import inform_staff, get_week
 from .scripts import Script
 from .script_mixins import RunDateMixin
+from server.utils.arx_utils import time_now
 
 
 class DatabaseCleanup(RunDateMixin, Script):
@@ -25,7 +26,7 @@ class DatabaseCleanup(RunDateMixin, Script):
         self.interval = 3600
         self.persistent = True
         self.start_delay = True
-        self.attributes.add("run_date", datetime.now() + timedelta(days=7))
+        self.attributes.add("run_date", time_now(aware=True) + timedelta(days=7))
 
     def at_repeat(self):
         """
@@ -38,7 +39,7 @@ class DatabaseCleanup(RunDateMixin, Script):
 
     def do_cleanup(self):
         """Cleans up stale objects from database"""
-        date = datetime.now()
+        date = time_now(aware=True)
         offset = timedelta(days=-30)
         date = date + offset
         try:

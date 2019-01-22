@@ -77,6 +77,7 @@ from typeclasses.mixins import InformMixin
 from web.character.models import AbstractPlayerAllocations, Clue
 from world.stats_and_skills import do_dice_check
 from pytz import timezone
+from server.utils.arx_utils import time_now
 
 # Dominion constants
 BASE_WORKER_COST = 0
@@ -431,7 +432,7 @@ class PlayerOrNpc(SharedMemoryModel):
         """Returns queryset of recent actions that weren't cancelled and aren't still in draft"""
         from datetime import timedelta
         offset = timedelta(days=-CrisisAction.num_days)
-        old = datetime.now() + offset
+        old = time_now(aware=True) + offset
         return self.actions.filter(Q(date_submitted__gte=old) &
                                    ~Q(status__in=(CrisisAction.CANCELLED, CrisisAction.DRAFT)) &
                                    Q(free_action=False))
@@ -441,7 +442,7 @@ class PlayerOrNpc(SharedMemoryModel):
         """Returns queryset of all assists from the past 30 days"""
         from datetime import timedelta
         offset = timedelta(days=-CrisisAction.num_days)
-        old = datetime.now() + offset
+        old = time_now(aware=True) + offset
         actions = CrisisAction.objects.filter(Q(date_submitted__gte=old) &
                                               ~Q(status__in=(CrisisAction.CANCELLED, CrisisAction.DRAFT)) &
                                               Q(free_action=False))
@@ -2034,7 +2035,7 @@ class Crisis(SharedMemoryModel):
     @property
     def time_remaining(self):
         """Returns timedelta of how much time is left before the crisis updates"""
-        now = datetime.now()
+        time_now(aware=True)
         if self.end_date and self.end_date > now:
             return self.end_date - now
 
@@ -2071,7 +2072,7 @@ class Crisis(SharedMemoryModel):
         """Raises errors if it's not valid to submit an action for this crisis"""
         if self.resolved:
             raise ActionSubmissionError("%s has been marked as resolved." % self)
-        if self.end_date and datetime.now() > self.end_date:
+        if self.end_date and time_now(aware=True) > self.end_date:
             raise ActionSubmissionError("It is past the deadline for %s." % self)
 
     def raise_creation_errors(self, dompc):
@@ -2101,7 +2102,7 @@ class Crisis(SharedMemoryModel):
             latest_episode = Episode.objects.last()
         else:
             latest_episode = Chapter.objects.last().episodes.create(name=episode_name, synopsis=episode_synopsis)
-        update = self.updates.create(date=datetime.now(), desc=gemit_text, gm_notes=gm_notes, episode=latest_episode)
+        update = self.updates.create(date=time_now(aware=True), desc=gemit_text, gm_notes=gm_notes, episode=latest_episode)
         qs = self.actions.filter(status__in=(CrisisAction.PUBLISHED, CrisisAction.PENDING_PUBLISH,
                                              CrisisAction.CANCELLED), update__isnull=True)
         pending = []
@@ -2283,7 +2284,7 @@ class AbstractAction(AbstractPlayerAllocations):
     def on_submit_success(self):
         """If no errors were raised, we mark ourselves as submitted and no longer allow edits."""
         if not self.date_submitted:
-            self.date_submitted = datetime.now()
+            self.date_submitted = time_now(aware=True)
         self.editable = False
         self.save()
         self.post_edit()
@@ -5608,7 +5609,7 @@ class RPEvent(SharedMemoryModel):
             msg += "{wGMs:{n %s\n" % ", ".join(str(ob) for ob in self.gms.all())
         if not self.finished and not self.public_event:
             # prevent seeing names of invites once a private event has started
-            if self.date > datetime.now():
+            if self.date > time_now(aware=True):
                 msg += "{wInvited:{n %s\n" % ", ".join(str(ob) for ob in self.participants.all())
         orgs = self.orgs.all()
         if orgs:
@@ -5792,7 +5793,7 @@ class RPEvent(SharedMemoryModel):
     def remove_org(self, org):
         """Removes org's invitation"""
         part = self.org_event_participation.get(org=org)
-        if self.date > datetime.now():
+        if self.date > time_now(aware=True):
             org.assets.social += part.social
             org.assets.save()
         part.delete()

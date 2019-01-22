@@ -19,7 +19,7 @@ from evennia.objects.models import ObjectDB
 import traceback
 from web.character.models import Roster, RosterEntry, PlayerAccount, AccountHistory
 from typeclasses.bulletin_board.bboard import BBoard
-
+from server.utils.arx_utils import time_now
 
 def get_jobs_manager(caller):
     """
@@ -541,7 +541,7 @@ class CmdApp(ArxPlayerCommand):
                     entry.character.flush_from_cache(force=True)
                     entry.player.flush_from_cache(force=True)
                     from datetime import datetime
-                    date = datetime.now()
+                    date = time_now(aware=True)
                     if not AccountHistory.objects.filter(entry=entry, account=account, end_date__isnull=True).exists():
                         AccountHistory.objects.create(entry=entry, account=account, start_date=date)
                     # make sure all their Attributes are clean for new player

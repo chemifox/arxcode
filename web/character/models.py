@@ -22,6 +22,7 @@ import random
 import traceback
 from world.stats_and_skills import do_dice_check
 from evennia.typeclasses.models import SharedMemoryModel
+from server.utils.arx_utils import time_now
 
 # multiplier for how much higher ClueDiscovery.roll must be over Clue.rating to be discovered
 DISCO_MULT = 10
@@ -919,7 +920,7 @@ class ClueDiscovery(SharedMemoryModel):
             self.roll = roll
         else:
             self.roll = self.required_roll_for_discovery
-        date = datetime.now()
+        date = time_now(aware=True)
         self.date = date
         self.discovery_method = method
         self.message = message
@@ -1565,7 +1566,7 @@ class Flashback(SharedMemoryModel):
             actions: The story post that the poster is writing.
             poster (RosterEntry): The player who added the story post.
         """
-        now = datetime.now()
+        now = time_now(aware=True)
         self.posts.create(poster=poster, actions=actions, db_date_created=now)
         if poster:
             poster.character.messages.num_flashbacks += 1

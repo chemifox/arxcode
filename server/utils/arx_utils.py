@@ -94,7 +94,7 @@ def time_now(aware=False):
         from django.utils import timezone
         return timezone.localtime(timezone.now())
     # naive datetime
-    return datetime.now()
+    return time_now(aware=True)
 
 
 def time_from_now(date):
@@ -120,7 +120,7 @@ def datetime_format(date):
     """
     year, month, day = date.year, date.month, date.day
     hour, minute, second = date.hour, date.minute, date.second
-    now = datetime.now()
+    now = time_now(aware=True)
 
     if year < now.year:
         # another year
@@ -241,7 +241,7 @@ def check_break(caller=None, checking_character_creation=False):
         return False
     if not end_date:
         return False
-    if end_date > datetime.now():
+    if end_date > time_now(aware=True):
         if caller:
             caller.msg("That is currently disabled due to staff break.")
             caller.msg("Staff are on break until %s." % end_date.strftime("%x %X"))
@@ -466,7 +466,7 @@ def create_gemit_and_post(msg, caller, episode_name=None, synopsis=None, orgs_li
     story = Story.objects.latest('start_date')
     chapter = story.current_chapter
     if episode_name:
-        date = datetime.now()
+        date = time_now(aware=True)
         episode = Episode.objects.create(name=episode_name, date=date, chapter=chapter, synopsis=synopsis)
     else:
         episode = Episode.objects.latest('date')
