@@ -170,9 +170,9 @@ class RPEventCreateForm(forms.ModelForm):
         date = self.data.get('date')
         if date:
             date = date.astimezone(timezone(zone))
-            msg += "{wDate:{n %s %s\n" % (date.strftime("%x %H:%M"), zone)
+            msg += "{wEvent Date:{n %s %s\n" % (date.strftime("%x %H:%M"), zone)
         else:
-            msg += "{wDate:{n %s\n" % date
+            msg += "{wEvent Date:{n %s\n" % date
         location = self.data.get('location')
         if location:
             location = ArxRoom.objects.get(id=location)

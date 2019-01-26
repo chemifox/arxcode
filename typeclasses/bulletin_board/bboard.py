@@ -236,7 +236,7 @@ class BBoard(Object):
         message += "{wBoard:{n %s, {wPost Number:{n %s\n" % (self.key, list(posts).index(post) + 1)
         message += "{wPoster:{n %s\n" % sender
         message += "{wSubject:{n %s\n" % post.db_header
-        message += "{wDate:{n %s\n" % post.db_date_created.strftime("%x %X")
+        message += "{wDate Created:{n %s\n" % post.db_date_created.strftime("%x %X")
         message += "{w" + "-"*60 + "{n\n"
         message += post.db_message
         message += "\n{w" + "-" * 60 + "{n\n"
