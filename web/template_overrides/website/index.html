@@ -14,14 +14,43 @@
    <!--div class="twoThirds noBorderOnLeft"-->
       <h1>Welcome to Ithir</h1>
     <div style="color:#8c8c8c">
-    <p><center>This is a text-based role playing game based around an original fantasy setting in the Immortal Lands of Ithir.</center></p></div></div>
-          <h2>Telnet Address</h2>
-       <div style="color:#8c8c8c">
-           <p><center>ithirMUSH.org:4000</center></p></div>
+    <p><center>In a world steeped in magic, a society of Elves are forced to break their alliances with the races of
+        Larandor to regain their immortality. Fleeing The Host, an impossible foe, the Elves have landed upon the shores
+        of a new continent, <a href="/topics/">Aarandor</a>. Faced with mystery, intrigue, and the loss of their
+        unifying leader the now split Elven Kinships seek to rebuild a new life in this foreign land. The five Elven
+        Kinships of <a href="/topics/aeran/">Aeran</a>, <a href="/topics/duindar/">Duindar</a>,
+        <a href="/topics/lorandi/">Lorandi</a>, <a href="/topics/thalerith/">Thalerith</a> and
+        <a href="/topics/faenor/">Faenor</a> must decide if they will follow their own paths or work together towards a
+        united future.
+        <br> <br>
+        Discovery, mystery, political intrigue and magic await those who are brave enough to step in to the world
+        of Ithir and claim their destiny in the Immortal Lands.</center></p></div></div>
     <!-- news app commented out since there are no news in the database originally -->
+<div class="rowOfBoxes dividingBorderAbove">
+   <div class="half noBorderOnLeft">
+      <h1>Players</h1>
+       <p><center>There are currently <strong>{{num_players_connected}}</strong> connected</center></p>
+       <h2>Recently Connected</h2>
+   <div style="color:#8c8c8c">
+      <ul>
+      {% for player in players_connected_recent %}
+      <li>{{player.username}} -- <em>{{player.last_login|timesince}} ago</em></li>
+      {% endfor %}
+      </ul></div>
+      </div>
 
-    <div class="dividingBorderAbove"></div>
-    <div class="fullWidth noBorderOnLeft">
+   <div class="half">
+   <h1>Connect to Ithir</h1>
+       <br>
+       <div style="color:#8c8c8c">
+        <center><a class="btn btn-success" href="/webclient">Play Now</a></center>
+           <br><br>
+           <b><center>To play on your own client, the address is:</center></b>
+           <p><center>ithirMUSH.org:4000</center></p></div>
+   </div>
+   </div>
+
+    <div class="fullWidth noBorderOnLeft dividingBorderAbove">
       <h1>Latest News</h1>
       {% for entry in news_entries %}
          <a href="/news/show/{{entry.id}}" class="newsHeading">{{entry.topic.name}}: {{entry.title}}</a>
@@ -32,50 +61,7 @@
       <div class="more"><a href="/news/archive">More News &raquo;</a></div>
 
 
-<div class="rowOfBoxes dividingBorderAbove">
 
-   <div class="half noBorderOnLeft">
-      <h1>Players</h1>
-       <center><p>There are currently <strong>{{num_players_connected}}</strong> connected</p></center>
-       <h1>Recently Connected</h1>
-   <div style="color:#8c8c8c">
-      <ul>
-      {% for player in players_connected_recent %}
-      <li>{{player.username}} -- <em>{{player.last_login|timesince}} ago</em></li>
-      {% endfor %}
-      </ul></div>
-   </div>
-
-   <!---<div class="quarter">
-      <h1>Recently Connected</h1>
-      <ul>
-      {% for player in players_connected_recent %}
-      <li>{{player.username}} -- <em>{{player.last_login|timesince}} ago</em></li>
-      {% endfor %}
-      </ul>
-      <p class="filler"><!-- Filler para to extend left vertical line ---> <!---</p>
-  </div> --->
-
-<!---   <div class="quarter">
-      <h1>Database Stats</h1>
-      <ul>
-      <li>{{num_players_registered}} players (+ {{num_characters}} characters)</li>
-      <li>{{num_rooms}} rooms (+ {{num_exits}} exits)</li>
-      <li>{{num_others}} other objects</li>
-
-      </ul>
-   </div> --->
-
-   <div class="half">
-       <h1>Helpful Links</h1>
-       <p><center><a href="https://www.pinterest.com/reilena/ithir-mountain-lands/">Pinterest - Faenor</a>
-       <br><a href="https://www.pinterest.com/reilena/ithir-ocean-lands/">Pinterest - Aeran</a>
-       <br><a href="https://www.pinterest.com/reilena/ithir-river-lands/">Pinterest - Duindar</a>
-       <br><a href="https://www.pinterest.com/reilena/ithir-grass-lands/">Pinterest - Lorandi</a>
-       <br><a href="https://www.pinterest.com/reilena/ithir-desert-lands/">Pinterest - Thalerith</a>
-       <br><a href="http://tehomcd.github.io">Tehom's Dev Blog/Donation Links</a></center></p>
-   </div>
-
-</div>
+    </div>
     </div>
 {% endblock %}

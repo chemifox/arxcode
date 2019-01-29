@@ -4,8 +4,8 @@
 	
 
 	
-	<div class="row text-center">
-		<h1 class="bg-primary">Lore Topics</h1>
+	<div class="row text-center dividingBorderAbove">
+		<br><h1 class="bg-primary">Lore Topics</h1>
 	</div> <!--button-->
 	<div id="Topics" class="collapse in">
     {% for category in all_categories %}
@@ -31,10 +31,9 @@ img {
   height: auto;
 }
 </style>
-    <hr />
-    <div class="row">
+    <div class="row dividingBorderAbove">
 	<figure class="text-center">
-	<figcaption><h1>Map of the Immortal Lands</h1></figcaption>
+	<br><figcaption><h1>Map of the Immortal Lands</h1></figcaption>
 	<a href="/static/images/AarandorMapSept2018.jpg">
 	<img src="/static/images/AarandorMapSept2018.jpg" height='618' width='846' />
 	</a>
@@ -44,13 +43,12 @@ img {
             Nasherat is the home of the Thelerith Kinship. Khelgar is the home of the Faenor Kinship.
             Torendaar is the home of the Lorandi Kinship. And lastly, Thelos is the name of the
             neutral city some call the City of Shrines.</p>
-	<hr />
 	</figure>
 	</div>
 
 	
-	<div class="row">
-        <h1 class="text-center">Organizations</h1>
+	<div class="row dividingBorderAbove">
+        <br><h1 class="text-center">Organizations</h1>
 	<ul class="list-inline text-center">
     {% for org in all_orgs %}
                 
@@ -73,10 +71,22 @@ img {
 	</ul>
 	</div>
 	{% endif %}
-	<h1 class="text-center">Cheat Sheets/Resources</h2>
-	<div class="row">
-	<a href="recipes"><h2 class="text-center">Recipes and Materials</h2></a>
-	<a href="{% url 'help_topics:list_commands' %}"><h2 class="text-center">Commands</h2></a>
-	</div>	
+    <div class="row dividingBorderAbove">
+	<br><h1 class="text-center">Cheat Sheets and Resources</h2>
+	<div class="row half noBorderOnLeft">
+        <h1>In-Game Help</h1><br>
+	<center><a href="recipes">Recipes and Materials</a>
+	<br><a href="{% url 'help_topics:list_commands' %}">Commands</a></center>
+	</div>
+
+       <div class="half">
+       <h1>External Links</h1>
+       <p><center><a href="https://www.pinterest.com/reilena/ithir-mountain-lands/">Pinterest - Faenor</a>
+       <br><a href="https://www.pinterest.com/reilena/ithir-ocean-lands/">Pinterest - Aeran</a>
+       <br><a href="https://www.pinterest.com/reilena/ithir-river-lands/">Pinterest - Duindar</a>
+       <br><a href="https://www.pinterest.com/reilena/ithir-grass-lands/">Pinterest - Lorandi</a>
+       <br><a href="https://www.pinterest.com/reilena/ithir-desert-lands/">Pinterest - Thalerith</a>
+       <br><a href="http://tehomcd.github.io">Tehom's Dev Blog/Donation Links</a></center></p>
+   </div>
 
 {% endblock %}
