@@ -69,18 +69,18 @@ img {
 		<li><a href="..{% url 'help_topics:display_org' org.id %}">{{ org.name }}</a></li>
 	{% endfor %}	
 	</ul>
-	</div>
+
 	{% endif %}
     <div class="row dividingBorderAbove">
-	<br><h1 class="text-center">Cheat Sheets and Resources</h2>
+	<br><h1 class="text-center">Cheat Sheets and Resources</h1>
 	<div class="row half noBorderOnLeft">
-        <h1>In-Game Help</h1><br>
+        <h2>In-Game Help</h2><br>
 	<center><a href="recipes">Recipes and Materials</a>
 	<br><a href="{% url 'help_topics:list_commands' %}">Commands</a></center>
 	</div>
 
        <div class="half">
-       <h1>External Links</h1>
+       <h2>External Links</h2>
        <p><center><a href="https://www.pinterest.com/reilena/ithir-mountain-lands/">Pinterest - Faenor</a>
        <br><a href="https://www.pinterest.com/reilena/ithir-ocean-lands/">Pinterest - Aeran</a>
        <br><a href="https://www.pinterest.com/reilena/ithir-river-lands/">Pinterest - Duindar</a>
@@ -88,5 +88,7 @@ img {
        <br><a href="https://www.pinterest.com/reilena/ithir-desert-lands/">Pinterest - Thalerith</a>
        <br><a href="http://tehomcd.github.io">Tehom's Dev Blog/Donation Links</a></center></p>
    </div>
+        	</div>
+    	</div>
 
 {% endblock %}

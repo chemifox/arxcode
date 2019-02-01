@@ -16,7 +16,7 @@
 		</tr>
         {% for post in posts %}
         <tr>
-            <tr bgcolor="#999999">
+            <tr bgcolor="#393939">
                 <td>{% if post.unread %}<b>{% endif %}
                 <a href="{% url 'msgs:post_view' board_id=board.id post_id=post.id %}">{{ post.subject }}</a>
                 {% if post.unread %}</b>{% endif %}

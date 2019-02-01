@@ -89,30 +89,20 @@
             </li>
                 <li class="nav-item dropdown">
                 <a class="dropdown-toggle" id="navbarDropdownMenuLink"
-                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">Guides
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">Help
                     <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span></a>
                 <div class="dropdown-menu">
-                    <ul><a class="dropdown-item" href="/topics/guides/">Guides</a></ul>
-                    <ul><a class="dropdown-item" href="/topics/rules/">Game Rules</a></ul>
+                    <ul><a class="dropdown-item" href="/topics/guides/">Info and Guides</a></ul>
+                    <ul><a class="dropdown-item" href="/topics/rules/">Rules and Policies</a></ul>
                     <ul><a class="dropdown-item" href="/topics/character_creation/">Character Creation</a></ul>
                 </div>
             </li>
-                <li class="nav-item dropdown">
-                <a class="dropdown-toggle" id="navbarDropdownMenuLink"
-                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">Chronicle
-                    <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span></a>
-                <div class="dropdown-menu">
-                    <ul><a class="dropdown-item" href="/character/story/">Story</a></ul>
-                    <ul><a class="dropdown-item" href="/dom/cal/list/">Events</a></ul>
-                    <ul><a class="dropdown-item" href="/comms/boards/">Boards</a></ul>
-                </div>
-            </li>
+            <li><a href="/character/story/">Story</a>
+            <li><a href="/dom/cal/list/">Events</a>
+            <li><a href="/comms/boards/">Boards</a>
                     {% if user.is_authenticated and user.is_staff %}
                 <li><a href="/admin/">Admin</a></li>
                 <li><a href="/support/">Requests</a></li>
-                    {% endif %}
-                    {% if webclient_enabled %}
-                <li><a href="/webclient">Play Ithir</a>
                     {% endif %}
             </ul>
         </div>

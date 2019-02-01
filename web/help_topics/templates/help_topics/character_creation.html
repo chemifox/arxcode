@@ -3,17 +3,14 @@
 <div class="container">
 	<div class="row">
 	<figure class="text-center">
-	<figcaption><h1>Character Attributes, Stats and Skills</h1></figcaption>
-	<hr />
+	<figcaption><h1>Character Creation</h1></figcaption>
 	</figure>
 	</div>
-
-	<div class="row text-center">
-		<h1 class="bg-primary">Help Files</h1>
-	</div> <!--button-->
-	<div id="Topics" class="collapse in">
+  <br>
+	<div id="Topics" class="collapse in dividingBorderAbove">
     {% for category in all_categories %}
 	<div class="row">
+      <br>
      <h2 class="text-center bg-danger">{{ category }}</h2>
 	  <ul class="list-inline text-center">
       {% for topic in all_topics %}

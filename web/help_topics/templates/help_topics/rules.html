@@ -4,16 +4,13 @@
 	<div class="row">
 	<figure class="text-center">
 	<figcaption><h1>Game Rules and Policies</h1></figcaption>
-	<hr />
 	</figure>
 	</div>
-
-	<div class="row text-center">
-		<h1 class="bg-primary">Help Files</h1>
-	</div> <!--button-->
-	<div id="Topics" class="collapse in">
+<br>
+	<div id="Topics" class="collapse in dividingBorderAbove">
     {% for category in all_categories %}
 	<div class="row">
+    <br>
 	  <ul class="list-inline text-center">
        <h2 class="text-center bg-danger">{{ category }}</h2>
       {% for topic in all_topics %}

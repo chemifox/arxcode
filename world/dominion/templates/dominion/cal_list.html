@@ -31,7 +31,7 @@
     </tr>
     {% for obj in view.unfinished %}
         <tr>
-        <tr bgcolor="#999999">
+        <tr bgcolor="#393939">
         <td width="25%"><a href="{% url 'dominion:display_event' obj.id %}">{{ obj.name|mush_to_html }}</a></td>
         <td width="25%">{{ obj.date }}</td>
         <td width="25%">{{ obj.location.key|mush_to_html }}</td>
@@ -50,7 +50,7 @@
     </tr>
     {% for obj in object_list %}
         <tr>
-        <tr bgcolor="#999999">
+        <tr bgcolor="#393939">
         <td width="25%"><a href="{% url 'dominion:display_event' obj.id %}">{{ obj.name|mush_to_html }}</a></td>
         <td width="25%">{{ obj.date }}</td>
         <td width="25%">{{ obj.location.key|mush_to_html }}</td>
