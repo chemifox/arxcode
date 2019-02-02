@@ -210,8 +210,8 @@ class CmdRosterList(ArxPlayerCommand):
     word 'noblewoman' in their concept:
     '@roster female,young,single,concept=noblewoman'. An example of multiple
     filters that require an argument might be the same search, but now only
-    for members of the Grayson royal family. That would look like:
-    '@roster female,young,single,concept,family=noblewoman,Grayson'
+    for members of the Serannar royal family. That would look like:
+    '@roster female,young,single,concept,family=noblewoman,Serannar'
 
     Please note that filters are exclusive - you only see results that match
     every filter given, so mutually exclusive filters will return no matches.
