@@ -1288,7 +1288,6 @@ class CmdCalendar(ArxPlayerCommand):
         @cal/movehere <event ID>
     Interaction:
         @cal/join <event ID>
-        @cal/sponsor <org>,<social resources>=<event ID>
 
     Creates or displays information about events. date should be
     in the format of 'MM/DD/YY HR:MN'. /private toggles whether the
@@ -1323,7 +1322,7 @@ class CmdCalendar(ArxPlayerCommand):
         pass
 
     display_switches = ("old", "list")
-    target_event_switches = ("comments", "join", "sponsor")
+    target_event_switches = ("comments", "join")
     form_switches = ("create", "abort", "submit")
     attribute_switches = ("plotroom", "roomdesc", "host", "gm", "invite", "uninvite", "location",
                           "desc", "date", "private", "risk", "action", "reschedule", "largesse")

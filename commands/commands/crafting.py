@@ -906,12 +906,17 @@ class CmdJunk(ArxCommand):
 
     Usage:
         +junk <object>
+        +junk/burn <object>
 
     Destroys an object, retrieving a portion of the materials
     used to craft it.
+
+    Using /burn will emit a message about burning the object
+    to the room.
     """
     key = "junk"
     locks = "cmd:all()"
+    aliases = ["burn"]
     help_category = "Crafting"
 
     def func(self):
@@ -919,6 +924,7 @@ class CmdJunk(ArxCommand):
         caller = self.caller
         pmats = caller.player.Dominion.assets.materials
         obj = caller.search(self.args, use_nicks=True, quiet=True)
+
         if not obj:
             AT_SEARCH_RESULT(obj, caller, self.args, False)
             return
@@ -960,7 +966,6 @@ class CmdJunk(ArxCommand):
                 if randint(0, 100) <= roll:
                     num_kept += 1
             return num_kept
-
         for mat in adorns:
             cmat = CraftingMaterialType.objects.get(id=mat)
             amount = adorns[mat]
@@ -989,6 +994,8 @@ class CmdJunk(ArxCommand):
             pmat.save()            
             refunded.append("%s %s" % (amount, cmat.name))
         caller.msg("By destroying %s, you have received: %s" % (obj, ", ".join(refunded) or "Nothing."))
+        if "burn" in self.switches:
+            caller.location.msg_contents("%s sets %s on fire, burning it to ash." % (caller.name, obj))
         obj.softdelete()
 
     def get_refund_chance(self):
