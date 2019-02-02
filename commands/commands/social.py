@@ -994,8 +994,7 @@ class CmdMessenger(ArxCommand):
                 or "preserve" in self.switches or "forward" in self.switches or "save" in self.switches):
             old = caller.messages.messenger_history
             if not old:
-                caller.msg("You have never received a single messenger ever. Not a single one. " +
-                           "Not even a death threat. {wNothing{n.")
+                caller.msg("You have not received a messenger yet.")
                 return
             if not self.args or 'oldindex' in self.switches:
                 try:
