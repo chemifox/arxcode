@@ -165,7 +165,7 @@ class RPEventCreateForm(forms.ModelForm):
         hosts = PlayerOrNpc.objects.filter(id__in=self.data.get('hosts', []))
         if hosts:
             msg += "{wOther Hosts:{n %s\n" % ", ".join(str(ob) for ob in hosts)
-        msg += "{wPublic:{n %s\n" % "Public" if self.data.get('public_event', True) else "Private"
+            msg += "{wPublic:{n %s\n" % ("Public" if self.data.get('public_event', True) else "Private")
         msg += "{wDescription:{n %s\n" % self.data.get('desc')
         date = self.data.get('date')
         if date:

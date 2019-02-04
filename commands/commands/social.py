@@ -1916,17 +1916,10 @@ class CmdPraise(ArxPlayerCommand):
     Usage:
         praise <character>[,<num praises>][=<message>]
         praise/all <character>[=<message>]
-        praise/org <org>[,<num praises>][=<message>]
 
     Praises a character, give them the recognition they deserve!
     Your number of praises per week are based on your social rank
     and skills. Using praise with no arguments lists your praises.
-    Costs 1 AP regardless of how many praises are used.
-
-    Praises for orgs work a little differently. It may only be used
-    for an organization sponsoring an event while you are in attendance,
-    and the amount gained is based on the largesse of the event and the
-    social resources spent by the organization.
     """
     key = "praise"
     locks = "cmd:all()"
@@ -1985,6 +1978,8 @@ class CmdPraise(ArxPlayerCommand):
                 raise self.PraiseError("You cannot %s yourself." % self.verb)
             if targ.is_staff:
                 raise self.PraiseError("Staff don't need your %s." % self.attr)
+            if not self.rhs:
+                raise self.PraiseError("You must provide a reason for your %s." % self.attr)
             targ = targ.Dominion.assets
         char = caller.char_ob
         current_used = self.current_used
@@ -2007,12 +2002,12 @@ class CmdPraise(ArxPlayerCommand):
         from server.utils.arx_utils import get_week
         amount = self.do_praise_roll(base) * to_use
         praise = PraiseOrCondemn.objects.create(praiser=caller.Dominion, target=targ, number_used=to_use,
-                                                message=self.rhs or "", week=get_week(), value=amount)
+                                                message=self.rhs, week=get_week(), value=amount)
         praise.do_prestige_adjustment()
         name = str(targ).capitalize()
         caller.msg("You %s the actions of %s. You have %s %s remaining." %
                    (self.verb, name, self.get_actions_remaining(), self.attr))
-        reasons = ": %s" % self.rhs if self.rhs else "."
+        reasons = ": %s" % self.rhs
         char.location.msg_contents("%s is overheard %s %s%s" % (char.name, self.verbing, name, reasons), exclude=char)
 
     def do_praise_roll(self, base=0):

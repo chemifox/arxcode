@@ -947,7 +947,7 @@ class CmdJunk(ArxCommand):
             obj.softdelete()
             if "burn" in self.switches:
                 caller.location.msg_contents("%s sets %s on fire, burning it to ash." % (caller.name, obj))
-                return 
+                return
         recipe = obj.db.recipe
         if not recipe:
             caller.msg("You may only +junk crafted objects.")

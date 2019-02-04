@@ -856,7 +856,7 @@ class PraiseOrCondemn(SharedMemoryModel):
     """
     praiser = models.ForeignKey('PlayerOrNpc', related_name='praises_given')
     target = models.ForeignKey('AssetOwner', related_name='praises_received')
-    message = models.TextField(blank=True)
+    message = models.TextField(blank=False)
     week = models.PositiveSmallIntegerField(default=0, blank=0)
     db_date_created = models.DateTimeField(auto_now_add=True)
     value = models.IntegerField(default=0)
