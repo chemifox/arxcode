@@ -4,28 +4,28 @@
   <div class="container">
   <h1 class="text-center">{{ object.name|mush_to_html }}</h1>
   <p class="well">{{ object.desc|mush_to_html }}</p>
-  <h2>Date</h2> <p>{{object.date}}</p>
-  <h2>Hosted By</h2> <p>{% for obj in object.hosts.all %}
+  <h2>Date</h2> <p><center>{{object.date}}</center></p>
+  <h2>Hosted By</h2> <p><center>{% for obj in object.hosts.all %}
       {% if obj.get_absolute_url %}<a href="{{ obj.get_absolute_url }}">{{ obj }}</a>{% else %}{{ obj }}
       {% endif %}
-  {% endfor %}</p>
+  {% endfor %}</center></p>
   {% if object.gms.all %}
-      <h2>GM'd By</h2> <p>{% for obj in object.gms.all %}
+      <h2>GM'd By</h2> <p><center>{% for obj in object.gms.all %}
   {% if obj.get_absolute_url %}<a href="{{ obj.get_absolute_url }}">{{ obj }}</a>{% else %}{{ obj }}
-      {% endif %}{% endfor %}</p>
+      {% endif %}{% endfor %}</center></p>
   {% endif %}
   {% if object.public_event or user.is_staff or user.Dominion in object.hosts.all or user.Dominion in object.gms.all %}
-  <h2>Participants</h2> <p>{% for obj in object.participants.all %}
+  <h2>Participants</h2> <p><center>{% for obj in object.participants.all %}
       {% if obj.get_absolute_url %}<a href="{{ obj.get_absolute_url }}">{{ obj }}</a>{% else %}{{ obj }}
       {% endif %}
-  {% endfor %}</p>
+  {% endfor %}</center></p>
   {% endif %}
-  <h2>Organizations</h2> <p>{% for obj in object.orgs.all %}
+  <h2>Organizations</h2> <p><center>{% for obj in object.orgs.all %}
       {% if obj.get_absolute_url %}<a href="{{ obj.get_absolute_url }}">{{ obj }}</a>{% else %}{{ obj }}
       {% endif %}
-  {% endfor %}</p>
-  <h2>Location</h2> <p>{{ object.location.key|mush_to_html}}</p>
-  <h2>Largesse Level</h2> <p>{{ object.get_celebration_tier_display }}</p>
+  {% endfor %}</center></p>
+  <h2>Location</h2> <p><center>{{ object.location.key|mush_to_html}}</center></p>
+  <h2>Largesse Level</h2> <p><center>{{ object.get_celebration_tier_display }}</center></p>
   {% if object.public_event or can_view %}
   <h3>Log</h3>
   <div class="well">

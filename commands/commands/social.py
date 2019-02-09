@@ -386,6 +386,7 @@ class CmdFinger(ArxPlayerCommand):
         if show_hidden:
             msg += "{wCharID:{n %s, {wPlayerID:{n %s\n" % (char.id, player.id)
             msg += "{wTotal Posecount:{n %s\n" % char.total_posecount
+            msg += "{wWeekly Posecount:{n %s\n" % char.posecount
         if char.db.obituary:
             msg += "{wObituary:{n %s\n" % char.db.obituary
         else:
