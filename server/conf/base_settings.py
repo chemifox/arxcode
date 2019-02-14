@@ -44,7 +44,7 @@ MAX_CHAR_LIMIT = 8000
 DEBUG = False
 CHANNEL_COMMAND_CLASS = "commands.commands.channels.ArxChannelCommand"
 BASE_ROOM_TYPECLASS = "typeclasses.rooms.ArxRoom"
-DEFAULT_HOME = "#30"
+DEFAULT_HOME = config("DEFAULT_HOME", default="#30")
 MULTISESSION_MODE = 1
 COMMAND_DEFAULT_MSG_ALL_SESSIONS = True
 ADDITIONAL_ANSI_MAPPINGS = [(r'%r', "\r\n"),]
