@@ -2041,12 +2041,12 @@ class CmdPraise(ArxPlayerCommand):
         praises = praises_or_condemns.filter(value__gte=0)
         condemns = praises_or_condemns.filter(value__lt=0)
         msg = "Praises:\n"
-        table = EvTable("Name", "Praises", "Value", "Message", width=78)
+        table = EvTable("Name", "Praises","Message", width=78)
         for praise in praises:
-            table.add_row(praise.target, praise.number_used, praise.value, praise.message)
+            table.add_row(praise.target, praise.number_used, praise.message)
         msg += str(table)
         msg += "\nCondemns:\n"
-        table = EvTable("Name", "Condemns", "Value", "Message", width=78)
+        table = EvTable("Name", "Condemns", "Message", width=78)
         for pc in condemns:
             table.add_row(pc.capitalize(), condemns[pc][0], condemns[pc][1])
         msg += str(table)
@@ -2478,10 +2478,9 @@ class CmdRandomScene(ArxCommand):
         @randomscene/viewrequests
         @randomscene/online
 
-    Generates three characters, as well as new characters within their first
-    two weeks of play, who you can receive bonus xp for this week by having
-    an RP scene with them. Executing the command generates the names, and
-    then once you meet with the player and have a scene with them, using
+    Generates three characters who you can receive bonus xp for this week by
+    having an RP scene with them. Executing the command generates the names,
+    and then once you meet with the player and have a scene with them, using
     @randomscene/claim will send a request to that player to validate the
     scene you both had. If they agree, during the weekly script you'll both
     receive xp. Requests that aren't answered are wiped in weekly maintenance.
