@@ -5957,17 +5957,17 @@ class PlotRoom(SharedMemoryModel):
 
         if self.domain and not self.wilderness:
             if self.domain.id == 1:
-                result = "|yArx"
-                region_color = "|y"
+                result = "|gAarandor"
+                region_color = "|g"
             else:
-                result = "|yOutside Arx"
+                result = "|gAarandor"
                 result += region_color + " - " + self.domain.name
             result += region_color + " - " + self.name
         elif region:
-            result = "|yOutside Arx"
+            result = "|gAarandor"
             result += region_color + " - " + self.get_detailed_region_name() + " - " + self.name
         else:
-            result = "|yOutside Arx - " + self.name
+            result = "|gAarandor - " + self.name
 
         result += "|n"
 
@@ -6014,9 +6014,9 @@ class PlotRoom(SharedMemoryModel):
             try:
                 city_center = ArxRoom.objects.get(id=30)
                 create.create_object(settings.BASE_EXIT_TYPECLASS,
-                                     key="Back to Arx <Arx>",
+                                     key="Back to Thelos <Thelos>",
                                      location=room,
-                                     aliases=["arx", "back to arx", "out"],
+                                     aliases=["thelos", "back to thelos", "out"],
                                      destination=city_center)
             except ArxRoom.DoesNotExist:
                 # Just abort and return the room

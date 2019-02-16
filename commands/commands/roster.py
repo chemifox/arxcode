@@ -54,15 +54,15 @@ def list_characters(caller, character_list, roster_type="Active Characters", ros
         message += "\nNo characters found."
     else:
         if display_afk:
-            table = prettytable.PrettyTable(["{wName #",
-                                             "{wSex",
+            table = prettytable.PrettyTable(["{wName",
+                                             "{wS",
                                              "{wAge",
                                              "{wFealty{n",
                                              "{wConcept{n",
                                              "{wIdle{n"])
         else:
-            table = prettytable.PrettyTable(["{wName #",
-                                             "{wSex",
+            table = prettytable.PrettyTable(["{wName",
+                                             "{wS",
                                              "{wAge",
                                              "{wFealty{n",
                                              "{wConcept{n"])
