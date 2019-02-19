@@ -194,6 +194,8 @@ class CmdWrite(ArxCommand):
             obj.attributes.remove("quality_level")
             obj.attributes.remove("can_stack")
             obj.db.author = caller
+            obj.db.recipe = 173
+            obj.db.materials = {}
             obj.db.written = True
             obj.cmdset.delete_default()
             obj.cmdset.add_default(SignCmdSet, permanent=True)

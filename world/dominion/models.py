@@ -5951,7 +5951,7 @@ class PlotRoom(SharedMemoryModel):
     def ansi_name(self):
         """Returns formatted string of the platroom with region name"""
         region = self.get_region()
-        region_color = "|y"
+        region_color = "|g"
         if region and region.color_code:
             region_color = region.color_code
 

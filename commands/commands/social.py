@@ -1509,7 +1509,7 @@ class CmdCalendar(ArxPlayerCommand):
             """convert form date to US/PST"""
             event = form.save()
             zone = char.character.db.timezone
-	    displaytime = event.date.astimezone(timezone(zone))
+            displaytime = event.date.astimezone(timezone(zone))
             self.caller.ndb.event_creation = None
             """Display event date in player timezone to player"""
             self.msg("New event created: %s at %s." % (event.name, displaytime.strftime("%x %X")))
@@ -1625,7 +1625,7 @@ class CmdCalendar(ArxPlayerCommand):
             raise self.CalCmdError("You cannot make an event for the past.")
         if event and event.date < now:
             raise self.CalCmdError("You cannot reschedule an event that's already started.")
-	date = displaytime.astimezone(timezone(SERVERTZ))
+        date = displaytime.astimezone(timezone(SERVERTZ))
         self.set_form_or_event_attribute('date', date, event)
         """Display player timezone"""
         self.msg("Date set to %s." % displaytime.strftime("%x %X"))

@@ -81,6 +81,7 @@ class CmdGemit(ArxPlayerCommand):
     Usage:
       @gemit/norecord <message>
       @gemit/startepisode <name>[/episode synopsis]=<message>
+      @gemit/episode <pre-existing episode name>=<message>
       @gemit <message>
       @gemit/orgs <org>[, <org2>,...]=<message>
 
@@ -90,6 +91,11 @@ class CmdGemit(ArxPlayerCommand):
     all actively running events. Text will be sent in green by
     default. The org switch messages online members, informs offline
     members, and makes an org bboard post.
+
+    The /episode switch should be used when switching between episodes.
+    It is probably safe to use the /episode function for most posts as
+    it will ensure you are posting to the correct episode.
+
     """
     key = "@gemit"
     locks = "cmd:perm(gemit) or perm(Wizards)"
@@ -117,6 +123,16 @@ class CmdGemit(ArxPlayerCommand):
                 if not episode_name or not msg:
                     raise CommandError("You must give a name & message for the new episode.")
                 create_gemit_and_post(msg, self.caller, episode_name, synopsis)
+            elif "episode" in self.switches:
+                msg = self.rhs
+                episode_name = self.lhs
+                from web.character.models import Episode
+                if not Episode.objects.filter(name__iexact=self.lhs).exists():
+                    self.msg("This episode does not exist yet, use /startepisode to create a new episode.")
+                    return
+                if not episode_name or not msg:
+                    raise CommandError("You must give a name and message for this episode.")
+                create_gemit_and_post(msg, self.caller, episode_name)
             else:
                 orgs_list = None
                 if "orgs" in self.switches:

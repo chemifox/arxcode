@@ -155,6 +155,8 @@ class CmdAdmDomain(ArxPlayerCommand):
                         house = Organization.objects.get(name__iexact="Faenor")
                     elif region.name == "Torendaar":
                         house = Organization.objects.get(name__iexact="Lorandi")
+                    elif region.name == "Thelos":
+                        house = Organization.objects.get(name__iexact="High Council of Thelos")
                     else:
                         self.msg("House for that region not found.")
                         return
