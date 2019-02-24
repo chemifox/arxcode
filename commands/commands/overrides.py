@@ -697,7 +697,7 @@ class CmdPose(ArxCommand):
             if self.args:
                 args = self.args.lower().strip()
                 pose_history = [ob for ob in pose_history if args in str(ob[0]).lower() or args in str(ob[1]).lower()]
-            msg = "\n".join("{c%s{n: %s" % (ob[0], ob[1].lstrip()) for ob in pose_history)
+            msg = "\n".join("{c%s{n: %s \n" % (ob[0], ob[1].lstrip()) for ob in pose_history)
             self.msg("Recent poses received:")
             self.msg(msg)
             return

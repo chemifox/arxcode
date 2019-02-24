@@ -1213,7 +1213,6 @@ class CmdListClues(ArxPlayerCommand):
         if caller.player_ob:
             caller = caller.player_ob
         doc = self.__doc__
-        doc += "\n\nYour cost of sharing clues is %s." % caller.clue_cost
         return doc
     
     @property

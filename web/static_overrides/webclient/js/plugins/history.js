@@ -111,4 +111,4 @@ let history_plugin = (function () {
         scratch: scratch
     }
 }
-plugin_handler.add('history', history_plugin);
+plugin_handler.add('history', history_plugin);}

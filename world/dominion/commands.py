@@ -1949,22 +1949,14 @@ class CmdOrganization(ArxPlayerCommand):
                 clue = get_org_clue_or_theory("clue")
                 if not clue:
                     return
-                cost = (caller.clue_cost / (org.social_modifier + 4)) + 1
                 if not org.access(caller, 'briefing'):
                     self.msg("You do not have permissions to do a briefing.")
-                    return
-                if caller.ndb.briefing_cost_warning != org:
-                    caller.ndb.briefing_cost_warning = org
-                    self.msg("The cost of the briefing will be %s. Execute the command again to brief them." % cost)
                     return
                 caller.ndb.briefing_cost_warning = None
                 # check if they don't need this at all
                 discovered_clues = [ob.clue for ob in entry.finished_clues]
                 if clue in discovered_clues:
                     self.msg("They cannot learn anything from this briefing.")
-                    return
-                if not caller.pay_action_points(cost):
-                    self.msg("You cannot afford to pay %s action points." % cost)
                     return
                 discovery = entry.discover_clue(clue=clue, method="Briefing")
                 share_type = "clue"

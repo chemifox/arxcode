@@ -1365,26 +1365,27 @@ class CmdCalendar(ArxPlayerCommand):
     def do_display_switches(self,char):
         """Displays our project if we have one"""
         proj = self.caller.ndb.event_creation
-	timezone = char.character.db.timezone
-	if not timezone:
-	    timezone = SERVERTZ
+        timezone = char.character.db.timezone
+        if not timezone:
+            timezone = SERVERTZ
         if not self.args and not self.switches and proj:
             self.display_project(timezone)
             return
         if self.caller.check_permstring("builders"):
             qs = RPEvent.objects.all()
         else:
-            qs = RPEvent.objects.filter(Q(public_event=True) | Q(dompcs=self.caller.Dominion))
+            dompc = self.caller.Dominion
+            qs = RPEvent.objects.filter(Q(public_event=True) | Q(dompcs=dompc) | Q(orgs__in=dompc.current_orgs))
         if "old" in self.switches:  # display finished events
             finished = qs.filter(finished=True).distinct().order_by('-date')
             from server.utils import arx_more
             table = self.display_events(finished, timezone)
             arx_more.msg(self.caller, "{wOld events:\n%s" % table, justify_kwargs=False)
         else:  # display upcoming events
-	    unfinished = qs.filter(finished=False).distinct().order_by('date')
-	    table = self.display_events(unfinished, timezone)
+            unfinished = qs.filter(finished=False).distinct().order_by('date')
+            table = self.display_events(unfinished, timezone)
             self.msg("{wUpcoming events:\n%s" % table, options={'box': True})
-	    self.msg("{wEvents displayed in %s" % timezone)
+            self.msg("{wEvents displayed in %s" % timezone)
 
     @staticmethod
     def display_events(events, zone):
@@ -1394,9 +1395,8 @@ class CmdCalendar(ArxPlayerCommand):
             host = event.main_host or "No host"
             host = str(host).capitalize()
             public = "Public" if event.public_event else "Not Public"
-	    displaytime = event.date.astimezone(timezone(zone))
-            table.add_row([event.id, event.name[:25], displaytime.strftime("%x %H:%M"),
-                            host, public])
+            displaytime = event.date.astimezone(timezone(zone))
+            table.add_row([event.id, event.name[:25], displaytime.strftime("%x %H:%M"), host, public])
         return table
 
     def do_target_event_switches(self, char):

@@ -49,6 +49,7 @@ class DatabaseCleanup(RunDateMixin, Script):
             self.cleanup_soft_deleted_objects()
             self.cleanup_empty_tags()
             self.cleanup_old_praises()
+            self.cleanup_old_sessions(date)
         except Exception as err:
             traceback.print_exc()
             print("Error in cleanup: %s" % err)
@@ -138,3 +139,14 @@ class DatabaseCleanup(RunDateMixin, Script):
         except Exception as err:
             traceback.print_exc()
             print("Error in cleaning praises: %s" % err)
+
+    @staticmethod
+    def cleanup_old_sessions(date):
+        """Cleans up stale/expired sessions"""
+        try:
+            from django.contrib.sessions.models import Session
+            qs = Session.objects.filter(expire_date__lte=date)
+            qs.delete()
+        except Exception as err:
+            traceback.print_exc()
+            print("Error in cleaning sessions: %s" % err)

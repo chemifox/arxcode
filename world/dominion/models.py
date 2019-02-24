@@ -3131,6 +3131,9 @@ class Reputation(SharedMemoryModel):
     # positive respect is respect/fear, negative is contempt/dismissal
     respect = models.IntegerField(default=0, blank=0)
 
+    def __str__(self):
+        return "%s for %s (%s)" % (self.player, self.organization, self.favor)
+
     class Meta:
         unique_together = ('player', 'organization')
 
@@ -3492,7 +3495,7 @@ class Organization(InformMixin, SharedMemoryModel):
     @property
     def online_members(self):
         """Returns members who are currently online"""
-        return self.active_members.filter(player__player__db_is_connected=True)
+        return self.active_members.filter(player__player__db_is_connected=True).distinct()
 
     @property
     def offline_members(self):
@@ -5658,7 +5661,9 @@ class RPEvent(SharedMemoryModel):
         try:
             from typeclasses.scripts.event_manager import LOGPATH
             filename = LOGPATH + "event_log_%s.txt" % self.id
-            return open(filename).read()
+            with open(filename) as log:
+                msg = log.read()
+            return msg
         except IOError:
             return ""
 
@@ -5798,6 +5803,15 @@ class RPEvent(SharedMemoryModel):
             org.assets.social += part.social
             org.assets.save()
         part.delete()
+
+    def make_announcement(self, msg):
+        from typeclasses.accounts import Account
+        msg = "{y(Private Message) %s" % msg
+        guildies = Member.objects.filter(organization__in=self.orgs.all(), deguilded=False)
+        all_dompcs = PlayerOrNpc.objects.filter(Q(id__in=self.dompcs.all()) | Q(memberships__in=guildies))
+        audience = Account.objects.filter(Dominion__in=all_dompcs, db_is_connected=True).distinct()
+        for ob in audience:
+            ob.msg(msg)
 
 
 class PCEventParticipation(SharedMemoryModel):

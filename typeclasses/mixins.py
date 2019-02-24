@@ -797,7 +797,7 @@ class MsgMixins(object):
                 self.ndb.pose_history = []
             else:
                 try:
-                    self.ndb.pose_history.append((from_obj, text))
+                    self.ndb.pose_history.append((str(from_obj), text))
                 except AttributeError:
                     pass
         if options.get('box', False):
