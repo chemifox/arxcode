@@ -168,6 +168,7 @@ class RPEventCreateForm(forms.ModelForm):
             msg += "{wPublic:{n %s\n" % ("Public" if self.data.get('public_event', True) else "Private")
         msg += "{wDescription:{n %s\n" % self.data.get('desc')
         date = self.data.get('date')
+        zone = self.owner.player.char_ob.db.timezone
         if date:
             date = date.astimezone(timezone(zone))
             msg += "{wEvent Date:{n %s %s\n" % (date.strftime("%x %H:%M"), zone)
@@ -175,7 +176,11 @@ class RPEventCreateForm(forms.ModelForm):
             msg += "{wEvent Date:{n %s\n" % date
         location = self.data.get('location')
         if location:
-            location = ArxRoom.objects.get(id=location)
+            try:
+                location = ArxRoom.objects.get(id=location)
+            except ArxRoom.DoesNotExist:
+                location = None
+                self.data['location'] = None
         msg += "{wLocation:{n %s\n" % location
         plotroom = self.data.get('plotroom')
         if plotroom:
@@ -199,11 +204,13 @@ class RPEventCreateForm(forms.ModelForm):
 
     def display_errors(self):
         """Returns a game-friendly errors string"""
+
         def format_name(field_name):
             """Formats field names for error display"""
             if field_name == "celebration_tier":
                 return "{wLargesse{n"
             return "{w%s{n" % field_name.capitalize()
+
         msg = "Please correct the following errors:\n"
         msg += "\n".join("%s: {r%s{n" % (format_name(field), ", ".join(errs)) for field, errs in self.errors.items())
         return msg
