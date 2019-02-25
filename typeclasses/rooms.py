@@ -239,6 +239,8 @@ class ArxRoom(NameMixins, ObjectMixins, ExtendedRoom):
             msg += "\n    {wYou can {c+bank{w here.{n"
         if "nonlethal_combat" in tags:
             msg += "\n{wCombat in this room is non-lethal."
+        if "rumors" in tags:
+            msg += "\n{wRumor and Gossip commands are available here."
         return msg
 
     @property
