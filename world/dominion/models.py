@@ -3131,11 +3131,11 @@ class Reputation(SharedMemoryModel):
     # positive respect is respect/fear, negative is contempt/dismissal
     respect = models.IntegerField(default=0, blank=0)
 
-    def __str__(self):
-        return "%s for %s (%s)" % (self.player, self.organization, self.favor)
-
     class Meta:
         unique_together = ('player', 'organization')
+
+    def __str__(self):
+        return "%s for %s" % (self.player, self.organization)
 
 
 class Fealty(SharedMemoryModel):
