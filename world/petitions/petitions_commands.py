@@ -280,7 +280,7 @@ class CmdBroker(ArxCommand):
     action points for sale will not refund the full amount.
 
     When searching, you can specify the name of a seller, a type
-    of crafting material or resource (umbra, economic, etc), ap,
+    of crafting material or resource (moonsteel, economic, etc), ap,
     or categories such as 'resources' or 'materials'.
     """
     key = "broker"
