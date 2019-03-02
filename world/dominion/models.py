@@ -81,14 +81,14 @@ from server.utils.arx_utils import time_now
 
 # Dominion constants
 BASE_WORKER_COST = 0
-SILVER_PER_BUILDING = 100.00
+SILVER_PER_BUILDING = 200
 FOOD_PER_FARM = 100.00
 # default value for a global modifier to Dominion income, can be set as a ServerConfig value on a per-game basis
 DEFAULT_GLOBAL_INCOME_MOD = 0
 # each point in a dominion skill is a 5% bonus
 BONUS_PER_SKILL_POINT = 0.10
 # number of workers for a building to be at full production
-SERFS_PER_BUILDING = 100.0
+SERFS_PER_BUILDING = 20.0
 # population cap for housing
 POP_PER_HOUSING = 1000
 BASE_POP_GROWTH = 0
@@ -1543,7 +1543,7 @@ class Domain(SharedMemoryModel):
         if pillage > max_pillage:
             pillage = max_pillage
         self.amount_plundered = pillage
-        self.lawlessness += 10
+        self.lawlessness += 0
         self.save()
         return pillage
 
@@ -1618,10 +1618,6 @@ class Domain(SharedMemoryModel):
             deaths = (self.lawlessness * DEATHS_PER_LAWLESS) * self.total_serfs
             deaths = int(deaths) + 1
         adjustment = base_growth - deaths
-        if adjustment < 0:
-            self.kill_serfs(adjustment)
-        else:
-            self.unassigned_serfs += adjustment
 
     food_production = property(_get_food_production)
     food_consumption = property(_get_food_consumption)
@@ -1657,10 +1653,9 @@ class Domain(SharedMemoryModel):
         loot = 0
         if hunger > 0:
             self.stored_food = 0
-            self.lawlessness += 5
+            self.lawlessness += 0
             # unless we have a very large population, we'll only lose 1 serf as a penalty
             lost_serfs = hunger / 100 + 1
-            self.kill_serfs(lost_serfs)
         else:  # hunger is negative, we have enough food for it
             self.stored_food += hunger
         for army in self.armies.all():
@@ -4292,7 +4287,7 @@ class Army(SharedMemoryModel):
         else:  # no bordering domain. So domain intact, but changing owner
             # set the domain's ruler
             target.ruler = ruler
-            target.lawlessness += 50
+            target.lawlessness += 0
             target.save()
             # set army as occupying the domain
             self.domain = target
