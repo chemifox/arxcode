@@ -3561,23 +3561,23 @@ class Organization(InformMixin, SharedMemoryModel):
 class UnitTypeInfo(models.Model):
     """Abstract base class with information about military units"""
     INFANTRY = unit_constants.INFANTRY
-    PIKE = unit_constants.PIKE
+    CASTERS = unit_constants.CASTERS
     CAVALRY = unit_constants.CAVALRY
     ARCHERS = unit_constants.ARCHERS
     LONGSHIP = unit_constants.LONGSHIP
     SIEGE_WEAPON = unit_constants.SIEGE_WEAPON
-    GALLEY = unit_constants.GALLEY
+    CORSAIR = unit_constants.CORSAIR
     DROMOND = unit_constants.DROMOND
     COG = unit_constants.COG
 
     UNIT_CHOICES = (
         (INFANTRY, 'Infantry'),
-        (PIKE, 'Pike'),
+        (CASTERS, 'Casters'),
         (CAVALRY, 'Cavalry'),
         (ARCHERS, 'Archers'),
         (LONGSHIP, 'Longship'),
         (SIEGE_WEAPON, 'Siege Weapon'),
-        (GALLEY, 'Galley'),
+        (CORSAIR, 'Corsair'),
         (COG, 'Cog'),
         (DROMOND, 'Dromond'),
         )

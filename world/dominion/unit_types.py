@@ -372,42 +372,42 @@ class UnitStats(PositionActor):
 class Infantry(UnitStats):
     id = unit_constants.INFANTRY
     name = "Infantry"
-    silver_upkeep = 5
+    silver_upkeep = 1
     melee_damage = 3
     storm_damage = 3
     defense = 1
     hp = 30
     movement = 2
     strategic_speed = 2
-    hiring_cost = 10
+    hiring_cost = 2
 
 
 @register_unit
-class Pike(UnitStats):
-    id = unit_constants.PIKE
-    name = "Pike"
-    silver_upkeep = 8
+class Casters(UnitStats):
+    id = unit_constants.CASTERS
+    name = "Casters"
+    silver_upkeep = 2
     melee_damage = 5
     storm_damage = 3
     defense = 1
     hp = 30
     movement = 2
     strategic_speed = 2
-    hiring_cost = 15
+    hiring_cost = 4
 
 
 @register_unit
 class Cavalry(UnitStats):
     id = unit_constants.CAVALRY
     name = "Cavalry"
-    silver_upkeep = 15
+    silver_upkeep = 3
     melee_damage = 10
     storm_damage = 3
     defense = 3
     hp = 60
     movement = 6
     strategic_speed = 2
-    hiring_cost = 30
+    hiring_cost = 6
     xp_cost_multiplier = 2
 
 
@@ -415,7 +415,7 @@ class Cavalry(UnitStats):
 class Archers(UnitStats):
     id = unit_constants.ARCHERS
     name = "Archers"
-    silver_upkeep = 10
+    silver_upkeep = 2
     melee_damage = 1
     range_damage = 5
     storm_damage = 3
@@ -425,7 +425,7 @@ class Archers(UnitStats):
     siege = 5
     movement = 2
     strategic_speed = 2
-    hiring_cost = 20
+    hiring_cost = 4
     xp_cost_multiplier = 2
 
 
@@ -433,7 +433,7 @@ class Archers(UnitStats):
 class Longship(UnitStats):
     id = unit_constants.LONGSHIP
     name = "Longships"
-    silver_upkeep = 75
+    silver_upkeep = 25
     food_upkeep = 20
     movement = 6
     melee_damage = 60
@@ -442,7 +442,7 @@ class Longship(UnitStats):
     environment = "naval"
     strategic_speed = 12
     structure_damage_multiplier = 20
-    hiring_cost = 150
+    hiring_cost = 50
     xp_cost_multiplier = 10
 
 
@@ -450,7 +450,7 @@ class Longship(UnitStats):
 class SiegeWeapon(UnitStats):
     id = unit_constants.SIEGE_WEAPON
     name = "Siege Weapon"
-    silver_upkeep = 500
+    silver_upkeep = 250
     food_upkeep = 20
     movement = 1
     melee_damage = 20
@@ -460,15 +460,15 @@ class SiegeWeapon(UnitStats):
     storm_damage = 600
     strategic_speed = 1
     structure_damage_multiplier = 20
-    hiring_cost = 1000
+    hiring_cost = 500
     xp_cost_multiplier = 30
 
 
 @register_unit
-class Galley(UnitStats):
-    id = unit_constants.GALLEY
-    name = "Galleys"
-    silver_upkeep = 250
+class Corsair(UnitStats):
+    id = unit_constants.CORSAIR
+    name = "Corsairs"
+    silver_upkeep = 50
     food_upkeep = 60
     movement = 5
     melee_damage = 240
@@ -477,7 +477,7 @@ class Galley(UnitStats):
     environment = "naval"
     strategic_speed = 10
     structure_damage_multiplier = 20
-    hiring_cost = 500
+    hiring_cost = 100
     xp_cost_multiplier = 50
 
 
@@ -485,7 +485,7 @@ class Galley(UnitStats):
 class Cog(UnitStats):
     id = unit_constants.COG
     name = "Cogs"
-    silver_upkeep = 500
+    silver_upkeep = 125
     food_upkeep = 120
     movement = 6
     melee_damage = 700
@@ -493,7 +493,7 @@ class Cog(UnitStats):
     hp = 5000
     environment = "naval"
     strategic_speed = 12
-    hiring_cost = 1000
+    hiring_cost = 250
     xp_cost_multiplier = 75
 
 
@@ -501,7 +501,7 @@ class Cog(UnitStats):
 class Dromond(UnitStats):
     id = unit_constants.DROMOND
     name = "Dromonds"
-    silver_upkeep = 1000
+    silver_upkeep = 250
     food_upkeep = 300
     movement = 3
     melee_damage = 2500
@@ -510,5 +510,5 @@ class Dromond(UnitStats):
     environment = "naval"
     strategic_speed = 8
     structure_damage_multiplier = 20
-    hiring_cost = 2000
+    hiring_cost = 500
     xp_cost_multiplier = 100

@@ -515,7 +515,7 @@ class CmdAdmArmy(ArxPlayerCommand):
             caller_change_field(caller, army, "desc", self.rhs)
             return
         if "unit" in self.switches:
-            u_types = ("infantry", "cavalry", "pike", "archers", "warships", "siege weapons")
+            u_types = ("infantry", "cavalry", "casters", "archers", "warships", "siege weapons")
             try:
                 utype = self.rhslist[0].lower()
                 quantity = int(self.rhslist[1])

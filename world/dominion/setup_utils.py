@@ -248,7 +248,7 @@ def setup_land_units(srank):
             A dict of unit IDs to the quanity of those troops.
     """
     INF = unit_constants.INFANTRY
-    PIK = unit_constants.PIKE
+    CAS = unit_constants.CASTERS
     CAV = unit_constants.CAVALRY
     ARC = unit_constants.ARCHERS
     units = {}
@@ -309,7 +309,7 @@ def setup_naval_units(srank):
             A dict of unit IDs to the quanity of those ships.
     """
     LS = unit_constants.LONGSHIP
-    GAL = unit_constants.GALLEY
+    GAL = unit_constants.CORSAIR
     DRO = unit_constants.DROMOND
     units = {}
     if srank == 6:
