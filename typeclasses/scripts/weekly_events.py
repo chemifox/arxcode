@@ -131,10 +131,6 @@ class WeeklyEvents(RunDateMixin, Script):
         self.cleanup_stale_attributes()
         self.post_inactives()
         self.count_poses()
-        self.db.pose_counter = (self.db.pose_counter or 0) + 1
-        if self.db.pose_counter % 4 == 0:
-            self.db.pose_counter = 0
-            self.count_poses()
         self.db.week += 1
         self.reset_action_points()
         self.inform_creator.create_and_send_informs()
