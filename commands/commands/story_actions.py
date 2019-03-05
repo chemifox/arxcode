@@ -720,9 +720,9 @@ class CmdGMAction(ActionCommandMixin, ArxPlayerCommand):
             if not action:
                 return
         if "stat" in self.switches:
-            return self.set_action_field(action, "stat", self.rhs)
+            return self.set_action_field(action, "stat_used", self.rhs)
         if "skill" in self.switches:
-            return self.set_action_field(action, "skill", self.rhs)
+            return self.set_action_field(action, "skill_used", self.rhs)
             
     def do_checks(self, action):
         """Make rolls for the action"""

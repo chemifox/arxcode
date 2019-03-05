@@ -191,7 +191,7 @@ class CmdWrite(ArxCommand):
                 obj.db.translation = obj.ndb.transtext
             obj.save()        
             caller.msg("You have written on %s." % obj.name)
-            obj.attributes.remove("quality_level")
+            obj.db.quality_level = 6
             obj.attributes.remove("can_stack")
             obj.db.author = caller
             obj.db.recipe = 173

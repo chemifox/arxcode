@@ -341,9 +341,6 @@ def post_roster_dompc_cleanup(player):
     dompc.proteges.clear()
     dompc.patron = None
     dompc.save()
-    for member in dompc.memberships.filter(rank=2):
-        member.rank = 3
-        member.save()
     try:
         dompc.assets.debts.all().delete()
     except AttributeError:

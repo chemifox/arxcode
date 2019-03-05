@@ -2361,6 +2361,7 @@ class CmdFamily(ArxPlayerCommand):
     Usage:
         @family
         @family <player>
+        @family/sparse <player>
 
     Displays family information about a given character, if
     available.
@@ -2391,7 +2392,13 @@ class CmdFamily(ArxPlayerCommand):
             if not famtree:
                 famtree = "No relatives found for {c%s{n.\n" % dompc
             caller.msg(famtree)
-            if player:
+            if 'sparse' in self.switches:
+                try:
+                    family = player.char_ob.db.family
+                except Organization.DoesNotExist:
+                    # display nothing
+                    pass
+            elif player:
                 try:
                     family = player.char_ob.db.family
                     fam_org = Organization.objects.get(name__iexact=family)
@@ -2401,6 +2408,7 @@ class CmdFamily(ArxPlayerCommand):
                 except Organization.DoesNotExist:
                     # display nothing
                     pass
+
             return
         except PlayerOrNpc.DoesNotExist:
             caller.msg("No relatives found for {c%s{n." % self.args)
