@@ -20,7 +20,7 @@ class SituationalCmdSet(CmdSet):
         self.add(home.ShopCmdSet())
         self.add(market.MarketCmdSet())
         self.add(rumor.RumorCmdSet())
-        self.add(starting_gear.StartingGearCmdSet())
+        #self.add(starting_gear.StartingGearCmdSet())
         self.add(cmdset_wearable.DefaultCmdSet())
         self.add(cmdset_wieldable.WeaponCmdSet())
         self.add(cmdset_places.DefaultCmdSet())
