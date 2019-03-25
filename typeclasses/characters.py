@@ -788,6 +788,14 @@ class Character(UseEquipmentMixins, NameMixins, MsgMixins, ObjectMixins, Default
     def total_posecount(self):
         return self.posecount + self.previous_posecount
 
+    @property
+    def sroom_posecount(self):
+        return self.db.sroom_posecount or 0
+
+    @sroom_posecount.setter
+    def sroom_posecount(self, val):
+        self.db.sroom_posecount = val
+
     def announce_move_from(self, destination, msg=None, mapping=None, **kwargs):
         """
         Called if the move is to be announced. This is

@@ -434,6 +434,7 @@ class CmdWhisper(ArxCommand):
 
         # this is a MuxCommand, which means caller will be a Character.
         caller = self.caller
+        room = caller.location
         # get the messages we've sent (not to channels)
         if not caller.ndb.whispers_sent:
             caller.ndb.whispers_sent = []
@@ -606,6 +607,12 @@ class CmdWhisper(ArxCommand):
                     exclude = [caller] + recobjs
                     caller.location.msg_action(self.caller, emit_string, options={'is_pose': True}, exclude=exclude)
         caller.posecount += 1
+        if "sroom" in room.tags.all() and len([ob for ob in room.contents if ob.player_ob]) > 1:
+            self.caller.sroom_posecount += 1
+            if self.caller.sroom_posecount >= 5:
+                self.caller.sroom_posecount = 0
+                self.caller.player_ob.gain_resources("social", 1)
+                caller.msg("You receive 1 social resource for being seen out in public.")
 
 
 class CmdPage(ArxPlayerCommand):

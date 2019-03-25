@@ -23,6 +23,7 @@ from evennia.utils.utils import (make_iter, crop, time_format, variable_from_mod
 from server.utils import arx_utils, prettytable
 from server.utils.arx_utils import ArxCommand, ArxPlayerCommand
 from world.dominion.models import CraftingMaterials
+from typeclasses.accounts import Account
 
 
 AT_SEARCH_RESULT = variable_from_module(*settings.SEARCH_AT_RESULT.rsplit('.', 1))
@@ -579,6 +580,14 @@ class CmdEmit(ArxCommand):
             caller.msg("Those options are restricted to GMs only.")
             return
         self.caller.posecount += 1
+        caller = self.caller
+        room = caller.location
+        if "sroom" in room.tags.all() and len([ob for ob in room.contents if ob.player_ob]) > 1:
+            self.caller.sroom_posecount += 1
+            if self.caller.sroom_posecount >= 5:
+                self.caller.sroom_posecount = 0
+                self.caller.player_ob.gain_resources("social", 1)
+                caller.msg("You receive 1 social resource for being seen out in public.")
         if self.cmdstring == '@remit':
             rooms_only = True
             send_to_contents = True
@@ -692,6 +701,8 @@ class CmdPose(ArxCommand):
 
     def func(self):
         """Hook function"""
+        caller = self.caller
+        room = caller.location
         if "history" in self.switches:
             pose_history = self.caller.ndb.pose_history or []
             if self.args:
@@ -705,8 +716,14 @@ class CmdPose(ArxCommand):
             msg = "What do you want to do?"
             self.caller.msg(msg)
         else:
+            if "sroom" in room.tags.all() and len([ob for ob in room.contents if ob.player_ob]) > 1:
+                self.caller.sroom_posecount += 1
             self.caller.location.msg_action(self.caller, self.args, options={'is_pose': True})
             self.caller.posecount += 1
+            if self.caller.sroom_posecount >= 5:
+                self.caller.sroom_posecount = 0
+                self.caller.player_ob.gain_resources("social", 1)
+                caller.msg("You receive 1 social resource for being seen out in public.")
 
 
 class CmdArxSay(CmdSay):
@@ -726,6 +743,8 @@ class CmdArxSay(CmdSay):
         if not self.raw:
             self.msg("Say what?")
             return
+        caller = self.caller
+        room = caller.location
         options = {'is_pose': True}
         speech = self.raw.lstrip(" ")
         # calling the speech hook on the location
@@ -741,6 +760,12 @@ class CmdArxSay(CmdSay):
         pre_name_emit_string = ' says%s, "%s{n"' % (langstring, speech)
         self.caller.location.msg_action(self.caller, pre_name_emit_string, exclude=[self.caller], options=options)
         self.caller.posecount += 1
+        if "sroom" in room.tags.all() and len([ob for ob in room.contents if ob.player_ob]) > 1:
+            self.caller.sroom_posecount += 1
+            if self.caller.sroom_posecount >= 5:
+                self.caller.sroom_posecount = 0
+                self.caller.player_ob.gain_resources("social", 1)
+                caller.msg("You receive 1 social resource for being seen out in public.")
 
 
 # Changed to display room dbref number rather than room name
