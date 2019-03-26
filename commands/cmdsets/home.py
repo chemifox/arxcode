@@ -58,26 +58,14 @@ class CmdManageHome(ArxCommand):
 
     Controls your home. /passmsg is for use of the 'pass' command to
     go through a locked door. /lockmsg is for those who are denied
-    entry. /lifestyle is to control how much silver you spend per
-    week and earn prestige.
+    entry.
     """
     key = "+home"
     # aliases = ["@home"]
     locks = "cmd:all()"
     help_category = "Home"
 
-#    def display_lifestyles(self):
-#        """Displays table of Dominion lifestyles with the character's current selection"""
-#        caller = self.caller
-#        table = PrettyTable(["{wRating{n", "{wCost{n", "{wPrestige{n"])
-#        caller.msg("{wLifestyles:{n")
-#        for rating in LIFESTYLES:
-#            num = str(rating)
-#            if caller.player_ob.Dominion.lifestyle_rating == rating:
-#                num += '{w*{n'
-#            table.add_row([num, LIFESTYLES[rating][0], LIFESTYLES[rating][1]])
-#        caller.msg(str(table), options={'box': True})
-    
+
     def func(self):
         """Execute command."""
         caller = self.caller
@@ -112,10 +100,6 @@ class CmdManageHome(ArxCommand):
             for ent in entrances:
                 ent.lock_exit()
             return
-        if "lifestyle" in self.switches and not self.args:
-            # list lifestyles
-            self.display_lifestyles()
-            return
         if not self.args:
             caller.msg("You must provide an argument to the command.")
             return
@@ -129,20 +113,7 @@ class CmdManageHome(ArxCommand):
                 r_exit.db.success_traverse = self.args
             caller.msg("{wThe message those who enter will now see is{n: %s" % self.args)
             return
-#        if "lifestyle" in self.switches or "lifestyles" in self.switches:
-#            if caller not in owners:
-#                caller.msg("You may only set the lifestyle rating for an owner.")
-#                return
-#            try:
-#                LIFESTYLES[int(self.args)]
-#            except (KeyError, TypeError, ValueError):
-#                caller.msg("%s is not a valid lifestyle." % self.args)
-#                self.display_lifestyles()
-#                return
-#            caller.player_ob.Dominion.lifestyle_rating = int(self.args)
-#            caller.player_ob.Dominion.save()
-#            caller.msg("Your lifestyle rating has been set to %s." % self.args)
-#            return
+
         player = caller.player.search(self.lhs)
         if not player:
             return
