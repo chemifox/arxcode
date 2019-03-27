@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container">
 	<h2>{{ subject }}</h2>
-	<p class="newsData">Posted by <b>{{ poster }}</b> on {{ date }}</p>
+	<p class="newsData">Posted by <b>{{ poster }}</b> on {{ date }} {{ zone }}</p>
 	<p class="well">{{ text|mush_to_html|urlize }}</p>
 </div>
 {% endblock %}

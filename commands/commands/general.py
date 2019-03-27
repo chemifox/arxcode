@@ -1776,7 +1776,19 @@ class CmdTimeZone(ArxCommand):
                     'US/Central',
                     'US/Eastern',
                     'Europe/Paris',
-                    'Europe/London']
+                    'Europe/London',
+                    'Europe/Athens',
+                    'Europe/Moscow',
+                    'Asia/Dubai',
+                    'Asia/Karachi',
+                    'Asia/Dhaka',
+                    'Asia/Jakarta',
+                    'Asia/Tokyo',
+                    'Australia/Sydney',
+                    'America/Buenos_Aires',
+                    'US/Puerto_Rico',
+                    'US/Alaska',
+                    'US/Hawaii']
         if "list" in self.switches:
             number = 1
             caller.msg("Available Time Zones:")

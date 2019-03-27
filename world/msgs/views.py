@@ -20,7 +20,9 @@ from .forms import (JournalMarkAllReadForm, JournalWriteForm, JournalMarkOneRead
 from server.utils.view_mixins import LimitPageMixin
 from typeclasses.bulletin_board.bboard import BBoard, Post
 from world.msgs.models import Journal
-
+from pytz import timezone
+from server.utils.arx_utils import time_now
+from server.conf.production_settings import SERVERTZ
 
 # Create your views here.
 
@@ -539,6 +541,7 @@ def post_view_unread(request):
 def post_view(request, board_id, post_id):
     """View for seeing an individual post"""
     board = board_for_request(request, board_id)
+    zone = SERVERTZ
     try:
         post = board.posts.get(id=post_id)
     except (Post.DoesNotExist, ValueError):
@@ -548,13 +551,20 @@ def post_view(request, board_id, post_id):
             raise Http404
 
     if request.user.is_authenticated():
-        board.mark_read(request.user, post)
+        board.mark_read(request.user, post, timezone(zone))
+
+    date = time_now(aware=True)
+    if date:
+        date = date.astimezone(timezone(zone))
+    else:
+        date
 
     context = {
         'id': post.id,
         'poster': board.get_poster(post),
         'subject': ansi.strip_ansi(post.db_header),
-        'date': post.db_date_created.strftime("%x"),
+        'date': date.strftime("%x %H:%M"),
+        'zone': zone,
         'text': post.db_message,
         'page_title': board.key + " - " + post.db_header
     }
