@@ -35,7 +35,7 @@ def setup_assets(dompc, amt):
 
 
 def starting_money():
-    smoney = 1000
+    smoney = 9000
     return smoney
 
 

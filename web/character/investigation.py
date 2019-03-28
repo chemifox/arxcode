@@ -1269,8 +1269,8 @@ class CmdListClues(ArxPlayerCommand):
         else:
             rhslist = self.rhslist
         shared_names = []
-        # cost = len(rhslist) * len(clues_to_share) * self.caller.clue_cost
-        # if cost > self.caller.roster.action_points:
+        #cost = len(rhslist) * len(clues_to_share) * self.caller.clue_cost
+        #if cost > self.caller.roster.action_points:
         #    self.msg("Sharing the clue(s) with them would cost %s action points." % cost)
         #    return
         for arg in rhslist:

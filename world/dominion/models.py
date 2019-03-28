@@ -2032,8 +2032,8 @@ class Crisis(SharedMemoryModel):
     def time_remaining(self):
         """Returns timedelta of how much time is left before the crisis updates"""
         time_now(aware=True)
-        if self.end_date and self.end_date > now:
-            return self.end_date - now
+        if self.end_date and self.end_date > time_now(aware=True):
+            return self.end_date - time_now(aware=True)
 
     @property
     def rating(self):

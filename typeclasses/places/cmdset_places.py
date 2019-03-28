@@ -210,6 +210,7 @@ class CmdTableTalk(ArxCommand):
         """Implements command"""
         caller = self.caller
         args = self.args
+        room = caller.location
         if not args:
             caller.msg("Usage: {wtt <message>{n")
             return
@@ -238,6 +239,12 @@ class CmdTableTalk(ArxCommand):
                 emit = False
             # gives the message, its sender, and whether it's an emit
             table.tt_msg(msg, from_obj=caller, emit=emit, options=options)
+            if "sroom" in room.tags.all() and len([ob for ob in room.contents if ob.player_ob]) > 1:
+                self.caller.sroom_posecount += 1
+                if self.caller.sroom_posecount >= 5:
+                    self.caller.sroom_posecount = 0
+                    self.caller.player_ob.gain_resources("social", 1)
+                    caller.msg("You receive 1 social resource for being seen out in public.")
             return
         caller.msg('%s you say, "%s"' % (prefix, args), options=options, from_obj=caller)
         table.tt_msg('%s {c%s{n says, "%s"' % (prefix, caller.name, args), from_obj=caller,

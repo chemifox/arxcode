@@ -244,7 +244,7 @@ class AccountCmdSet(cmdset_account.AccountCmdSet):
         self.add(staff_commands.CmdSetServerConfig())
         self.add(staff_commands.CmdSendEmail())
         from .cmdsets import starting_gear
-        self.add(starting_gear.CmdSetupGear())
+        #self.add(starting_gear.CmdSetupGear())
         from world.fashion import fashion_commands
         self.add(fashion_commands.CmdAdminFashion())
 
