@@ -299,7 +299,7 @@ class WeeklyEvents(RunDateMixin, Script):
             if (ob.posecount < min_poses and (ob.tags.get("rostercg")and ob.player_ob
                                               and not ob.player_ob.tags.get("staff_alt"))):
                 low_activity.append(ob)
-            ob.db.previous_posecount = ob.posecount
+            ob.db.previous_posecount += ob.posecount
             ob.posecount = 0
         board = BBoard.objects.get(db_key__iexact="staff")
         table = EvTable("{wName{n", "{wNum Poses{n", border="cells", width=78)

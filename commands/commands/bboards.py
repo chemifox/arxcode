@@ -8,6 +8,7 @@ for easy handling.
 
 """
 from evennia.utils import create
+from server.conf import settings
 from server.utils import prettytable
 from server.utils.arx_utils import inform_staff
 from server.utils.arx_utils import ArxCommand, ArxPlayerCommand
@@ -568,7 +569,7 @@ class CmdBBCreate(ArxCommand):
 
         typeclass = BOARD_TYPECLASS
         new_board = create.create_object(typeclass, bboardname, location=caller,
-                                         home="#448", permissions=None,
+                                         home=settings.BBOARDS_HOME, permissions=None,
                                          locks=lockstring, aliases=None, destination=None,
                                          report_to=None, nohome=False)
         new_board.desc = description

@@ -8,6 +8,7 @@ for easy handling.
 
 """
 from evennia.utils import create
+from server.conf import settings
 from server.utils.arx_utils import ArxCommand
 from evennia.objects.models import ObjectDB
 
@@ -83,7 +84,7 @@ class CmdMapCreate(ArxCommand):
         # Create and set the map up
         lockstring = "view:all();delete:perm(Immortals);edit:id(%s)" % caller.id
         new_map = create.create_object(typeclass, name, location=caller,
-                                         home ="#448", permissions=None,
+                                         home=settings.MAPS_HOME, permissions=None,
                                          locks=lockstring, aliases=None, destination=None,
                                          report_to=None, nohome=False)
         new_map.desc = description

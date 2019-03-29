@@ -45,6 +45,8 @@ DEBUG = False
 CHANNEL_COMMAND_CLASS = "commands.commands.channels.ArxChannelCommand"
 BASE_ROOM_TYPECLASS = "typeclasses.rooms.ArxRoom"
 DEFAULT_HOME = config("DEFAULT_HOME", default="#30")
+MAPS_HOME = config("MAPS_HOME", default="#448")
+BBOARDS_HOME = config("BBOARDS_HOME", default="#448")
 MULTISESSION_MODE = 1
 COMMAND_DEFAULT_MSG_ALL_SESSIONS = True
 ADDITIONAL_ANSI_MAPPINGS = [(r'%r', "\r\n"),]
