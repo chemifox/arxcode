@@ -551,19 +551,13 @@ def post_view(request, board_id, post_id):
             raise Http404
 
     if request.user.is_authenticated():
-        board.mark_read(request.user, post, timezone(zone))
-
-    date = time_now(aware=True)
-    if date:
-        date = date.astimezone(timezone(zone))
-    else:
-        date
+        board.mark_read(request.user, post)
 
     context = {
         'id': post.id,
         'poster': board.get_poster(post),
         'subject': ansi.strip_ansi(post.db_header),
-        'date': date.strftime("%x %H:%M"),
+        'date': post.db_date_created.strftime("%x"),
         'zone': zone,
         'text': post.db_message,
         'page_title': board.key + " - " + post.db_header
