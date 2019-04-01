@@ -26,7 +26,7 @@ let history_plugin = (function () {
         // step forwards in history stack
         history_pos = Math.max(--history_pos, 0);
         return history[history.length - 1 - history_pos];
-    };
+    }
 
     //
     // add a new history line
@@ -43,19 +43,14 @@ let history_plugin = (function () {
         history_pos = 0;
     }
 
-     var end = function () {
-        // move to the end of the history stack
-        history_pos = 0;
-        return history[history.length -1];
-    }
-
+    //
+    // Add input to the scratch line
     var scratch = function (input) {
         // Put the input into the last history entry (which is normally empty)
         // without making the array larger as with add.
         // Allows for in-progress editing to be saved.
         history[history.length-1] = input;
     }
-
 
     // Public
 
@@ -73,18 +68,16 @@ let history_plugin = (function () {
             history_entry = fwd();
         }
 
-    if (history_entry !== null) {
-        // Doing a history navigation; replace the text in the input.
-        inputfield.val(history_entry);
-        event.preventDefault();
-    }
-    else {
-        // Save the current contents of the input to the history scratch area.
-        setTimeout(function () {
-            // Need to wait until after the key-up to capture the value.
-            input_history.scratch(inputfield.val());
-            input_history.end();
-        }, 0)
+        if (history_entry !== null) {
+            // Performing a history navigation
+            // replace the text in the input and move the cursor to the end of the new value
+            inputfield.val('');
+            inputfield.blur().focus().val(history_entry);
+            event.preventDefault();
+            return true;
+        }
+
+        return false;
     }
 
     //
@@ -98,17 +91,12 @@ let history_plugin = (function () {
     // Init function
     var init = function () {
         console.log('History Plugin Initialized.');
-    } 
+    }
 
     return {
         init: init,
         onKeydown: onKeydown,
         onSend: onSend,
-        back: back,
-        fwd: fwd,
-        add: add,
-        end: end,
-        scratch: scratch
     }
-}
-plugin_handler.add('history', history_plugin);}
+})()
+plugin_handler.add('history', history_plugin);

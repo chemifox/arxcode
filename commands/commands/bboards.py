@@ -251,6 +251,10 @@ class CmdBBReadOrPost(ArxPlayerCommand):
     switch may be chained to view archived posts.
 
     @bborgstance is used to set an organization's stance on a proclamation.
+
+    As a note, all bb numbers are unique to the user. If you would like to
+    direct someone to a specific post it is better to use the board name.
+    ex. 'Check out bb/read faenor/10!'
     """
 
     key = "@bb"

@@ -318,7 +318,7 @@ class StaffCmdSet(CmdSet):
         self.add(combat.CmdObserveCombat())
         self.add(combat.CmdAdminCombat())
         self.add(combat.CmdCreateAntagonist())
-        self.add(combat.CmdStandYoAssUp())
+        self.add(combat.CmdAdminHeal())
         self.add(domcommands.CmdSetRoom())
         self.add(condition_commands.CmdModifiers())
         # home commands

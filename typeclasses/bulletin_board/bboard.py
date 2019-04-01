@@ -239,15 +239,7 @@ class BBoard(Object):
         message += "{wBoard:{n %s, {wPost Number:{n %s\n" % (self.key, list(posts).index(post) + 1)
         message += "{wPoster:{n %s\n" % sender
         message += "{wSubject:{n %s\n" % post.db_header
-        zone = self.db.timezone
-        if not zone:
-            zone = SERVERTZ
-        date = time_now(aware=True)
-        if date:
-            date = date.astimezone(timezone(zone))
-            message += "{wDate Created:{n %s %s\n" % (date.strftime("%x %H:%M"), zone)
-        else:
-            message += "{wDate Created:{n %s\n" % date
+        message += "{wDate Created:{n %s\n" % post.db_date_created.strftime("%x")
         message += "{w" + "-"*60 + "{n\n"
         message += post.db_message
         message += "\n{w" + "-" * 60 + "{n\n"
@@ -255,7 +247,7 @@ class BBoard(Object):
         if caller.is_guest():
             return
         # mark it read
-        self.mark_read(caller, post, timezone(zone))
+        self.mark_read(caller, post)
 
     @staticmethod
     def archive_post(post):
@@ -277,7 +269,7 @@ class BBoard(Object):
 
         self.num_unread_cache[caller] = num_unread
 
-    def mark_read(self, caller, post, zone):
+    def mark_read(self, caller, post):
         if not post.db_receivers_accounts.filter(id=caller.id).exists():
             # Mark our post read
             post.db_receivers_accounts.add(caller)

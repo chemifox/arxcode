@@ -1633,18 +1633,18 @@ class CmdHeal(ArxCommand):
             script.attempt_heal(heal_roll, caller)
 
 
-class CmdStandYoAssUp(ArxCommand):
+class CmdAdminHeal(ArxCommand):
     """
     Heals up a player character
     Usage:
-        +standyoassup <character>
-        +standyoassup/noheal <character>
-        +standyoassup/global <character>
+        +admin_heal <character>
+        +admin_heal/noheal <character>
+        +admin_heal/global <character>
 
-    Heals a puny mortal and wakes them up. Use /noheal if you just wanna wake
+    Heals a character that has been injured. Use /noheal if you just wanna wake
     them but want them to remain injured.
     """
-    key = "+standyoassup"
+    key = "+admin_heal"
     locks = "cmd:perm(wizards)"
     help_category = "GMing"
 
@@ -1658,6 +1658,6 @@ class CmdStandYoAssUp(ArxCommand):
         if "noheal" not in self.switches:
             targ.dmg = 0
             targ.msg("You have been healed.")
-            caller.msg("You heal %s because they're a sissy mortal who needs everything done for them." % targ)
+            caller.msg("You heal %s." % targ)
         targ.wake_up()
         return
