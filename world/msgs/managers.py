@@ -9,6 +9,7 @@ from evennia.comms.managers import MsgManager
 WHITE_TAG = "white_journal"
 BLACK_TAG = "black_journal"
 REVEALED_BLACK_TAG = "revealed_black"
+PRAYER_TAG = "prayer"
 VISION_TAG = "visions"
 MESSENGER_TAG = "messenger"
 RELATIONSHIP_TAG = "relationship"
@@ -228,6 +229,7 @@ class MsgProxyManager(MsgManager):
     black_query = q_msgtag(BLACK_TAG)
     revealed_query = q_msgtag(REVEALED_BLACK_TAG)
     all_journals_query = Q(white_query | black_query)
+    prayer_query = q_msgtag(PRAYER_TAG)
 
     def get_queryset(self):
         return MsgQuerySet(self.model)
@@ -253,6 +255,9 @@ class MsgProxyManager(MsgManager):
     def black(self):
         return self.get_queryset().black()
 
+    def prayer(self):
+        return self.get_queryset().prayer()
+
     def relationships(self):
         return self.get_queryset().relationships()
 
@@ -271,7 +276,19 @@ class JournalManager(MsgProxyManager):
         # get all White Journals plus Black Journals they've written
         return qs.filter(self.white_query |
                          Q(self.black_query & q_sender_character(user.char_ob) | self.revealed_query))
-        
+
+
+class PrayerManager(MsgProxyManager):
+    def get_queryset(self):
+        return super(PrayerManager, self).get_queryset().filter(self.prayer_query)
+
+    def all_permitted_prayers(self, user):
+        qs = self.get_queryset()
+        if user.is_staff:
+            return qs
+        # get all White Journals plus Black Journals they've written
+        return qs.filter(self.prayer_query)
+
         
 class BlackJournalManager(MsgProxyManager):
     def get_queryset(self):
@@ -304,3 +321,6 @@ class PostManager(MsgProxyManager):
 class RumorManager(MsgProxyManager):
     def get_queryset(self):
         return super(RumorManager, self).get_queryset().filter(q_msgtag(GOSSIP_TAG) | q_msgtag(RUMOR_TAG))
+
+
+
