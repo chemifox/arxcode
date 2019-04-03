@@ -272,9 +272,9 @@ class Prayer(MarkReadMixin, Msg):
             pass
 
     def __str__(self):
-        relationship = self.relationship
-        rel_txt = " on %s" % relationship.key if relationship else ""
-        return "<Prayer written by %s%s>" % (self.writer, rel_txt)
+        prayer = self.prayer
+        prayer_txt = " on %s" % prayer.key
+        return "<Prayer written by %s%s>" % (self.writer, prayer_txt)
 
     def tag_favorite(self, player):
         """
@@ -292,50 +292,14 @@ class Prayer(MarkReadMixin, Msg):
         """
         self.tags.remove("pid_%s_favorite" % player.id)
 
-    def add_black_locks(self):
-        """Sets the locks for this message being black"""
+    def add_prayer_locks(self):
+        """Sets the locks for prayers"""
         try:
             p_id = self.senders[0].player_ob.id
-            blacklock = "read: perm(Builders) or pid(%s)." % p_id
+            prayerlock = "read: perm(Builders) or pid(%s)." % p_id
         except (AttributeError, IndexError):
-            blacklock = "read: perm(Builders)"
-        self.locks.add(blacklock)
-
-    def remove_black_locks(self):
-        """Removes the lock for black journals"""
-        self.locks.add("read: all()")
-
-    def convert_to_black(self):
-        """Converts this journal to a black journal"""
-        self.db_header = self.db_header.replace("white", "black")
-        self.tags.add(BLACK_TAG, category="msg")
-        self.tags.remove(WHITE_TAG, category="msg")
-        self.add_black_locks()
-        self.save()
-
-    def convert_to_white(self):
-        """Converts this journal to a white journal"""
-        self.db_header = self.db_header.replace("black", "white")
-        self.tags.remove(BLACK_TAG, category="msg")
-        self.tags.add(WHITE_TAG, category="msg")
-        self.remove_black_locks()
-        self.save()
-
-    def reveal_black_journal(self):
-        """Makes a black journal viewable to all - intended for posthumous releases"""
-        self.remove_black_locks()
-        self.tags.add(REVEALED_BLACK_TAG, category="msg")
-
-    def hide_black_journal(self):
-        """Hides a black journal again, for fixing errors"""
-        self.add_black_locks()
-        self.tags.remove(REVEALED_BLACK_TAG, category="msg")
-
-    @property
-    def is_public(self):
-        """Whether this journal is visible to the public without an access check"""
-        tags = self.tags.all()
-        return WHITE_TAG in tags or REVEALED_BLACK_TAG in tags
+            prayerlock = "read: perm(Builders)"
+        self.locks.add(prayerlock)
 
 
 class Messenger(MarkReadMixin, Msg):

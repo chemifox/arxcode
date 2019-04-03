@@ -5,7 +5,7 @@
 
 from django.contrib import admin
 from evennia.comms.models import Msg
-from .models import Inform, Messenger, Post, Journal, Vision, Rumor
+from .models import Inform, Messenger, Post, Journal, Vision, Rumor, Prayer
 from evennia.typeclasses.admin import TagInline
 from evennia.objects.models import ObjectDB
 from evennia.objects.admin import ObjectDBAdmin
@@ -105,6 +105,7 @@ admin.site.register(Journal, JournalAdmin)
 admin.site.register(Vision, MsgAdmin)
 admin.site.register(Post, MsgAdmin)
 admin.site.register(Rumor, MsgAdmin)
+admin.site.register(Prayer, MsgAdmin)
 
 
 class ArxObjectDBAdmin(ObjectDBAdmin):

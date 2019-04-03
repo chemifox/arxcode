@@ -4,7 +4,7 @@
 {% load app_filters %}
 <h2> Written By {% if obj.writer.get_absolute_url %}
     <a href="{{ obj.writer.get_absolute_url }}">{{ obj.writer.key }}</a>
-{% else %}{{ obj.writer.key }}{% endif %}{% if "black_journal" in obj.tags.all %} in Black Journal{% endif %}</h2>
+{% else %}{{ obj.writer.key }}{% endif %}{% if "prayer" in obj.tags.all %} in Prayer{% endif %}</h2>
 <p class="newsDate">{{obj.db_date_created}}({{ obj.db_header|date_from_header }})</p>
 {% if obj.relationship %}
     <h2> Relationship Note on {% if obj.relationship.get_absolute_url %}

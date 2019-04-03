@@ -115,3 +115,14 @@ class MessageHandler(messengerhandler.MessengerHandler, journalhandler.JournalHa
         self.num_journals = 0
         self.num_rel_updates = 0
         self.num_flashbacks = 0
+
+    @property
+    def num_weekly_prayers(self):
+        """Number of prayer-type things that count for xp"""
+        return self.num_journals + self.num_rel_updates + self.num_flashbacks
+
+    def reset_journal_count(self):
+        """Resetting our count of things which count for xp"""
+        self.num_journals = 0
+        self.num_rel_updates = 0
+        self.num_flashbacks = 0
