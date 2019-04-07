@@ -230,6 +230,7 @@ class MsgProxyManager(MsgManager):
     revealed_query = q_msgtag(REVEALED_BLACK_TAG)
     all_journals_query = Q(white_query | black_query)
     prayer_query = q_msgtag(PRAYER_TAG)
+    all_prayers_query = Q(prayer_query)
 
     def get_queryset(self):
         return MsgQuerySet(self.model)
@@ -280,13 +281,13 @@ class JournalManager(MsgProxyManager):
 
 class PrayerManager(MsgProxyManager):
     def get_queryset(self):
-        return super(PrayerManager, self).get_queryset().filter(self.prayer_query)
+        return super(PrayerManager, self).get_queryset().filter(self.all_prayers_query)
 
     def all_permitted_prayers(self, user):
         qs = self.get_queryset()
         if user.is_staff:
             return qs
-        # get all White Journals plus Black Journals they've written
+        # get all Prayers they have written
         return qs.filter(self.prayer_query)
 
         

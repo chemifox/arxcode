@@ -252,7 +252,6 @@ class Prayer(MarkReadMixin, Msg):
 
     class Meta:
         proxy = True
-
     objects = PrayerManager()
 
     @property
@@ -264,7 +263,7 @@ class Prayer(MarkReadMixin, Msg):
             pass
 
     @property
-    def relationship(self):
+    def prayer(self):
         """Character who a prayer is written about."""
         try:
             return self.db_receivers_objects.all()[0]
