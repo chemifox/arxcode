@@ -4,7 +4,8 @@ Handler for Journals
 
 from .msg_utils import get_initial_queryset, lazy_import_from_str
 from .handler_base import MsgHandlerBase
-from world.msgs.managers import WHITE_TAG, BLACK_TAG, RELATIONSHIP_TAG, q_search_text_body, q_receiver_character_name, PRAYER_TAG
+from world.msgs.managers import (WHITE_TAG, BLACK_TAG, RELATIONSHIP_TAG, q_search_text_body, q_receiver_character_name,
+                                 PRAYER_TAG)
 
 from server.utils.arx_utils import get_date, create_arx_message
 
@@ -25,7 +26,6 @@ class JournalHandler(MsgHandlerBase):
         self._white_relationships = None
         # Relationships obj has written in their Black Journal
         self._black_relationships = None
-        self._prayer = None
 
     @property
     def white_journal(self):
@@ -67,16 +67,6 @@ class JournalHandler(MsgHandlerBase):
     def black_relationships(self, value):
         self._black_relationships = value
 
-    @property
-    def prayer(self):
-        if self._prayer is None:
-            self.build_prayer()
-        return self._prayer
-
-    @black_journal.setter
-    def prayer(self, value):
-        self._prayer = value
-
     def build_relationshipdict(self, white=True):
         """
         Builds a dictionary of names of people we have relationships with to a list
@@ -114,13 +104,6 @@ class JournalHandler(MsgHandlerBase):
         self._black_journal = list(get_initial_queryset("Journal").written_by(self.obj).black())
         return self._black_journal
 
-    def build_prayer(self):
-        """
-        Returns a list of all 'black journal' entries our character has written.
-        """
-        self._prayer = list(get_initial_queryset("Prayer").written_by(self.obj).prayer())
-        return self._prayer
-
     def add_to_journals(self, msg, white=True):
         """adds message to our journal"""
         if not white:
@@ -130,13 +113,6 @@ class JournalHandler(MsgHandlerBase):
         else:
             if msg not in self.white_journal:
                 self.white_journal.insert(0, msg)
-        return msg
-
-    def add_to_prayers(self, msg):
-        """adds message to our journal"""
-        if prayer:
-            msg.add_prayer_locks()
-            self.prayer.insert(0, msg)
         return msg
 
     def add_journal(self, msg, white=True, date=""):
@@ -181,26 +157,6 @@ class JournalHandler(MsgHandlerBase):
         self.num_rel_updates += 1
         return msg
 
-    def add_prayer(self, msg, targ, date=""):
-        """creates a prayer"""
-        cls = lazy_import_from_str("Prayer")
-        if not date:
-            date = get_date()
-        header = self.create_date_header(date)
-        name = targ.key.lower()
-        receivers = [targ, self.obj.player_ob]
-        tags = PRAYER_TAG
-        msg = create_arx_message(self.obj, msg, receivers=receivers, header=header, cls=cls, tags=tags)
-        msg = self.add_to_prayers(msg)
-        rels = self.prayer
-        relslist = rels.get(name, [])
-        if msg not in relslist:
-            relslist.insert(0, msg)
-        rels[name] = relslist
-        # number of relationship updates this week, for xp purposes
-        self.num_prayer_updates += 1
-        return msg
-
     def search_journal(self, text):
         """
         Returns all matches for text in character's journal
@@ -211,11 +167,9 @@ class JournalHandler(MsgHandlerBase):
 
         return list(matches)
 
-    def size(self, white=True, prayer=True):
+    def size(self, white=True):
         if white:
             return len(self.white_journal)
-        if prayer:
-            return len(self.prayer)
         else:
             return len(self.black_journal)
 
@@ -234,14 +188,6 @@ class JournalHandler(MsgHandlerBase):
     @num_rel_updates.setter
     def num_rel_updates(self, val):
         self.obj.db.num_rel_updates = val
-
-    @property
-    def num_prayer_updates(self):
-        return self.obj.db.num_prayer_updates or 0
-
-    @num_prayer_updates.setter
-    def num_prayer_updates(self, val):
-        self.obj.db.num_prayer_updates = val
 
     def convert_short_rel_to_long_rel(self, character, rel_key, white=True):
         """
@@ -326,31 +272,4 @@ class JournalHandler(MsgHandlerBase):
             import traceback
             traceback.print_exc()
             msg = "Error in retrieving journal. It may have been deleted and the server has not yet synchronized."
-        return msg
-
-    def disp_prayer_by_num(self, num=1, prayer=True, caller=None):
-        if prayer:
-            prayer = self.prayer
-            pname = "prayer"
-        msg = "Message {w#%s{n for {c%s{n's %s:\n" % (num, self.obj, pname)
-        num -= 1
-        entry = prayer[num]
-        if caller and prayer:
-            if not entry.access(caller, 'read'):
-                return False
-        # noinspection PyBroadException
-        try:
-            subjects = entry.db_receivers_objects.all()
-            if subjects:
-                msg += "Prayer to: {c%s{n\n" % ", ".join(ob.key for ob in subjects)
-            msg += self.disp_entry(entry)
-            # mark the player as having read this
-            if caller:
-                if caller.player_ob:
-                    caller = caller.player_ob
-                entry.receivers = caller
-        except Exception:  # Catch possible database errors, or bad formatting, etc
-            import traceback
-            traceback.print_exc()
-            msg = "Error in retrieving prayer. It may have been deleted and the server has not yet synchronized."
         return msg

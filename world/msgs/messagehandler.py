@@ -10,11 +10,11 @@ semicolons.
 """
 
 from server.utils.arx_utils import get_date, create_arx_message
-from .handler_mixins import messengerhandler, journalhandler, msg_utils
+from .handler_mixins import messengerhandler, journalhandler, msg_utils, prayerhandler
 from .managers import (VISION_TAG)
 
 
-class MessageHandler(messengerhandler.MessengerHandler, journalhandler.JournalHandler):
+class MessageHandler(messengerhandler.MessengerHandler, journalhandler.JournalHandler, prayerhandler.PrayerHandler):
     """Handler for most messages"""
     def __init__(self, obj=None):
         """
@@ -118,11 +118,9 @@ class MessageHandler(messengerhandler.MessengerHandler, journalhandler.JournalHa
 
     @property
     def num_weekly_prayers(self):
-        """Number of prayer-type things that count for xp"""
-        return self.num_journals + self.num_rel_updates + self.num_flashbacks
+        """Number of prayer-type things that count for mana"""
+        return self.num_prayers
 
-    def reset_journal_count(self):
-        """Resetting our count of things which count for xp"""
-        self.num_journals = 0
-        self.num_rel_updates = 0
-        self.num_flashbacks = 0
+    def reset_prayer_count(self):
+        """Resetting our count of things which count for mana"""
+        self.num_prayers= 0
