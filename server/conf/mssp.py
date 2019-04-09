@@ -13,7 +13,7 @@ affect uptime).
 
 """
 
-MSSPTable =  {
+MSSPTable = {
 
     # Required fieldss
 
@@ -42,7 +42,7 @@ MSSPTable =  {
     "GAMEPLAY":           "",       # Adventure, Educational, Hack and Slash, None,
                                       # Player versus Player, Player versus Environment,
                                       # Roleplaying, Simulation, Social or Strategy
-    "STATUS":             "Alpha",  # Alpha, Closed Beta, Open Beta, Live
+    "STATUS":             "Open Beta",  # Alpha, Closed Beta, Open Beta, Live
     "GAMESYSTEM":         "Custom", # D&D, d20 System, World of Darkness, etc. Use Custom if homebrew
     "INTERMUD":           "IMC2",   # evennia supports IMC2.
     "SUBGENRE":           "None",   # LASG, Medieval Fantasy, World War II, Frankenstein,
