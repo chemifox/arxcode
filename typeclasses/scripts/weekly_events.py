@@ -399,11 +399,20 @@ class WeeklyEvents(RunDateMixin, Script):
         """
         Award weekly XP if minimum activity standard was met.
         """
-        xp = 10
-        min_poses = 20
+        xp = 0
+ #       min_poses = 20
         char = player.char_ob
-        if char.posecount >= min_poses:
-            msg = "You met the minimum activity standard and earned %s xp." % xp
+	if char.posecount > 4:
+	    xp = 3
+	if char.posecount > 9:
+            xp = 5
+	if char.posecount > 14:
+	    xp = 7
+	if char.posecount > 19:
+	    xp = 10
+	        	
+        if xp > 0:
+            msg = "You met a minimum activity standard and earned %s xp." % xp
             self.award_xp(char, xp, player, msg, xptype="activity")
 
     @staticmethod
