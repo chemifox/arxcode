@@ -219,6 +219,9 @@ class MsgQuerySet(QuerySet):
     def relationships(self):
         return self.filter(q_msgtag(RELATIONSHIP_TAG))
 
+    def prayers(self):
+        return self.filter(q_msgtag(PRAYER_TAG))
+
     def get(self, *args, **kwargs):
         ret = super(MsgQuerySet, self).get(*args, **kwargs)
         return reload_model_as_proxy(ret)

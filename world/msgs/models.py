@@ -272,7 +272,7 @@ class Prayer(MarkReadMixin, Msg):
 
     def __str__(self):
         prayer = self.prayer
-        prayer_txt = " on %s" % prayer.key
+        prayer_txt = " on %s" % prayer
         return "<Prayer written by %s%s>" % (self.writer, prayer_txt)
 
     def tag_favorite(self, player):

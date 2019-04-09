@@ -374,6 +374,8 @@ class CmdFinger(ArxPlayerCommand):
                 rost = "{yInactive{n"
             elif rost == "Available":
                 rost = "{gAvailable{n"
+            elif rost == "Gods":
+                rost = "{gGods{n"
             else:
                 raise AttributeError
             roster_status += " %s" % rost
@@ -3500,7 +3502,7 @@ class CmdGetInLine(ArxCommand):
             return
 
 
-class CmdPrayer(ArxCommand):
+class CmdPrayer(ArxPlayerCommand):
     """
     prayer
 
@@ -3601,20 +3603,21 @@ class CmdPrayer(ArxCommand):
         player = caller.player_ob
         all_msgs = Prayer.prayer.all_unread_by(player)
         # we'll do a bulk create of the through-model that represents how prayers are marked as read
-        ReadPrayerModel = Prayer.db_receivers_accounts.through
+        readprayermodel = Prayer.db_receivers_accounts.through
         bulk_list = []
         for msg in all_msgs:
-            bulk_list.append(ReadPrayerModel(accountdb=player, msg=msg))
-        ReadPrayerModel.objects.bulk_create(bulk_list)
+            bulk_list.append(readprayermodel(accountdb=player, msg=msg))
+            readprayermodel.objects.bulk_create(bulk_list)
 
     def func(self):
         """Execute command."""
         caller = self.caller
+        prayer = True
         num = 1
         # if no arguments, caller's journals
         if not self.args and not self.switches:
             char = caller
-            prayer = "prayer" in self.switches
+            prayer = "Prayer" in self.switches
             p_name = "Prayer"
             # display caller's latest white or black journal entry
             try:
@@ -3684,7 +3687,7 @@ class CmdPrayer(ArxCommand):
                 if not msg:
                     caller.msg("You do not have permission to read that.")
                     return
-                caller.msg("Number of entries for {c%s{n's %s prayer: %s" % (char, "prayer", len(prayer)))
+                caller.msg("Number of entries for {c%s{n's prayer: %s" % (char, len(prayer)))
                 caller.msg(msg, options={'box': True})
             except AttributeError:
                 caller.msg("No player found for %s." % self.lhs)
@@ -3699,39 +3702,64 @@ class CmdPrayer(ArxCommand):
                 caller.msg("You must provide a number that matches one of their entries.")
                 return
             return
-        # creating a new black or white journal
-        if "write" in self.switches:
-            if not self.lhs:
-                caller.msg("You cannot add a blank entry.")
-                return
+        # creating a new prayer
+        charob = caller.char_ob
+        args = self.args
+        if not self.switches:
+            if not self.lhs and self.rhs:
+                char = charob
+                name = self.rhs.lower()
+            elif self.lhs and not self.rhs:
+                char = charob
+                name = self.lhs.lower()
             else:
-                entry = caller.messages.add_prayer(self.lhs)
-            caller.msg("New %s added:" % "prayer")
-            caller.msg(caller.messages.disp_entry(entry), options={'box': True})
-            # change this thing below to add an inform to the God who recieved the prayer
-            # if white:
-            #    caller.msg_watchlist("A player you are watching, {c%s{n, has updated their white journal." % caller.key)
-            return
-        if "search" in self.switches:
-            rhs = self.rhs
-            if not rhs:
-                char = caller
-                rhs = self.args
-            else:
-                char = caller.player.search(self.lhs)
+                char = caller.search(self.lhs)
                 if not char:
                     return
                 char = char.char_ob
                 if not char:
-                    caller.msg("No character found.")
+                    caller.msg("No character.")
                     return
-            entries = char.messages.search_prayer(rhs)
-            if not entries:
-                caller.msg("No matches.")
-                return
+                name = self.rhs.lower()
             prayer = char.messages.prayer
-            prayer_matches = [prayer.index(entry) + 1 for entry in entries if entry in prayer]
-            caller.msg("Prayer matches: %s" % ", ".join("#%s" % str(num) for num in prayer_matches))
+            prayers = {k: prayer.get(k, []) for k in set(prayer.keys())}
+            if not prayers:
+                caller.msg("No relationships found.")
+                return
+            entries = prayers.get(name, [])
+            entries = [msg for msg in entries if msg.access(caller, 'read') or 'prayer' in msg.tags.all()]
+            if not entries:
+                caller.msg("No relationship found.")
+                return
+            if self.rhs:
+                caller.msg("{wPrayer from %s to %s:{n" % (self.lhs.capitalize(), self.rhs.capitalize()))
+            else:
+                caller.msg("{wPrayer to %s:{n" % args.capitalize())
+            sep = "{w-------------------------------------------------------------------{n"
+            caller.msg(sep)
+            for msg in entries:
+                pname = "{wPrayer:{n %s\n" % "Prayer"
+                caller.msg("\n" + pname + charob.messages.disp_entry(msg), options={'box': True})
+                msg.receivers = caller
+            return
+        lhs = self.lhs
+        rhs = self.rhs
+        # lhs will be used for keys, so need to make sure always lower case
+        lhs = lhs.lower()
+        desc = rhs
+        if 'write' in self.switches:
+            targ = caller.search(lhs)
+            if not targ:
+                return
+            targ = targ.char_ob
+            if not targ:
+                caller.msg("No character found.")
+                return
+            msg = charob.messages.add_prayer(desc, targ, prayer)
+            caller.msg("Entry added to %s:\n%s" % (Prayer, msg))
+            caller.msg("Relationship note added. If the 'type' of relationship has changed, "
+                       "such as a friend becoming an enemy, please adjust it with /changesheet.")
+            return
         if "index" in self.switches:
             num = 20
             if not self.lhs:
