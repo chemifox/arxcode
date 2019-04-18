@@ -1295,10 +1295,10 @@ class CmdCalendar(ArxPlayerCommand):
     Creates or displays information about events. date should be
     in the format of 'MM/DD/YY HR:MN'. /private toggles whether the
     event is public or private (defaults to public). To spend extravagant
-    amounts of money in hosting an event for prestige, set the /largesse
-    level. To see the valid largesse types with their costs, do
-    '@cal/largesse'. All times are in PST by default. It will show in
-    your own timezone if you have your +timezone set.
+    amounts of money in hosting an event, set the /largesse level.
+    To see the valid largesse types with their costs, do '@cal/largesse'.
+    All times are in PST by default. It will show in your own timezone if
+    you have your +timezone set.
 
     To mark an event as a player-run-plot, use /addgm to designate a
     player as the storyteller for the event. Please only use this for a

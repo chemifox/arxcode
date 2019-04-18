@@ -578,7 +578,8 @@ class Character(UseEquipmentMixins, NameMixins, MsgMixins, ObjectMixins, Default
         total = 0
         my_skills = self.db.skills or {}
         skills_used = {"diplomacy": 2, "empathy": 2, "etiquette": 2, "manipulation": 2, "propaganda": 2,
-                       "intimidation": 2, "leadership": 2, "streetwise": 2, "performance": 2, "war": 2, "survival": 2}
+                       "intimidation": 2, "leadership": 2, "streetwise": 2, "performance": 2, "war": 2, "survival": 2,
+                       "theology": 2}
         stats_used = {"charm": 2, "composure": 2, "command": 2}
         for skill, exponent in skills_used.items():
             total += pow(my_skills.get(skill, 0), exponent)
