@@ -3722,7 +3722,7 @@ class CmdPrayer(ArxPlayerCommand):
                     return
                 name = self.rhs.lower()
             prayer = char.messages.prayer
-            prayers = {k: prayer.get(k, []) for k in set(prayer.keys())}
+            prayers = {k: prayer.get(k, []) for k in set(prayer.key())}
             if not prayers:
                 caller.msg("No relationships found.")
                 return

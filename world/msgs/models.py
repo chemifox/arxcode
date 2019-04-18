@@ -183,6 +183,7 @@ class Journal(MarkReadMixin, Msg):
         rel_txt = " on %s" % relationship.key if relationship else ""
         return "<Journal written by %s%s>" % (self.writer, rel_txt)
 
+
     def tag_favorite(self, player):
         """
         Tags this journal as a favorite by the player. We create a custom tag on the Journal to represent that.
@@ -272,7 +273,7 @@ class Prayer(MarkReadMixin, Msg):
 
     def __str__(self):
         prayer = self.prayer
-        prayer_txt = " on %s" % prayer
+        prayer_txt = " to %s" % prayer.key
         return "<Prayer written by %s%s>" % (self.writer, prayer_txt)
 
     def tag_favorite(self, player):
