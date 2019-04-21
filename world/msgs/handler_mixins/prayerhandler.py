@@ -23,29 +23,29 @@ class PrayerHandler(MsgHandlerBase):
     @property
     def prayer(self):
         if self._prayer is None:
-            self.build_prayerdict()
+            self.build_prayer()
         return self._prayer
 
     @prayer.setter
     def prayer(self, value):
         self._prayer = value
 
-    def build_prayerdict(self):
-        """
-        Builds a dictionary of names of people we have prayers to into a list
-        of prayer Msgs we've made about that God.
-        """
-        rels = get_initial_queryset("Prayer").prayers().written_by(self.obj)
-        rels = rels.prayers()
-        relsdict = {}
-        for rel in rels:
-            if rel.db_receivers_objects.all():
-                name = rel.db_receivers_objects.all()[0].key.lower()
-                relslist = relsdict.get(name, [])
-                relslist.append(rel)
-                relsdict[name] = relslist
-            self._prayer = relsdict
-        return relsdict
+#    def build_prayerdict(self):
+#        """
+#        Builds a dictionary of names of people we have prayers to into a list
+#        of prayer Msgs we've made about that God.
+#        """
+#        rels = get_initial_queryset("Prayer").prayers().written_by(self.obj)
+#        rels = rels.prayers()
+#        relsdict = {}
+#        for rel in rels:
+#            if rel.db_receivers_objects.all():
+#                name = rel.db_receivers_objects.all()[0].key.lower()
+#                relslist = relsdict.get(name, [])
+#                relslist.append(rel)
+#                relsdict[name] = relslist
+#            self._prayer = relsdict
+#        return relsdict
 
     def build_prayer(self):
         """
@@ -54,25 +54,27 @@ class PrayerHandler(MsgHandlerBase):
         self._prayer = list(get_initial_queryset("Prayer").written_by(self.obj))
         return self._prayer
 
-#    def add_to_prayers(self, msg):
-#        """adds message to our prayer"""
-#        msg.add_prayer_locks()
-#        self.prayer.insert(0, msg)
-#        return msg
+    def add_to_prayer(self, msg):
+        """adds message to our prayer"""
+        msg.add_prayer_locks()
+        self.prayer.insert(0, msg)
+        return msg
 
-    def add_prayer(self, msg, targ, prayer, date=""):
+    def add_prayer(self, msg, targ, date=""):
         """creates a new prayer message and returns it"""
         cls = lazy_import_from_str("Prayer")
         if not date:
             date = get_date()
         header = self.create_date_header(date)
-        name = targ.key.lower()
+        # name = targ.key.lower()
         receivers = [targ, self.obj.player_ob]
         tags = PRAYER_TAG
         msg = create_arx_message(self.obj, msg, receivers=receivers, header=header, cls=cls, tags=tags)
-        msg = self.add_prayer(msg, targ, prayer)
-        prayerlist = prayer.get(name, [])
-        prayer[name] = prayerlist
+        msg = self.add_to_prayer(msg)
+        # prayers = self.prayer
+        # prayerlist = prayers.get(name, [])
+        # targ[name] = prayerlist
+        # prayerlist.insert(0, msg)
         # prayers made this week, for mana purposes
         self.num_prayers += 1
         return msg

@@ -3545,11 +3545,14 @@ class CmdPrayer(ArxPlayerCommand):
             String that's a formatted PrettyTable
         """
         num = 1
-        table = PrettyTable(["{w#{n", "{wPrayed to{n", "{wDate{n", "{wUnread?{n"])
+        table = PrettyTable(["{w#{n", "{wWritten About{n", "{wDate{n", "{wUnread?{n"])
         fav_tag = "pid_%s_favorite" % self.caller.player_ob.id
         for entry in p_list:
             try:
+                event = character.messages.get_event(entry)
                 name = ", ".join(ob.key for ob in entry.db_receivers_objects.all())
+                if event and not name:
+                    name = event.name[:25]
                 if fav_tag in entry.tags.all():
                     str_num = str(num) + "{w*{n"
                 else:
@@ -3612,17 +3615,15 @@ class CmdPrayer(ArxPlayerCommand):
     def func(self):
         """Execute command."""
         caller = self.caller
-        prayer = True
         num = 1
         # if no arguments, caller's journals
         if not self.args and not self.switches:
             char = caller
-            prayer = "Prayer" in self.switches
             p_name = "Prayer"
             # display caller's latest white or black journal entry
             try:
-                self.msg("Number of entries in your %s: %s" % (p_name, char.messages.size(prayer)))
-                self.msg(char.messages.disp_entry_by_num(num=num, prayer=prayer, caller=caller.player_ob),
+                self.msg("Number of entries in your %s: %s" % (p_name, char.messages.size()))
+                self.msg(char.messages.disp_entry_by_num(num=num, caller=caller.player_ob),
                          options={'box': True})
             except IndexError:
                 caller.msg("No prayers written yet.")
@@ -3640,8 +3641,7 @@ class CmdPrayer(ArxPlayerCommand):
             self.msg("You have written %s prayers this week." % num)
             return
         # if no switches but have args, looking up journal of a character
-        if (not self.switches or 'black' in self.switches
-                or 'favorite' in self.switches or 'unfavorite' in self.switches):
+        if not self.switches or 'favorite' in self.switches or 'unfavorite' in self.switches:
             try:
                 if not self.args:
                     char = caller
@@ -3755,10 +3755,10 @@ class CmdPrayer(ArxPlayerCommand):
             if not targ:
                 caller.msg("No character found.")
                 return
-            msg = charob.messages.add_prayer(desc, targ, prayer)
-            caller.msg("Entry added to %s:\n%s" % (Prayer, msg))
-            caller.msg("Relationship note added. If the 'type' of relationship has changed, "
-                       "such as a friend becoming an enemy, please adjust it with /changesheet.")
+            jname = "prayer"
+            msg = charob.messages.add_prayer(desc, targ)
+            caller.msg("Entry added to %s:\n%s" % (jname, msg))
+
             return
         if "index" in self.switches:
             num = 20
@@ -3779,10 +3779,9 @@ class CmdPrayer(ArxPlayerCommand):
                 except ValueError:
                     caller.msg("Number of entries must be a number.")
                     return
-            else:
-                prayer = char.messages.prayer
-            caller.msg("{wPrayers from {c%s{n" % char)
-            caller.msg(self.prayer_index(char, prayer[:num]))
+            prayers = char.messages.prayer
+            caller.msg("{wPrayers for {c%s{n" % char)
+            caller.msg(self.prayer_index(char, prayers[:num]))
             return
         if "all" in self.switches:
             self.disp_unread_prayers()
