@@ -3546,17 +3546,17 @@ class CmdPrayer(ArxPlayerCommand):
         """
         num = 1
         table = PrettyTable(["{w#{n", "{wWritten About{n", "{wDate{n", "{wUnread?{n"])
-        fav_tag = "pid_%s_favorite" % self.caller.player_ob.id
+        # fav_tag = "pid_%s_favorite" % self.caller.player_ob.id
         for entry in p_list:
             try:
                 event = character.messages.get_event(entry)
                 name = ", ".join(ob.key for ob in entry.db_receivers_objects.all())
                 if event and not name:
                     name = event.name[:25]
-                if fav_tag in entry.tags.all():
-                    str_num = str(num) + "{w*{n"
-                else:
-                    str_num = str(num)
+                # if fav_tag in entry.tags.all():
+                #    str_num = str(num) + "{w*{n"
+                # else:
+                str_num = str(num)
                 unread = "" if self.caller.player_ob in entry.receivers else "{wX{n"
                 date = character.messages.get_date_from_header(entry)
                 table.add_row([str_num, name, date, unread])
@@ -3618,7 +3618,7 @@ class CmdPrayer(ArxPlayerCommand):
         num = 1
         # if no arguments, caller's journals
         if not self.args and not self.switches:
-            char = caller
+            char = caller.char_ob
             p_name = "Prayer"
             # display caller's latest white or black journal entry
             try:
@@ -3779,9 +3779,9 @@ class CmdPrayer(ArxPlayerCommand):
                 except ValueError:
                     caller.msg("Number of entries must be a number.")
                     return
-            prayers = char.messages.prayer
+            prayers = char.char_ob.messages.prayer
             caller.msg("{wPrayers for {c%s{n" % char)
-            caller.msg(self.prayer_index(char, prayers[:num]))
+            caller.msg(self.prayer_index(char.char_ob, prayers[:num]))
             return
         if "all" in self.switches:
             self.disp_unread_prayers()

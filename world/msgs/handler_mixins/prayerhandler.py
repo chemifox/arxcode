@@ -30,22 +30,22 @@ class PrayerHandler(MsgHandlerBase):
     def prayer(self, value):
         self._prayer = value
 
-#    def build_prayerdict(self):
-#        """
-#        Builds a dictionary of names of people we have prayers to into a list
-#        of prayer Msgs we've made about that God.
-#        """
-#        rels = get_initial_queryset("Prayer").prayers().written_by(self.obj)
-#        rels = rels.prayers()
-#        relsdict = {}
-#        for rel in rels:
-#            if rel.db_receivers_objects.all():
-#                name = rel.db_receivers_objects.all()[0].key.lower()
-#                relslist = relsdict.get(name, [])
-#                relslist.append(rel)
-#                relsdict[name] = relslist
-#            self._prayer = relsdict
-#        return relsdict
+    def build_prayerdict(self):
+        """
+        Builds a dictionary of names of people we have prayers to into a list
+        of prayer Msgs we've made about that God.
+        """
+        rels = get_initial_queryset("Prayer").prayers().written_by(self.obj)
+        rels = rels.prayers()
+        relsdict = {}
+        for rel in rels:
+            if rel.db_receivers_objects.all():
+                name = rel.db_receivers_objects.all()[0].key.lower()
+                relslist = relsdict.get(name, [])
+                relslist.append(rel)
+                relsdict[name] = relslist
+            self._prayer = relsdict
+        return relsdict
 
     def build_prayer(self):
         """
