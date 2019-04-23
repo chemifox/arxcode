@@ -36,7 +36,7 @@ class PrayerHandler(MsgHandlerBase):
         of prayer Msgs we've made about that God.
         """
         rels = get_initial_queryset("Prayer").prayers().written_by(self.obj)
-        rels = rels.prayers()
+        #rels = rels.prayers()
         relsdict = {}
         for rel in rels:
             if rel.db_receivers_objects.all():
@@ -81,7 +81,7 @@ class PrayerHandler(MsgHandlerBase):
 
     def search_prayer(self, text):
         """
-        Returns all matches for text in character's journal
+        Returns all matches for text in character's prayers
         """
         Prayer = lazy_import_from_str("Prayer")
         matches = Prayer.prayer.written_by(self.obj).filter(q_receiver_character_name(text)

@@ -14,7 +14,7 @@ from .handler_mixins import messengerhandler, journalhandler, msg_utils, prayerh
 from .managers import (VISION_TAG)
 
 
-class MessageHandler(messengerhandler.MessengerHandler, journalhandler.JournalHandler, prayerhandler.PrayerHandler):
+class MessageHandler(messengerhandler.MessengerHandler, prayerhandler.PrayerHandler, journalhandler.JournalHandler):
     """Handler for most messages"""
     def __init__(self, obj=None):
         """

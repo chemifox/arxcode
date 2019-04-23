@@ -618,11 +618,13 @@ class PrayerListView(LimitPageMixin, ListView):
         return queryset
 
     def get_queryset(self):
-        """Get queryset based on permissions. Reject outright if they're not logged in."""
+        """Gets our queryset based on user privileges"""
         user = self.request.user
+        num = 1
         if not user or not user.is_authenticated() or not user.char_ob:
-            raise PermissionDenied("You must be logged in.")
-        qs = Prayer.objects.all_permitted_prayers(user).all_read_by(user).order_by('-db_date_created')
+            qs = Prayer.prayer.order_by('-db_date_created')
+        else:
+            qs = Prayer.prayer.order_by(num)
         return self.search_filters(qs)
 
     def get_context_data(self, **kwargs):
@@ -695,7 +697,7 @@ class PrayerListReadView(PrayerListView):
             user = self.request.user
             if not user or not user.is_authenticated() or not user.char_ob:
                 raise PermissionDenied("You must be logged in.")
-            qs = Prayer.objects.all_permitted_prayers(user).all_read_by(user).order_by('-db_date_created')
+            qs = Prayer.prayer.order_by('-db_date_created')
             return self.search_filters(qs)
 
 

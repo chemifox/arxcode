@@ -34,6 +34,7 @@ from world.msgs.models import Journal, Messenger, Prayer
 from world.msgs.managers import reload_model_as_proxy
 from world.stats_and_skills import do_dice_check
 from server.utils.arx_utils import time_now
+from pytz import timezone
 
 
 def char_name(character_object, verbose_where=False, watch_list=None):
@@ -3507,18 +3508,18 @@ class CmdPrayer(ArxPlayerCommand):
     prayer
 
     Usage:
-        prayer/index [=<number of entries>] -- see a list of your prayers
-        prayer <entry number> -- see a specific prayer
+        prayer/index [=<number of entries>]
+        prayer <entry number>
         prayer <god>[=<entry number>] -- see all my prayers to a specific god
         prayer/search =<text or tags to search for> -- search all my prayers for a thing
-        prayer/write <god>=<prayer> -- write a prayer to a God
-        prayer/edit <entry number>=<text> -- edit your prayers
-        prayer/delete <entry number> -- delete your prayers
+        prayer/write <god>=<prayer>
+        prayer/edit <entry number>=<text>
+        prayer/delete <entry number>
         prayer/markallread -- mark all your prayers as read
         prayer/favorite <entry number> -- favroute your prayers
         prayer/unfavorite <character>=<entry number> -- unfavorite your prayers
         prayer/dispfavorites --- show all your favorite prayers
-        prayer/countweek -- show how many times you have prayed this week
+        prayer/countweek
 
     This allows a character to pray to the Gods. You will only ever be able to see
     your own prayers. The Gods will be able to see your prayers as well. When you
@@ -3566,7 +3567,7 @@ class CmdPrayer(ArxPlayerCommand):
         return str(table)
 
     def disp_unread_prayers(self):
-        """Sends a list of all journals the caller hasn't read to them"""
+        """Sends a list of all prayers the caller hasn't read to them"""
         caller = self.caller
         msgs = Prayer.prayer.all_unread_by(self.caller.player_ob).order_by('-db_date_created')
         msgs = [msg.id for msg in msgs]
@@ -3616,14 +3617,14 @@ class CmdPrayer(ArxPlayerCommand):
         """Execute command."""
         caller = self.caller
         num = 1
-        # if no arguments, caller's journals
+        # if no arguments, caller's prayers
         if not self.args and not self.switches:
             char = caller.char_ob
             p_name = "Prayer"
-            # display caller's latest white or black journal entry
+            # display caller's latest prayer entry
             try:
                 self.msg("Number of entries in your %s: %s" % (p_name, char.messages.size()))
-                self.msg(char.messages.disp_entry_by_num(num=num, caller=caller.player_ob),
+                self.msg(char.messages.disp_entry_by_num(num=num, caller=char),
                          options={'box': True})
             except IndexError:
                 caller.msg("No prayers written yet.")
@@ -3637,19 +3638,19 @@ class CmdPrayer(ArxPlayerCommand):
             caller.msg("All messages marked read.")
             return
         if "countweek" in self.switches:
-            num = caller.messages.num_weekly_prayers
+            num = caller.char_ob.messages.num_weekly_prayers
             self.msg("You have written %s prayers this week." % num)
             return
         # if no switches but have args, looking up journal of a character
         if not self.switches or 'favorite' in self.switches or 'unfavorite' in self.switches:
             try:
                 if not self.args:
-                    char = caller
+                    char = caller.char_ob
                     num = 1
                 else:
                     if self.lhs.isdigit():
                         num = int(self.lhs)
-                        char = caller
+                        char = caller.char_ob
                     else:
                         # search as a player to make it global
                         char = caller.player.search(self.lhs)
@@ -3760,6 +3761,26 @@ class CmdPrayer(ArxPlayerCommand):
             caller.msg("Entry added to %s:\n%s" % (jname, msg))
 
             return
+        if "search" in self.switches:
+            rhs = self.rhs
+            if not rhs:
+                char = caller
+                rhs = self.args
+            else:
+                char = caller.search(self.lhs)
+                if not char:
+                    return
+                char = char.char_ob
+                if not char:
+                    caller.msg("No character found.")
+                    return
+            entries = char.messages.search_prayer(rhs)
+            if not entries:
+                caller.msg("No matches.")
+                return
+            prayer = char.char_ob.messages.prayer
+            prayer_matches = [prayer.index(entry) + 1 for entry in entries if entry in prayer]
+            caller.msg("Prayer matches: %s" % ", ".join("#%s" % str(num) for num in prayer_matches))
         if "index" in self.switches:
             num = 20
             if not self.lhs:
@@ -3787,7 +3808,8 @@ class CmdPrayer(ArxPlayerCommand):
             self.disp_unread_prayers()
             return
         if "edit" in self.switches or "delete" in self.switches:
-            prayer = caller.messages.prayer
+            char = caller
+            prayer = char.char_ob.messages.prayer
             delete = "delete" in self.switches
             try:
                 num = int(self.lhs)
@@ -3813,7 +3835,7 @@ class CmdPrayer(ArxPlayerCommand):
             else:
                 entry.db_message = self.rhs
                 entry.save()
-            logpath = settings.LOG_DIR + "/journal_changes.txt"
+            logpath = settings.LOG_DIR + "/prayer_changes.txt"
             try:
                 log = open(logpath, 'a+')
                 msg = "*" * 78
