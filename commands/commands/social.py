@@ -2974,6 +2974,7 @@ Allows you to donate AP to other players (with some restrictions) to
         except CommandError as err:
             self.msg(err)
 
+
 class CmdRPHooks(ArxPlayerCommand):
     """
     Sets or searches RP hook tags
@@ -3074,6 +3075,72 @@ class CmdRPHooks(ArxPlayerCommand):
             self.msg("That category name contains invalid characters.")
             return False
         return True
+
+
+class CmdOath(ArxPlayerCommand):
+    """
+    Sets or views a character's oaths
+
+    Usage:
+        +oath
+        +oath/set <holder>=<oath text>
+
+    With out a switch, oath simply shows your own oaths. /set will set the oath
+    where holder is the character you are committing an oath to and oath text is
+    the words of the oath itself. Once an oath is given, it can not be removed.
+    Oaths are taken very seriously by the elves of Ithir and by the God of Oaths,
+    Baridon.
+
+    You may only have one oath to an individual at any given time. If you make an
+    oath to them again, it will override your original oath. When you make an oath
+    to someone they will be sent an inform alerting them of the oath being made.
+    """
+    key = "oath"
+    aliases = ["+oaths"]
+    help_category = "Social"
+
+    def display_oathbound(self):
+        """Displays oaths for all characters"""
+        qs = Character.objects.filter(db_tags__db_key="has_oath")
+        self.msg("{wCharacters with oaths:{n %s" % ", ".join(ob.key for ob in qs))
+
+    def func(self):
+        """Executes admin_oath command"""
+        targ = self.caller.char_ob
+        oaths = targ.db.oaths or {}
+        target = self.caller.search(self.lhs)
+        if not self.rhs:
+            from evennia.utils.evtable import EvTable
+            self.msg("{wOaths %s has sworn:{n" % targ)
+            table = EvTable("{wMaster{n", "{wOath{n", width=78, border="cells")
+            for holder, oath in oaths.items():
+                table.add_row(holder.capitalize(), oath[0])
+            table.reformat_column(0, width=15)
+            table.reformat_column(1, width=63)
+            self.msg(str(table))
+            return
+        if "set" in self.switches or "add" in self.switches:
+            try:
+                holder = self.lhslist[0].lower()
+                notes = "%s" % self.rhs
+            except (IndexError, ValueError, TypeError):
+                self.msg("Invalid syntax.")
+                return
+            oaths[holder] = [notes]
+            targ.db.oaths = oaths
+            targ.tags.add("has_oath")
+            # send a message to the player confirming their oath
+            self.msg("%s's oath to %s: %s" % (targ.key, holder, notes))
+            self.msg("{530The weight of your oath settles in and you feel bound to your word.{n")
+            # send a message to staff telling them an oath was made
+            inform_staff("Player Set Oath: %s has sworn an {530oath{n to %s." % (targ, holder))
+            # send an inform to the target of the oath so they know someone has made an oath to them.
+            msg = "%s has made an oath to you.\n" % targ.key
+            msg += "{wOath:{n %s " % notes
+            caller = self.caller
+            targ = caller.search(self.lhslist[0])
+            targ.inform(msg, category="Oaths")
+            return
 
 
 class CmdFirstImpression(ArxCommand):

@@ -221,6 +221,7 @@ class AccountCmdSet(cmdset_account.AccountCmdSet):
         self.add(social.CmdCensus())
         self.add(social.CmdIAmHelping())
         self.add(social.CmdRPHooks())
+        self.add(social.CmdOath())
 
     @check_errors
     def add_staff_commands(self):
@@ -239,7 +240,7 @@ class AccountCmdSet(cmdset_account.AccountCmdSet):
         self.add(staff_commands.CmdJournalAdminForDummies())
         self.add(staff_commands.CmdTransferKeys())
         self.add(staff_commands.CmdAdminTitles())
-        self.add(staff_commands.CmdAdminWrit())
+        self.add(staff_commands.CmdAdminOath())
         self.add(staff_commands.CmdAdminBreak())
         self.add(staff_commands.CmdSetServerConfig())
         self.add(staff_commands.CmdSendEmail())

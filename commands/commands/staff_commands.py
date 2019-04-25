@@ -1449,76 +1449,80 @@ class CmdAdminTitles(ArxPlayerCommand):
             self.display_titles(targ)
 
 
-class CmdAdminWrit(ArxPlayerCommand):
+class CmdAdminOath(ArxPlayerCommand):
     """
-    Sets or views a character's writs
+    Sets or views a character's oaths
 
     Usage:
-        @admin_writ <character>
-        @admin_writ/set <character>=<holder>,<value>,<notes>
-        @admin_writ/remove <character>=<holder>
+        @admin_oath <character>
+        @admin_oath/set <character>=<holder>,<value>,<notes>
+        @admin_oath/remove <character>=<holder>
     """
-    key = "@admin_writ"
-    aliases = ["@admin_writs"]
+    key = "@admin_oath"
+    aliases = ["@admin_oaths"]
     help_category = "GMing"
     locks = "cmd:perm(builders)"
 
-    def display_writbound(self):
-        """Displays writs for all characters"""
-        qs = Character.objects.filter(db_tags__db_key="has_writ")
-        self.msg("{wCharacters with writs:{n %s" % ", ".join(ob.key for ob in qs))
+    def display_oathbound(self):
+        """Displays oaths for all characters"""
+        qs = Character.objects.filter(db_tags__db_key="has_oath")
+        self.msg("{wCharacters with oaths:{n %s" % ", ".join(ob.key for ob in qs))
 
     def func(self):
-        """Executes admin_writ command"""
+        """Executes admin_oath command"""
         if not self.args:
-            self.display_writbound()
+            self.display_oathbound()
             return
         targ = self.caller.search(self.lhs)
         if not targ:
-            self.display_writbound()
+            self.display_oathbound()
             return
         targ = targ.char_ob
-        writs = targ.db.writs or {}
+        oaths = targ.db.oaths or {}
         if not self.rhs:
             from evennia.utils.evtable import EvTable
-            self.msg("{wWrits of %s{n" % targ)
-            table = EvTable("{wMaster{n", "{wValue{n", "{wNotes{n", width=78, border="cells")
-            for holder, writ in writs.items():
-                table.add_row(holder.capitalize(), writ[0], writ[1])
+            self.msg("{wOaths of %s{n" % targ)
+            table = EvTable("{wMaster{n", "{wOath{n", width=78, border="cells")
+            for holder, oath in oaths.items():
+                table.add_row(holder.capitalize(), oath[0])
             table.reformat_column(0, width=15)
-            table.reformat_column(1, width=9)
-            table.reformat_column(2, width=54)
+            table.reformat_column(1, width=63)
             self.msg(str(table))
             return
         if "set" in self.switches or "add" in self.switches:
             try:
                 holder = self.rhslist[0].lower()
-                value = int(self.rhslist[1])
-                if len(self.rhslist) > 2:
-                    notes = ", ".join(self.rhslist[2:])
+                if len(self.rhslist) > 1:
+                    notes = ", ".join(self.rhslist[1:])
                 else:
-                    notes = ""
+                    notes = "%s" % self.rhs
             except (IndexError, ValueError, TypeError):
                 self.msg("Invalid syntax.")
                 return
-            writs[holder] = [value, notes]
-            targ.db.writs = writs
-            targ.tags.add("has_writ")
-            self.msg("%s's writ to %s set to a value of %s, notes: %s" % (targ.key, holder, value, notes))
+            oaths[holder] = [notes]
+            targ.db.oaths = oaths
+            targ.tags.add("has_oath")
+            self.msg("%s's oath to %s: %s" % (targ.key, holder, notes))
+            inform_staff("Staff Set Oath: %s has sworn an {530oath{n to %s." % (targ, holder))
+            msg = "%s has made an oath to you.\n" % targ.key
+            msg += "{wOath:{n %s " % notes
+            caller = self.caller
+            targ = caller.search(self.rhslist[0])
+            targ.inform(msg, category="Oaths")
             return
         if "remove" in self.switches:
             holder = self.rhs.lower()
             try:
-                del writs[holder]
+                del oaths[holder]
             except KeyError:
-                self.msg("No writ found to %s" % holder)
+                self.msg("No oath found to %s" % holder)
                 return
-            if not writs:
-                targ.tags.remove("has_writ")
-                targ.attributes.remove("writs")
+            if not oaths:
+                targ.tags.remove("has_oath")
+                targ.attributes.remove("oaths")
             else:
-                targ.db.writs = writs
-            self.msg("%s's writ to %s removed." % (targ, holder))
+                targ.db.oaths = oaths
+            self.msg("%s's oath to %s removed." % (targ, holder))
             return
         self.msg("Invalid switch.")
 
