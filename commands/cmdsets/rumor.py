@@ -130,7 +130,7 @@ class CmdGossip(ArxCommand):
                 caller.msg("You have already attempted to investigate this rumor.")
                 return
             header = loc.messages.parse_header(rumor)
-            difficulty = header.get("difficulty", 15)
+            difficulty = header.get("difficulty", 40)
             rumor.db_receivers_objects.add(caller)
             origin = self.investigate(rumor, caller, difficulty)
             if origin:

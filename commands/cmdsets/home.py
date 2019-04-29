@@ -964,6 +964,9 @@ class CmdBuyFromShop(CmdCraft):
     for an explanation of switches, all of which can be used with +shop. Costs 
     and materials are covered by you. +shop/viewdesigns lets you see the 
     crafter's pre-made descriptions that you can copy for items you create.
+
+    There is also a comprehensive step by step instruction guide on how to
+    craft an item that can be found under 'help crafting guide'.
     """
     key = "+shop"
     aliases = ["@shop", "shop"]

@@ -289,6 +289,9 @@ class CmdCraft(ArxCommand):
     extra materials post-creation.
 
     Craft with no arguments will display the status of a current project.
+
+    There is also a comprehensive step by step instruction guide on how to
+    craft an item that can be found under 'help crafting guide'.
     """
     key = "craft"
     locks = "cmd:all()"

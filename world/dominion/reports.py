@@ -120,7 +120,7 @@ class WeeklyReport(Report):
         self.owner = owner
         self.failed_payments = []
         self.successful_payments = []
-        self.lifestyle_msg = None
+        # self.lifestyle_msg = None
         self.owner = owner
         self.week = week
         self.army_reports = []
@@ -158,8 +158,8 @@ class WeeklyReport(Report):
             txt += "Bank balance after income: %s\n" % self.vault
             if self.army_reports:
                 txt += "Army reports: %s\n" % ", ".join(self.army_reports)
-            if self.lifestyle_msg:
-                txt += self.lifestyle_msg
+            # if self.lifestyle_msg:
+            #    txt += self.lifestyle_msg
             if report.message:
                 report.message += "\n" + txt
             else:
