@@ -495,6 +495,10 @@ class CmdAdminRoster(ArxPlayerCommand):
                 elif self.rhs:
                     history.gm_notes += self.rhs
                 history.save()
+                entry.character.db.previous_posecount = 0
+                entry.character.db.weekly_posecount = 0
+                entry.character.db.sroom_posecount = 0
+                entry.character.db.pose_count = 0
             # set up password
             # noinspection PyBroadException
             try:

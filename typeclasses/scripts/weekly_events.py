@@ -302,13 +302,14 @@ class WeeklyEvents(RunDateMixin, Script):
             if ob.db.previous_posecount is None:
                 ob.db.previous_posecount = 0
             ob.db.previous_posecount += ob.posecount
-            ob.posecount = 0
         board = BBoard.objects.get(db_key__iexact="staff")
         table = EvTable("{wName{n", "{wNum Poses{n", border="cells", width=78)
         for ob in low_activity:
-            table.add_row(ob.key, ob.db.previous_posecount)
+            table.add_row(ob.key, ob.db.pose_count)
         board.bb_post(poster_obj=self, msg=str(table), subject="Inactive by Poses List")
         inform_staff("List of Inactive Characters by pose count list posted.")
+        for ob in qs:
+            ob.posecount = 0
     # Various 'Beats' -------------------------------------------------
 
 #    def process_journals(self, player):
