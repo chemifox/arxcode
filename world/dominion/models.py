@@ -3974,6 +3974,7 @@ class Army(SharedMemoryModel):
         Checks if a given player has permission to issue orders to this army.
         """
         # if we can change the army, we can also order it
+        dompc = player.Dominion
         if self.can_change(player):
             return True
         # check player's access because temp owner can also be an org
