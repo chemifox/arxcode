@@ -971,7 +971,7 @@ class CmdGuestAddInput(ArxPlayerCommand):
             import traceback
             traceback.print_exc()
             caller.msg("Something went wrong when awarding starting xp. Logging error.")
-        xp_msg = "Based on your character's fealty, you will enter the game with %s xp." % char.db.xp
+        xp_msg = "Based on your character's age, you will enter the game with %s xp." % char.db.xp
         xp_msg += "You will be able to spend them with the {wxp/spend{n command."
         caller.msg(xp_msg)
 
