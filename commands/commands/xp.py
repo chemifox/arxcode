@@ -273,9 +273,9 @@ class CmdTrain(ArxCommand):
     only lasts until they log out or the server reboots, so it should be
     used promptly.
 
-    You can train up to a max number of players depending on your teaching
-    or animal ken skill without expending action points: 1 for skill 0-2,
-    2 for 3-4, 3 for 5.
+    You can train up to a max number of players or animal retainers depending
+    on your teaching or animal ken skill without expending action points: 1
+    for skill 0-2, 2 for 3-4, 3 for 5.
 
     Action points used for training is 100 - 15 * skill, where skill is the
     higher of animal ken or teaching.
