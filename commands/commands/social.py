@@ -3569,7 +3569,7 @@ class CmdPrayer(ArxPlayerCommand):
     def disp_unread_prayers(self):
         """Sends a list of all prayers the caller hasn't read to them"""
         caller = self.caller
-        msgs = Prayer.prayer.all_unread_by(self.caller.player_ob).order_by('-db_date_created')
+        msgs = Prayer.objects.all_unread_by(self.caller.player_ob).order_by('-db_date_created')
         msgs = [msg.id for msg in msgs]
         if len(msgs) > 500:
             self.msg("Truncating some matches.")

@@ -136,4 +136,3 @@ class PrayerWriteForm(forms.Form):
         targ = self.cleaned_data['character']
         msg = self.cleaned_data['prayer']
         char.messages.add_prayer(msg, targ)
-
