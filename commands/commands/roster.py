@@ -892,6 +892,21 @@ def display_secrets(caller, character):
     return
 
 
+def display_children(caller, character):
+    """
+    Display secrets
+    """
+    caller.msg("{wChildren of %s:{n" % character.key.capitalize())
+    caller.msg("{w-------------------------------{n")
+    children = character.db.children
+    if not children:
+        caller.msg("No children to display.")
+        return
+    for num, children in enumerate(children):
+        caller.msg("{w%s) {n%s" % ((num + 1), children))
+    return
+
+
 def display_gmnotes(caller, character):
     """
     Display secrets
@@ -951,6 +966,7 @@ class CmdSheet(ArxPlayerCommand):
         @sheet/desc
         @sheet/stats
         @sheet/all
+        @sheet/children
 
     Displays the character sheet of a player character. Only public
     information is displayed for a character you do not own, such
@@ -970,7 +986,7 @@ class CmdSheet(ArxPlayerCommand):
     help_category = "General"
     locks = "cmd:all()"
     private_switches = ("secrets", "secret", "visions", "vision", "actions")
-    public_switches = ('social', 'background', 'info', 'personality', 'recognition')
+    public_switches = ('social', 'background', 'info', 'personality', 'recognition', 'children')
 
     def func(self):
         """Executes sheet command"""
@@ -989,7 +1005,8 @@ class CmdSheet(ArxPlayerCommand):
                 display_secrets(caller, charob)
                 display_gmnotes(caller,charob)
                 self.display_visions(charob)
-            display_relationships(caller, charob, show_hidden)          
+            display_relationships(caller, charob, show_hidden)
+            display_children(caller, charob)
             bground = charob.db.background
             if not bground:
                 bground = "No background written yet."
@@ -1051,8 +1068,9 @@ class CmdSheet(ArxPlayerCommand):
                 return
             elif "recognition" in switches:
                 display_recognition(caller, charob)
+            elif "children" in switches:
+                display_children(caller, charob)
             return
-
 
     def get_character(self, check_storyactions=False):
         """
@@ -1401,6 +1419,79 @@ class CmdRelationship(ArxPlayerCommand):
             caller.msg("No match found to delete.")
             return       
         caller.msg("Usage: @relationship/switches <arguments>")
+        return
+
+
+class CmdChild(ArxPlayerCommand):
+    """
+    @addchild - adds information about a child to a player
+    Usage:
+        @addchild player=<child info>
+        @addchild/del player=<# of child> - deletes child
+        @addchild/list player
+
+    Adds or deletes a child from the players character sheet.
+    Character info should strictly follow the 'help adding a
+    child' help file format for consistancy.
+    """
+    key = "@addchild"
+    help_category = "General"
+    locks = "cmd:perm(addchild) or perm(Wizards)"
+    valid_traits = ("gender", "birthdate", "haircolor", "eyecolor",
+                    "skintone", "peronality")
+
+    def func(self):
+        """Executes addchild command"""
+        caller = self.caller
+        roster = get_roster_manager()
+        lhs = self.lhs
+        rhs = self.rhs
+        switches = self.switches
+        if not lhs:
+            caller.msg("Add child to who?")
+            return
+        if not roster:
+            return
+        if not rhs and 'list' not in switches:
+            caller.msg("No child specified.")
+            return
+        playob = caller.search(lhs)
+        if not playob:
+            caller.msg("No character found by that name.")
+            return
+        charob = playob.char_ob
+        if not charob:
+            caller.msg("No character found to @comment upon.")
+            return
+        if 'del' in switches:
+            if not rhs.isdigit():
+                caller.msg("Children to be deleted must be a number.")
+                return
+            if not charob.db.children:
+                caller.msg("No children found to delete.")
+                return
+            rhs = int(rhs)
+            if not (1 <= rhs <= len(charob.db.children)):
+                caller.msg("No child found by that number.")
+                return
+            rhs -= 1
+            charob.db.children.pop(rhs)
+            charob.save()
+            caller.msg("Child %s deleted." % (rhs + 1))
+            return
+        if 'list' in switches:
+            children = charob.db.children
+            caller.msg("Secrets:")
+            child_str = ""
+            for num in range(len(children)):
+                child_str += "{w[%s]{n: " % (num + 1)
+                child_str += "%s\n" % children[num]
+            caller.msg(child_str)
+            return
+        if not charob.db.children:
+            charob.db.children = []
+        charob.db.children.append(rhs)
+        caller.msg("Child '%s' added to %s." % (rhs, charob.name))
         return
 
 

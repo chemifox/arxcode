@@ -180,6 +180,7 @@ class AccountCmdSet(cmdset_account.AccountCmdSet):
         self.add(roster.CmdSheet())
         self.add(roster.CmdRelationship())
         self.add(roster.CmdAddSecret())
+        self.add(roster.CmdChild())
         self.add(roster.CmdDelComment())
         self.add(roster.CmdAdmRelationship())
 
