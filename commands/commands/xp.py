@@ -38,7 +38,7 @@ class CmdUseXP(ArxCommand):
 
     """
     key = "xp"
-    aliases = ["+xp", "experience", "learn"]
+    aliases = ["experience", "learn"]
     locks = "cmd:all()"
     help_category = "Progression"
 

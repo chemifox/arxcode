@@ -62,7 +62,7 @@ class CmdDiceCheck(ArxCommand):
     """
 
     key = "@check"
-    aliases = ['+check', '+roll']
+    # aliases = ['+check']
     locks = "cmd:all()"
     
     def func(self):
