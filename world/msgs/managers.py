@@ -260,7 +260,7 @@ class MsgProxyManager(MsgManager):
         return self.get_queryset().black()
 
     def prayer(self):
-        return self.get_queryset().prayer()
+        return self.get_queryset().prayers()
 
     def relationships(self):
         return self.get_queryset().relationships()
@@ -281,7 +281,7 @@ class JournalManager(MsgProxyManager):
         return qs.filter(self.white_query |
                          Q(self.black_query & q_sender_character(user.char_ob) | self.revealed_query))
 
-"""
+
 class PrayerManager(MsgProxyManager):
     def get_queryset(self):
         return super(PrayerManager, self).get_queryset().filter(self.all_prayers_query)
@@ -292,7 +292,6 @@ class PrayerManager(MsgProxyManager):
             return qs
         # get all Prayers they have written
         return qs.filter(self.prayer_query)
-    """
 
         
 class BlackJournalManager(MsgProxyManager):
@@ -305,9 +304,9 @@ class WhiteJournalManager(MsgProxyManager):
         return super(WhiteJournalManager, self).get_queryset().filter(self.white_query)
 
 
-class PrayerManager(MsgProxyManager):
-    def get_queryset(self):
-        return super(PrayerManager, self).get_queryset().filter(self.prayer_query)
+# class PrayerManager(MsgProxyManager):
+#    def get_queryset(self):
+#        return super(PrayerManager, self).get_queryset().filter(self.prayer_query)
 
 
 class MessengerManager(MsgProxyManager):

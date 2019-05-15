@@ -3586,7 +3586,7 @@ class CmdPrayer(ArxPlayerCommand):
     def disp_favorite_prayers(self):
         """Sends a list of all the prayers the caller has favorited"""
         caller = self.caller
-        msgs = Prayer.prayer.favorites_of(caller).order_by('-db_date_created')
+        msgs = Prayer.objects.favorites_of(caller).order_by('-db_date_created')
         msgs = [msg.id for msg in msgs]
         if len(msgs) > 500:
             self.msg("Truncating some matches.")
@@ -3605,7 +3605,7 @@ class CmdPrayer(ArxPlayerCommand):
         """Marks the caller as having read all journals"""
         caller = self.caller
         player = caller.player_ob
-        all_msgs = Prayer.prayer.all_unread_by(player)
+        all_msgs = Prayer.objects.all_unread_by(player)
         # we'll do a bulk create of the through-model that represents how prayers are marked as read
         readprayermodel = Prayer.db_receivers_accounts.through
         bulk_list = []

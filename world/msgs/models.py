@@ -301,6 +301,12 @@ class Prayer(MarkReadMixin, Msg):
             prayerlock = "read: perm(Builders)"
         self.locks.add(prayerlock)
 
+    @property
+    def is_public(self):
+        """Whether this journal is visible to the public without an access check"""
+        tags = self.tags.all()
+        return PRAYER_TAG not in tags
+
 
 class Messenger(MarkReadMixin, Msg):
     """

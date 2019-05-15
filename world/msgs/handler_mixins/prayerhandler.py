@@ -84,7 +84,7 @@ class PrayerHandler(MsgHandlerBase):
         Returns all matches for text in character's prayers
         """
         Prayer = lazy_import_from_str("Prayer")
-        matches = Prayer.prayer.written_by(self.obj).filter(q_receiver_character_name(text)
+        matches = Prayer.objects.written_by(self.obj).filter(q_receiver_character_name(text)
                                                             | q_search_text_body(text)).distinct()
 
         return list(matches)
@@ -111,7 +111,7 @@ class PrayerHandler(MsgHandlerBase):
         num -= 1
         entry = prayer[num]
         if caller:
-            if not entry.access(caller, 'read'):
+            if entry.access(caller, 'read'):
                 return False
         # noinspection PyBroadException
         try:

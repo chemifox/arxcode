@@ -156,7 +156,7 @@ class JournalListReadView(JournalListView):
         return self.search_filters(qs)
 
 
-API_CACHE = None
+# API_CACHE = None
 
 
 def journal_list_json(request):
@@ -618,13 +618,11 @@ class PrayerListView(LimitPageMixin, ListView):
         return queryset
 
     def get_queryset(self):
-        """Gets our queryset based on user privileges"""
+        """Get queryset based on permissions. Reject outright if they're not logged in."""
         user = self.request.user
-        num = 1
         if not user or not user.is_authenticated() or not user.char_ob:
-            qs = Prayer.objects.order_by('-db_date_created')
-        else:
-            qs = Prayer.objects.order_by('-db_date_created')
+            raise PermissionDenied("You must be logged in.")
+        qs = Prayer.objects.all_permitted_prayers(user).order_by('-db_date_created')
         return self.search_filters(qs)
 
     def get_context_data(self, **kwargs):
@@ -697,8 +695,11 @@ class PrayerListReadView(PrayerListView):
             user = self.request.user
             if not user or not user.is_authenticated() or not user.char_ob:
                 raise PermissionDenied("You must be logged in.")
-            qs = Prayer.objects.order_by('-db_date_created')
+            qs = Prayer.objects.all_permitted_prayers(user).all_read_by(user).order_by('-db_date_created')
             return self.search_filters(qs)
+
+
+API_CACHE = None
 
 
 def prayer_list_json(request):
@@ -751,10 +752,10 @@ def prayer_list_json(request):
             timestamp = None
         global API_CACHE
         if timestamp:
-            ret = map(get_response, Prayer.prayers.filter(db_date_created__gt=timestamp).order_by('-db_date_created'))
+            ret = map(get_response, Prayer.objects.filter(db_date_created__gt=timestamp).order_by('-db_date_created'))
             return HttpResponse(json.dumps(ret), content_type='application/json')
         if not API_CACHE:  # cache the list of all of them
-            ret = map(get_response, Prayer.prayers.order_by('-db_date_created'))
+            ret = map(get_response, Prayer.objects.order_by('-db_date_created'))
             API_CACHE = json.dumps(ret)
         return HttpResponse(API_CACHE, content_type='application/json')
 

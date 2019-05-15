@@ -82,21 +82,21 @@ class JournalWriteForm(forms.Form):
 
 class PrayerMarkAllReadForm(forms.Form):
     choices = forms.ModelMultipleChoiceField(
-        queryset=Journal.objects.all(),
+        queryset=Prayer.objects.all(),
         widget=forms.MultipleHiddenInput,
         )
 
 
 class PrayerMarkOneReadForm(forms.Form):
     choice = forms.ModelChoiceField(
-        queryset=Journal.objects.all(),
+        queryset=Prayer.objects.all(),
         widget=forms.HiddenInput,
         )
 
 
 class PrayerMarkFavorite(forms.Form):
     tagged = forms.ModelChoiceField(
-        queryset=Journal.objects.all(),
+        queryset=Prayer.objects.all(),
         widget=forms.HiddenInput,
     )
 
@@ -107,7 +107,7 @@ class PrayerMarkFavorite(forms.Form):
 
 class PrayerRemoveFavorite(forms.Form):
     untagged = forms.ModelChoiceField(
-        queryset=Journal.objects.all(),
+        queryset=Prayer.objects.all(),
         widget=forms.HiddenInput,
     )
 
