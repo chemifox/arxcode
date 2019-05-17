@@ -166,7 +166,8 @@ class ArxRoom(NameMixins, ObjectMixins, ExtendedRoom):
         ExtendedRoom.return_appearance(self, looker)
         # return updated desc plus other stuff
         return (ObjectMixins.return_appearance(self, looker, detailed, format_desc)
-                + self.command_string() + self.mood_string + self.event_string() + self.combat_string(looker))
+                + self.command_string() + self.mood_string + self.event_string() + self.combat_string(looker) +
+                self.gm_string(looker))
     
     def _current_event(self):
         if not self.db.current_event:
@@ -241,6 +242,14 @@ class ArxRoom(NameMixins, ObjectMixins, ExtendedRoom):
             msg += "\n{wCombat in this room is non-lethal."
         if "rumors" in tags:
             msg += "\n{wRumor and Gossip commands are available here."
+        return msg
+
+    def gm_string(self, looker):
+        msg = ""
+        tags = self.tags.all()
+        if looker.truesight:
+            if "gmnotes" in tags:
+                msg += "\n{yGM Notes are available here."
         return msg
 
     @property
