@@ -530,7 +530,7 @@ class CmdEmit(ArxCommand):
     to players respectively.
     """
     key = "@emit"
-    aliases = ["@pemit", "@remit", "\\\\"]
+    aliases = ["@pemit", "@remit"]
     locks = "cmd:all()"
     help_category = "Social"
     perm_for_switches = "Builders"
@@ -617,7 +617,7 @@ class CmdEmit(ArxCommand):
             gms = [ob for ob in caller.location.contents if ob.check_permstring('builders')]
             non_gms = [ob for ob in caller.location.contents if "emit_label" in ob.tags.all() and ob.player]
             gm_msg = "{w[{c%s{w]{n %s" % (caller.name, message)
-            caller.location.msg_contents(gm_msg, from_obj=caller, options={'is_pose': True}, gm_msg=True)
+            # caller.location.msg_contents(gm_msg, from_obj=caller, options={'is_pose': True}, gm_msg=True)
             for ob in non_gms:
                 ob.msg(gm_msg, from_obj=caller, options={'is_pose': True})
             caller.location.msg_contents(message, exclude=gms + non_gms, from_obj=caller, options={'is_pose': True})
