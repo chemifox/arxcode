@@ -1215,8 +1215,8 @@ class CmdRelationship(ArxPlayerCommand):
     help_category = "Social"
     locks = "cmd:all()"
     typelist = ['parent', 'sibling', 'friend', 'enemy', 'frenemy', 'family', 'client', 'patron', 'protege',
-                'acquaintance', 'secret', 'rival', 'ally', 'spouse', 'Faenor', 'Aeran', 'Lorandi',
-                'Duindar', 'Thalerith', 'Thelos', 'deceased']
+                'acquaintance', 'secret', 'rival', 'ally', 'spouse', 'faenor', 'aeran', 'lorandi',
+                'duindar', 'thalerith', 'thelos', 'deceased']
 
     # noinspection PyUnusedLocal
     def get_help(self, caller, cmdset):
@@ -1227,117 +1227,10 @@ class CmdRelationship(ArxPlayerCommand):
     def func(self):
         """Executes relationship command"""
         caller = self.caller
-        args = self.args
         switches = self.switches
         charob = caller.char_ob
-        # builders can see /list info
-        show_hidden = caller.check_permstring("builders")
-        # check if it's a guest modifying their character
-        if not charob:
-            charob = caller.ndb.char
-        if not charob:
-            caller.msg("No character found.")
-            return
-        white = True
-        if "newprivate" in self.switches:
-            self.switches.append("changeprivate")
-        if "changeprivate" in self.switches:
-            white = False
-        if "new" in self.switches:
-            self.switches.append("change")
-        jname = "White Journal" if white else "Black Journal"
-        if not args or 'list' in self.switches:
-            if 'list' in self.switches:
-                old = charob
-                charob = caller.search(self.lhs)
-                if not charob:
-                    return
-                charob = charob.char_ob
-                if not charob:
-                    caller.msg("No character.")
-                    return
-                # check to see if this is caller's own character, if so, we show hidden stuff
-                if old == charob:
-                    show_hidden = True
-            if show_hidden:
-                rels = dict(charob.messages.white_relationships.items() + charob.messages.black_relationships.items())
-            else:
-                rels = dict(charob.messages.white_relationships.items())
-            # display list of relationships
-            if not rels:
-                caller.msg("No relationships found.")
-            else:
-                caller.msg("{w%s has relationships with the following characters:{n" % charob.key)
-                caller.msg("{w--------------------------------------------{n")
-                disp = ", ".join(key for key in sorted(rels.keys()))
-                caller.msg(disp)
-                caller.msg("To see the individual relationships, use {w@relationship %s=<name>{n" % charob.key)
-            caller.msg("\nSocial information for %s:" % charob.key)
-            caller.execute_cmd("@sheet/social %s" % charob.key)
-            return
-        if not switches:
-            if not self.lhs and self.rhs:
-                char = charob
-                name = self.rhs.lower()
-            elif self.lhs and not self.rhs:
-                char = charob
-                name = self.lhs.lower()
-            else:
-                char = caller.search(self.lhs)
-                if not char:
-                    return
-                char = char.char_ob
-                if not char:
-                    caller.msg("No character.")
-                    return
-                name = self.rhs.lower()
-            white = char.messages.white_relationships
-            black = char.messages.black_relationships
-            rels = {k: white.get(k, []) + black.get(k, []) for k in set(white.keys() + black.keys())}
-            if not rels:
-                caller.msg("No relationships found.")
-                return
-            entries = rels.get(name, [])
-            entries = [msg for msg in entries if msg.access(caller, 'read') or 'white_journal' in msg.tags.all()]
-            if not entries:
-                caller.msg("No relationship found.")
-                return
-            if self.rhs:
-                caller.msg("{wRelationship of %s to %s:{n" % (self.lhs.capitalize(), self.rhs.capitalize()))
-            else:
-                caller.msg("{wRelationship with %s:{n" % args.capitalize())
-            sep = "{w-------------------------------------------------------------------{n"
-            caller.msg(sep)
-            for msg in entries:            
-                jname = "{wJournal:{n %s\n" % ("White Journal" if msg in white.get(self.rhs.lower() if self.rhs
-                                                                                   else self.args.lower(), [])
-                                               else "Black Reflection")
-                caller.msg("\n" + jname + charob.messages.disp_entry(msg), options={'box': True})
-                msg.receivers = caller
-            return
         lhs = self.lhs
         rhs = self.rhs
-        if (not lhs or not rhs) and 'delsheet' not in switches:
-            caller.msg("Usage: @relationship/switches <name>=<description>")
-            return
-        # lhs will be used for keys, so need to make sure always lower case
-        lhs = lhs.lower()
-        desc = rhs
-        if 'change' in switches or 'changeprivate' in switches:
-            targ = caller.search(lhs)
-            if not targ:
-                return
-            targ = targ.char_ob
-            if not targ:
-                caller.msg("No character found.")
-                return
-            msg = charob.messages.add_relationship(desc, targ, white)
-            caller.msg("Entry added to %s:\n%s" % (jname, msg))
-            caller.msg("Relationship note added. If the 'type' of relationship has changed, "
-                       "such as a friend becoming an enemy, please adjust it with /changesheet.")
-            if white:
-                charob.msg_watchlist("A character you are watching, {c%s{n, has updated their white journal." % caller)
-            return
         if 'sheet' in switches:
             rhslist = self.rhslist
             rel_types = [ob.lower() for ob in self.typelist]
@@ -1357,11 +1250,11 @@ class CmdRelationship(ArxPlayerCommand):
             # if that type of relationship doesn't exist, add it
             if not charob.db.relationship_sheet.get(lhs):
                 charob.db.relationship_sheet[lhs] = [(name, desc)]
-                caller.msg("Sheet relationship added to tree.")
+                caller.msg("Relationship added to tree.")
                 return
             # it exists, so add our name/desc tuple to the list
             charob.db.relationship_sheet[lhs].append((name, desc))
-            caller.msg("Sheet relationship added to tree.")
+            caller.msg("Relationship added to sheet.")
             return
         if 'changesheet' in switches:
             lhslist = lhs.split(",")
@@ -1374,7 +1267,7 @@ class CmdRelationship(ArxPlayerCommand):
                 return
             rels = charob.db.relationship_sheet
             if not rels:
-                caller.msg("No relationships in tree to change - use /sheet to add instead.")
+                caller.msg("No relationships on sheet to change - use /sheet to add instead.")
                 return
             oldtype, newtype = lhslist[0].lower(), lhslist[1]
             if newtype not in self.typelist:
@@ -1401,7 +1294,7 @@ class CmdRelationship(ArxPlayerCommand):
             name = name.rstrip()
             desc = desc.lstrip()
             rels[newtype].append((name, desc))
-            caller.msg("Relationship tree changed.")
+            caller.msg("Relationship changed.")
             return
         if 'delsheet' in switches:
             args = self.args.lower()
@@ -1751,6 +1644,9 @@ class CmdAdmRelationship(ArxPlayerCommand):
     aliases = ["@admin_relationships"]
     help_category = "Builder"
     locks = "cmd:perm(Builders)"
+    typelist = ['parent', 'sibling', 'friend', 'enemy', 'frenemy', 'family', 'client', 'patron', 'protege',
+                'acquaintance', 'secret', 'rival', 'ally', 'spouse', 'aaenor', 'aeran', 'lorandi',
+                'duindar', 'thalerith', 'thelos', 'deceased']
 
     def func(self):
         """Executes admin_relationship command"""
@@ -1778,6 +1674,10 @@ class CmdAdmRelationship(ArxPlayerCommand):
             try:
                 rtype = self.rhslist[0]
                 desc = self.rhslist[1]
+                rel_types = [ob.lower() for ob in self.typelist]
+                if rtype not in rel_types:
+                    caller.msg("The type of relationship must be in: %s." % ", ".join(self.typelist))
+                    return
             except IndexError:
                 caller.msg("Need both type and desc for sheet rels.")
                 return
@@ -1803,10 +1703,5 @@ class CmdAdmRelationship(ArxPlayerCommand):
                 relsheet[rtype] = rel
                 caller.msg("Removed instances of %s from dict." % targ)
             charob.db.relationship_sheet = relsheet
-            return          
-        desc = self.rhs
-        white = "private" not in self.switches
-        jname = "relationships" if white else "private relationships"
-        msg = charob.messages.add_relationship(desc, targ, white)
-        caller.msg("Entry added to %s:\n%s" % (jname, msg))
+            return
         return
