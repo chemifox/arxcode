@@ -530,7 +530,7 @@ class CmdEmit(ArxCommand):
     to players respectively.
     """
     key = "@emit"
-    aliases = ["@pemit", "@remit"]
+    aliases = ["@pemit", "@remit", "\\\\"]
     locks = "cmd:all()"
     help_category = "Social"
     perm_for_switches = "Builders"
