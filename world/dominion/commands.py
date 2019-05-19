@@ -1998,17 +1998,17 @@ class CmdOrganization(ArxPlayerCommand):
                 if not clue.allow_sharing:
                     self.msg("%s cannot be shared." % clue)
                     return
-                cost = 20 - (2 * org.social_modifier)
-                if cost < 1:
-                    cost = 1
-                if caller.ndb.org_clue_cost_warning != org:
-                    caller.ndb.org_clue_cost_warning = org
-                    self.msg("The cost will be %s. Execute the command again to pay it." % cost)
-                    return
-                caller.ndb.org_clue_cost_warning = None
-                if not caller.pay_action_points(cost):
-                    self.msg("You cannot afford to pay %s AP." % cost)
-                    return
+                # cost = 20 - (2 * org.social_modifier)
+                # if cost < 1:
+                #   cost = 1
+                # if caller.ndb.org_clue_cost_warning != org:
+                #     caller.ndb.org_clue_cost_warning = org
+                #     self.msg("The cost will be %s. Execute the command again to pay it." % cost)
+                #    return
+                #caller.ndb.org_clue_cost_warning = None
+                #if not caller.pay_action_points(cost):
+                #    self.msg("You cannot afford to pay %s AP." % cost)
+                #    return
                 ClueForOrg.objects.create(clue=clue, org=org, revealed_by=caller.roster)
                 category = "%s: Clue Added" % org
                 share_str = str(clue)
