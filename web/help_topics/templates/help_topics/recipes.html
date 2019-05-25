@@ -42,7 +42,7 @@
 		{% else %}
 		<tr>
 		{% endif %}
-		<td width="20%"><b>{{ recipe.name }}</b></td>
+		<td width="20%"><b>{{ recipe.name|mush_to_html }}</b></td>
 		<td width="10%"><b>{{ recipe.ability }}</b></td>
 		<td width="10%"><b>{{ recipe.difficulty }}</b></td>
 		<td width="20%"><b>{{ recipe.display_reqs|mush_to_html }}</b></td>
@@ -67,7 +67,7 @@
 	</tr>
 	{% for mat in materials %}
 		<tr>
-		<td width="10%"><b>{{ mat.name }}</b></td>
+		<td width="10%"><b>{{ mat.name|mush_to_html }}</b></td>
 		<td width="10%"><b>{{ mat.value }}</b></td>
 		<td width="20%"><b>{{ mat.category }}</b></td>
 		<td width="70%"><b>{{ mat.desc }}</b></td>
