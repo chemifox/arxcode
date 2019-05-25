@@ -43,7 +43,7 @@ class StartingGearCmdSet(CmdSet):
         the internal cmdset stack. They will then be able to removed or
         replaced as needed.
         """
-        self.add(CmdStartingGear())
+        #self.add(CmdStartingGear())
 
 
 class CmdStartingGear(ArxCommand):
