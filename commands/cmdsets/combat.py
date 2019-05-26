@@ -14,7 +14,8 @@ creative process.
 """
 from django.db.models import Q
 from evennia import CmdSet
-from server.utils.arx_utils import ArxCommand, list_to_string
+from server.utils.arx_utils import list_to_string
+from commands.base import ArxCommand
 from evennia.utils import create, evtable
 from server.utils.arx_utils import inform_staff
 from typeclasses.scripts.combat import combat_settings
@@ -343,7 +344,7 @@ def check_targ(caller, target, verb="Attack"):
     if not target:
         caller.msg("%s who?" % verb)
         return False
-    if not target.attackable:
+    if not hasattr(target, 'attackable') or not target.attackable:
         caller.msg("%s is not attackable and cannot enter combat." % target.name)
         return False
     combat = target.combat.combat
@@ -653,6 +654,9 @@ class CmdFlee(CombatCommand):
             return
         if not exit_obj.is_exit:
             caller.msg("That is not an exit.")
+            return
+        if hasattr(exit_obj, "passable") and not exit_obj.passable(self.caller):
+            caller.msg("That exit is blocked by an obstacle you have not passed!")
             return
         caller.combat.state.do_flee(exit_obj)
 

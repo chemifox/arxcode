@@ -28,6 +28,7 @@
   <h2>Largesse Level</h2> <p><center>{{ object.get_celebration_tier_display }}</center></p>
   {% if object.public_event or can_view %}
   <h3>Log</h3>
+
   <div class="well">
   {{ object.log|linebreaks}}
   </div>

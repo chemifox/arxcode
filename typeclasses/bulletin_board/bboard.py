@@ -3,14 +3,11 @@ Default Typeclass for Bulletin Boards, based loosely on bboards.
 
 See objects.objects for more information on Typeclassing.
 """
+from server.utils.arx_utils import get_full_url
 from typeclasses.objects import Object
 from world.msgs.models import Post
 from world.msgs.managers import POST_TAG, TAG_CATEGORY
-from pytz import timezone
-from server.utils.arx_utils import time_now
-from server.conf.production_settings import SERVERTZ
 
-PAGEROOT = "http://ithirmush.org"
 
 class BBoard(Object):
     """
@@ -55,7 +52,7 @@ class BBoard(Object):
         if announce:
             post_num = self.posts.count()
             from django.core.urlresolvers import reverse
-            post_url = PAGEROOT + reverse('msgs:post_view', kwargs={'board_id': self.id, 'post_id': post.id})
+            post_url = get_full_url(reverse('msgs:post_view', kwargs={'board_id': self.id, 'post_id': post.id}))
 
             notify = "\n{{wNew post on {0} by {1}:{{n {2}".format(self.key, posted_by, subject)
             notify += "\nUse {w@bbread %s/%s {nor {w%s{n to read this message." % (self.key, post_num, post_url)
@@ -197,6 +194,7 @@ class BBoard(Object):
         """
         Remove post if it's inside the bulletin board.
         """
+        retval = False
         if post in self.posts:
             post.delete()
             retval = True

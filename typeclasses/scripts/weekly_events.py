@@ -13,7 +13,8 @@ from django.db.models import Q, F
 from evennia.objects.models import ObjectDB
 from evennia.utils.evtable import EvTable
 
-from world.dominion.models import AssetOwner, Army, Member, AccountTransaction, Orders
+from world.dominion.models import AssetOwner, Member, AccountTransaction
+from world.dominion.domain.models import Army, Orders
 from world.msgs.models import Inform
 from typeclasses.bulletin_board.bboard import BBoard
 from typeclasses.accounts import Account
@@ -32,7 +33,8 @@ TRAINING_CAP_PER_WEEK = 10
 PLAYER_ATTRS = ("votes", 'claimed_scenelist', 'random_scenelist', 'validated_list', 'praises', 'condemns',
                 'requested_validation', 'donated_ap', 'masked_validated_list')
 CHARACTER_ATTRS = ("currently_training", "trainer", 'scene_requests', "num_trained", "num_journals",
-                   "num_rel_updates", "num_comments", "num_flashbacks", "support_cooldown", "support_points_spent")
+                   "num_rel_updates", "num_comments", "num_flashbacks", "support_cooldown", "support_points_spent",
+                   "rp_command_used", "random_rp_command_this_week")
 
 
 class BulkInformCreator(object):
@@ -63,11 +65,11 @@ class BulkInformCreator(object):
         self.informs.append(inform)
         return inform
 
-    def create_and_send_informs(self):
+    def create_and_send_informs(self, sender="the Weekly Update script"):
         """Creates all our informs and notifies players/orgs about them"""
         Inform.objects.bulk_create(self.informs)
         for receiver in self.receivers_to_notify:
-            receiver.msg("{yYou have new informs from the Weekly Update script.{n")
+            receiver.msg("{yYou have new informs from %s.{n" % sender)
 
 
 class WeeklyEvents(RunDateMixin, Script):
@@ -88,6 +90,11 @@ class WeeklyEvents(RunDateMixin, Script):
         self.persistent = True
         self.start_delay = True
         self.attributes.add("run_date", time_now(aware=True) + timedelta(days=7))
+
+    def at_start(self, **kwargs):
+        super(WeeklyEvents, self).at_start(**kwargs)
+        from world.magic.advancement import init_magic_advancement
+        init_magic_advancement()
 
     @property
     def inform_creator(self):

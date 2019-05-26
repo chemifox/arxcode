@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# -*- coding: utf-8 -*-
 """
 The Fashion app is for letting players have a mechanical benefit for fashion. Without
 a strong mechanical benefit for fashion, players who don't care about it will tend
@@ -112,6 +111,7 @@ class FashionOutfit(FashionCommonMixins):
     A collection of wearable and wieldable items that all fit on a character
     at the same time.
     """
+    FAME_CAP = 5000000
     name = models.CharField(max_length=80, db_index=True)
     owner = models.ForeignKey('dominion.PlayerOrNpc', related_name='fashion_outfits', on_delete=models.CASCADE)
     fashion_items = models.ManyToManyField('objects.ObjectDB', through='ModusOrnamenta', blank=True)
@@ -137,9 +137,9 @@ class FashionOutfit(FashionCommonMixins):
             self.delete()
 
     def delete(self, *args, **kwargs):
-#        for item in self.fashion_items.all():
-#            if item.pk:
-#                item.invalidate_snapshots_cache()
+        # for item in self.fashion_items.all():
+        #     if item.pk:
+        #         item.invalidate_snapshots_cache()
         super(FashionOutfit, self).delete(*args, **kwargs)
 
     def add_fashion_item(self, item, slot=None):
@@ -153,7 +153,7 @@ class FashionOutfit(FashionCommonMixins):
             self.owner_character.undress()
         except CombatError as err:
             raise EquipError(str(err) + "\nUndress failed. " + self.equipped_msg)
-        except EquipError as err:
+        except EquipError:
             pass
         wield_err, wear_err, = "", ""
         try:
@@ -225,10 +225,10 @@ class FashionOutfit(FashionCommonMixins):
         ap_cost = len(valid_items) * FashionableMixins.fashion_ap_cost
         if not self.owner.player.pay_action_points(ap_cost):
             raise FashionError("It costs %d AP to model %s; you do not have enough energy." % (ap_cost, self))
-        outfit_prestige = 0
+        outfit_fame = 0
         for item in valid_items:
-            outfit_prestige += item.model_for_fashion(self.owner.player, org, outfit=self)
-        return outfit_prestige
+            outfit_fame += item.model_for_fashion(self.owner.player, org, outfit=self)
+        return min(outfit_fame, self.FAME_CAP)
 
     @property
     def table_display(self):
@@ -318,7 +318,7 @@ class FashionOutfit(FashionCommonMixins):
         for item in self.fashion_items.all():
             if not item.modeled_by:
                 worth += item.item_worth
-        return str(worth or "")
+        return str("{:,}".format(worth) or "cannot model")
 
     @property
     def buzz(self):
@@ -394,8 +394,9 @@ class FashionSnapshot(FashionCommonMixins):
     The recorded moment when a piece of gear becomes a weapon
     of the fashionpocalypse.
     """
-    ORG_PRESTIGE_DIVISOR = 2
-    DESIGNER_PRESTIGE_DIVISOR = 4
+    FAME_CAP = 1500000
+    ORG_FAME_DIVISOR = 2
+    DESIGNER_FAME_DIVISOR = 4
     db_date_created = models.DateTimeField(auto_now_add=True)
     fashion_item = models.ForeignKey('objects.ObjectDB', related_name='fashion_snapshots',
                                      on_delete=models.SET_NULL, null=True)
@@ -450,7 +451,7 @@ class FashionSnapshot(FashionCommonMixins):
         percentage *= max(level_mod, 0.01)
         percentage *= max((self.fashion_item.quality_level/40.0), 0.01)
         # they get either their percentage of the item's worth, their modified roll, or 4, whichever is highest
-        self.prestige = max(int(self.fashion_item.item_worth * percentage), max(int(roll), 4))
+        self.prestige = min(max(int(self.fashion_item.item_worth * percentage), max(int(roll), 4)), self.FAME_CAP)
         self.save()
 
     def apply_prestige(self, reverse=False):
@@ -458,25 +459,27 @@ class FashionSnapshot(FashionCommonMixins):
         Awards full amount of prestige to fashion model and a portion to the
         sponsoring Organization & the item's Designer.
         """
+        from world.dominion.models import PrestigeCategory
+
         mult = -1 if reverse else 1
-        model_prestige = self.prestige * mult
-        org_prestige = self.org_prestige * mult
-        designer_prestige = self.designer_prestige * mult
-        self.fashion_model.assets.adjust_prestige(model_prestige, force=reverse)
-        self.org.assets.adjust_prestige(org_prestige, force=reverse)
-        self.designer.assets.adjust_prestige(designer_prestige, force=reverse)
+        model_fame = self.fame * mult
+        org_fame = self.org_fame * mult
+        designer_fame = self.designer_fame * mult
+        self.fashion_model.assets.adjust_prestige(model_fame, PrestigeCategory.FASHION)
+        self.org.assets.adjust_prestige(org_fame)
+        self.designer.assets.adjust_prestige(designer_fame, PrestigeCategory.DESIGN)
 
     def inform_fashion_clients(self):
         """
         Informs clients when prestige is earned, by using their AssetOwner method.
         """
         category = "fashion"
-        msg = "prestige awarded from %s modeling %s." % (self.fashion_model, self.fashion_item)
-        if self.org_prestige > 0:
-            org_msg = "{315%d{n %s" % (self.org_prestige, msg)
+        msg = "fame awarded from %s modeling %s." % (self.fashion_model, self.fashion_item)
+        if self.org_fame > 0:
+            org_msg = "{{315{:,}{{n {}".format(self.org_fame, msg)
             self.org.assets.inform_owner(org_msg, category=category, append=True)
-        if self.designer_prestige > 0:
-            designer_msg = "{315%d{n %s" % (self.designer_prestige, msg)
+        if self.designer_fame > 0:
+            designer_msg = "{{315{:,}{{n {}".format(self.designer_fame, msg)
             self.designer.assets.inform_owner(designer_msg, category=category, append=True)
 
     def reverse_snapshot(self):

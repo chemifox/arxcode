@@ -5,6 +5,7 @@ message will be sent, if any. While it could be a simulated roll made
 by a GM, a character's roll will be stored in character.ndb.last_roll
 attribute.
 """
+from collections import defaultdict
 from random import randint
 
 
@@ -38,8 +39,8 @@ class Roll(object):
         self.average_skill_list = average_skill_list
         self.announce_values = announce_values
         self.flub = flub
-        self.stats = {}
-        self.skills = {}
+        self.stats = defaultdict(int)
+        self.skills = defaultdict(int)
         self.bonus_crit_chance = 0
         self.bonus_crit_mult = 0
         self.bonus_keep = bonus_keep
@@ -58,7 +59,7 @@ class Roll(object):
             stat_list = [ob.lower() for ob in stat_list]
             # look up each stat from supplied caller, adds to stats dict
             for somestat in stat_list:
-                self.stats[somestat] = self.character.attributes.get(somestat, 0)
+                self.stats[somestat] += self.character.attributes.get(somestat, 0)
             # None isn't iterable so make an empty set of skills
             skill_list = skill_list or []
             # add individual skill to the list
@@ -69,7 +70,7 @@ class Roll(object):
             skills = caller.db.skills or {}
             # compares skills to dict we just made, adds to self.skills dict
             for someskill in skill_list:
-                self.skills[someskill] = skills.get(someskill, 0)
+                self.skills[someskill] += skills.get(someskill, 0)
             self.bonus_crit_chance = caller.db.bonus_crit_chance or 0
             self.bonus_crit_mult = caller.db.bonus_crit_mult or 0
             if use_real_name:
@@ -117,6 +118,7 @@ class Roll(object):
         result = sum(rolls)
         divisor = self.divisor or 1
         result /= divisor
+        result += self.get_roll_modifiers()
         # crit chance is determined here. If we can't crit, we just set the multiplier to be 1
         crit_mult = self.check_crit_mult()
         self.crit_mult = crit_mult
@@ -158,7 +160,7 @@ class Roll(object):
         try:
             if not self.can_crit:
                 return 1
-            bonus_crit_chance = self.bonus_crit_chance
+            bonus_crit_chance = self.bonus_crit_chance + self.get_crit_chance_modifiers()
             bonus_crit_mult = self.bonus_crit_mult
             roll = randint(1, 100)
             if roll > (5 + bonus_crit_chance):
@@ -205,3 +207,15 @@ class Roll(object):
         msg += roll_msg
         self.msg = msg
         return msg
+
+    def get_roll_modifiers(self):
+        try:
+            return self.character.mods.get_total_roll_modifiers(self.stats, self.skills)
+        except AttributeError:
+            return 0
+
+    def get_crit_chance_modifiers(self):
+        try:
+            return self.character.mods.get_total_crit_chance_modifiers(self.stats, self.skills)
+        except AttributeError:
+            return 0

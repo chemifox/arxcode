@@ -3,14 +3,14 @@ Commands for home spaces/rooms.
 """
 
 from evennia import CmdSet
-from server.utils.arx_utils import ArxCommand
+from commands.base import ArxCommand
 from django.conf import settings
 from world.dominion.models import LIFESTYLES
 from django.db.models import Q
 from evennia.objects.models import ObjectDB
 from world.dominion.models import AssetOwner, Organization, CraftingRecipe
-from commands.commands.crafting import CmdCraft
-from commands.commands.overrides import CmdDig
+from commands.base_commands.crafting import CmdCraft
+from commands.base_commands.overrides import CmdDig
 from server.utils.prettytable import PrettyTable
 from server.utils.arx_utils import inform_staff, raw
 from evennia.utils import utils
@@ -233,6 +233,7 @@ class CmdBuildRoom(CmdDig):
     key = "+buildroom"
     locks = "cmd:all()"
     help_category = "Home"
+    help_entry_tags = ["housing"]
 
     # noinspection PyAttributeOutsideInit
     def func(self):
@@ -414,6 +415,7 @@ class CmdManageRoom(ArxCommand):
     desc_switches = ("desc", "winterdesc", "springdesc", "summerdesc", "falldesc")
     bouncer_switches = ("ban", "unban", "boot")
     personnel_switches = ("addbouncer", "rmbouncer", "adddecorator", "rmdecorator")
+    help_entry_tags = ["housing"]
     
     def check_perms(self):
         """Checks the permissions for the room"""
@@ -677,6 +679,7 @@ class CmdManageShop(ArxCommand):
     key = "+manageshop"
     locks = "cmd:all()"
     help_category = "Home"
+    help_entry_tags = ["shops"]
 
     def list_prices(self):
         """Lists a table of prices for the shop owner"""

@@ -4,12 +4,11 @@ Forms for Dominion
 from django import forms
 from django.db.models import Q
 
-from server.conf.production_settings import SERVERTZ
 from typeclasses.rooms import ArxRoom
 from world.dominion.models import RPEvent, Organization, PlayerOrNpc, PlotRoom
+from world.dominion.plots.models import Plot
 from server.utils.arx_utils import time_now
 
-from datetime import datetime
 from pytz import timezone
 
 
@@ -36,19 +35,20 @@ class RPEventCreateForm(forms.ModelForm):
     gms = forms.ModelMultipleChoiceField(queryset=player_queryset, required=False)
     org_invites = forms.ModelMultipleChoiceField(queryset=org_queryset, required=False)
     location = forms.ModelChoiceField(queryset=ArxRoom.objects.all(), widget=forms.HiddenInput(), required=False)
+    plot = forms.ModelChoiceField(queryset=Plot.objects.none(), required=False)
 
     class Meta:
         """Meta options for setting up the form"""
         model = RPEvent
         fields = ['name', 'desc', 'date', 'room_desc', 'location', 'plotroom', 'celebration_tier', 'risk',
-                  'public_event', 'actions']
+                  'public_event']
 
     def __init__(self, *args, **kwargs):
         self.owner = kwargs.pop('owner')
         super(RPEventCreateForm, self).__init__(*args, **kwargs)
         self.fields['desc'].required = True
         self.fields['date'].required = True
-        self.fields['actions'].queryset = self.owner.actions.all()
+        self.fields['plot'].queryset = self.owner.plots_we_can_gm
         if not self.owner.player.is_staff:
             current_orgs = [ob.id for ob in self.owner.current_orgs]
             self.fields['org_invites'].queryset = self.org_queryset.filter(Q(secret=False) | Q(id__in=current_orgs))
@@ -71,8 +71,6 @@ class RPEventCreateForm(forms.ModelForm):
 
     def clean_date(self):
         """Validates our date. ValiDATES, get it? Get it?"""
-        #from datetime import datetime
-        #from pytz import timezone
         date = self.cleaned_data['date']
         now = time_now(aware=True)
         if date < now:
@@ -136,6 +134,11 @@ class RPEventCreateForm(forms.ModelForm):
                 event.add_guest(pc_invite)
         for org in self.cleaned_data.get('org_invites', []):
             event.invite_org(org)
+        plot = self.cleaned_data.get('plot', None)
+        if plot:
+            # we create a blank PlotUpdate so that this is tagged to the Plot, but nothing has happened yet
+            event.beat = plot.updates.create()
+            event.save()
         self.pay_costs()
         self.post_event(event)
         return event
@@ -158,9 +161,11 @@ class RPEventCreateForm(forms.ModelForm):
     def display(self, zone):
         """Returns a game-friendly display string"""
         """with date time in proper timezone"""
-        if not zone:
-            zone = SERVERTZ
         msg = "{wName:{n %s\n" % self.data.get('name')
+        plot = self.data.get('plot')
+        if plot:
+            plot = Plot.objects.get(id=plot)
+            msg += "{wPlot:{n %s\n" % plot
         msg += "{wMain Host:{n %s\n" % self.owner
         hosts = PlayerOrNpc.objects.filter(id__in=self.data.get('hosts', []))
         if hosts:
@@ -168,7 +173,7 @@ class RPEventCreateForm(forms.ModelForm):
             msg += "{wPublic:{n %s\n" % ("Public" if self.data.get('public_event', True) else "Private")
         msg += "{wDescription:{n %s\n" % self.data.get('desc')
         date = self.data.get('date')
-        zone = self.owner.player.char_ob.db.timezone
+        zone = zone or self.owner.player.char_ob.timezone
         if date:
             date = date.astimezone(timezone(zone))
             msg += "{wEvent Date:{n %s %s\n" % (date.strftime("%x %H:%M"), zone)

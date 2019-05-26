@@ -37,7 +37,7 @@
     <div class="col-md-3 text-left">
     <p><b>Concept:</b> {{ character.db.concept }}<br>
 	{% if character.db.real_concept and show_hidden %}<b>Real Concept:</b> {{ character.db.real_concept}}<br>{% endif %}
-    <b>Fealty:</b> 
+    <b>Fealty:</b>
 	{% if fealty_org_id %}
 	<a href="{% url 'help_topics:display_org' fealty_org_id.id %}">{{ character.db.fealty }}</a>
 	{% else %}{{ character.db.fealty}}
@@ -58,7 +58,8 @@
 	</div>
 	</div>
     {% if character.db.obituary %}
-    <p><b>Obituary:</b> {{ character.db.obituary|mush_to_html }}</p>{% endif %}
+    <p><b>Obituary:</b> {{ character.db.obituary|mush_to_html }}</p>
+    {% endif %}
     <p><b>Description:</b> {{ character.perm_desc|mush_to_html }}</p>
 
     <p><b>Personality:</b> {{ character.db.personality|mush_to_html }}</p>
@@ -80,17 +81,15 @@
       {% endfor %}
     {% endif %}
     {% if show_hidden %}
-    {% if character.db.secrets %}
-    <h2 class="text-center">Secrets</h2>
-    {% for secret in character.db.secrets %}
-    <p>{{ forloop.counter}} : {{ secret|mush_to_html }}</p>
-    {% endfor %}
-    {% endif %}
-    {% if character.db.gm_notes %}
+      {% if secrets %}
+      <h2 class="text-center">Secrets</h2>
+      {% for secret in secrets %}
+        <p>{{ forloop.counter}} : {{ secret.desc|mush_to_html }}</p>
         {% if request.user.is_staff %}
             <h2 class="text-center">GM Notes</h2>
-            <li>{{  character.db.gm_notes }}</li>
+          {{  secret.gm_notes }}
         {% endif %}
+          {% endfor %}
     {% endif %}
         </div>
         </div>
@@ -155,37 +154,19 @@
         <li class="text-center"><b>{{ skill }}:</b> {{ value }}</li>
       {% empty %}
         <li>This character has no skills yet.</li>
-      {% endfor %}
-    </ul>
-    {% endif %}
-	<!-- Until these are replaced by new comment system
-    <h2>Comments</h2>
-    <ul>
-      {% for commenter,commentlist in character.db.comments.items %}
-        <li><b>{{ commenter|capfirst }}</b> wrote:</li>
-        {% for entry in commentlist %}
-          <blockquote>{{ entry.header }} : <q>{{ entry.message }}</q></blockquote>
-        {% empty %}
-          No comments.<br>
+
         {% endfor %}
-      {% empty %}
-        No comments left for {{ character.key }} yet.
-      {% endfor %}
-    </ul>
-    {% if can_comment %}
-      <form action="{% url 'character:comment' character.id %}" method="post">
-      {% csrf_token %}
-      <textarea name="comment" rows="4" cols="50" placeholder="Type IC Comment Here"></textarea>
-      <br><input type="submit" value="Submit Comment">
-      </form>
+      </ul>
     {% endif %}
-	-->
+
     <div class="row">
         <div class="col-sm-3 text-center">
             <h3 class="text-center"><a href="{% url 'character:gallery' character.id %}"><span class="label label-success">Gallery</span></a></h3>
             </div>
         <div class="col-sm-3 text-center">
             <h3 class="text-center"><a href="{% url 'character:character_story' character.id %}"><span class="label label-success">Past Actions</span></a></h3>
+        <div class="col-md-4 text-center">
+            <h1 class="text-center"><a href="{% url 'character:list_actions' character.id %}"><span class="label label-primary">Story Actions</span></a></h1>
             </div>
         {% if show_hidden %}
             <div class="col-sm-3 text-center">
@@ -196,7 +177,7 @@
                     <span class="label label-success">Clues</span></a></h3></div>
         {% endif %}
     </div>
-      <br></br>
+      <br />
 
     <div class="container">
         <div>
@@ -229,6 +210,6 @@
         </div>
 
     </div>
-    
+
  </div>
   {% endblock %}

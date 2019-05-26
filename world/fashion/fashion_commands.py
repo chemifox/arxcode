@@ -1,11 +1,13 @@
 """
 Commands for the fashion app.
 """
-from server.utils.arx_utils import ArxCommand, list_to_string
+from datetime import datetime, timedelta
+
+from commands.base import ArxCommand
 from server.utils.prettytable import PrettyTable
 from world.dominion.models import Organization
 from world.fashion.exceptions import FashionError
-from world.fashion.models import FashionSnapshot as Snapshot, FashionOutfit as Outfit, ModusOrnamenta as MO
+from world.fashion.models import FashionSnapshot as Snapshot, FashionOutfit as Outfit
 
 
 def get_caller_outfit_from_args(caller, args):
@@ -144,6 +146,10 @@ class CmdFashionModel(ArxCommand):
     of prestige as well. Although masks may be modeled, doing so will reveal the
     model's identity in subsequent item labels and informs.
     Without the /all switch for leaderboards, only Top 20 are displayed.
+
+    If you want to ignore modeling emits (such as at parties and other large
+    scenes), you can use the @settings command to turn on ignore_model_emit.
+    (See help @settings for more information.)
     """
     key = "model"
     aliases = ["models"]
@@ -173,6 +179,7 @@ class CmdFashionModel(ArxCommand):
         if not item or not org:
             return
         player = self.caller.player
+        self.check_recency(org)
         try:
             prestige = item.model_for_fashion(player, org)
         except AttributeError:
@@ -188,16 +195,21 @@ class CmdFashionModel(ArxCommand):
         org = Organization.objects.get_public_org(self.rhs, self.caller)
         if not outfit or not org:
             return
-            prestige = outfit.model_outfit_for_fashion(org)
-        self.emit_modeling_result(outfit, org, prestige)
+        self.check_recency(org)
+        fame = outfit.model_outfit_for_fashion(org)
+        self.emit_modeling_result(outfit, org, fame)
 
-    def emit_modeling_result(self, thing, org, prestige):
+    def emit_modeling_result(self, thing, org, fame):
         """A local emit and caller message about an outfit/item that has been modeled."""
         player = self.caller.player
-        emit = Snapshot.get_emit_msg(player, thing, org, prestige)
-        self.caller.location.msg_contents(emit)
-        success = "For modeling %s{n you earn {c%d{n prestige. " % (thing, prestige)
-        success += "Your prestige is now %d." % player.assets.prestige
+        emit = Snapshot.get_emit_msg(player, thing, org, fame)
+        for obj in self.caller.location.contents:
+            ignore_model = obj.db.ignore_model_emits or False
+            if not ignore_model:
+                obj.msg(emit)
+
+        success = "For modeling {}{{n you earn {{c{:,}{{n fame. ".format(thing, fame)
+        success += "Your prestige is now {:,}.".format(player.assets.prestige)
         self.msg(success)
 
     def view_leaderboards(self):
@@ -231,7 +243,8 @@ class CmdFashionModel(ArxCommand):
                 if not org:
                     return
                 pretty_headers[0] = "%s Model" % org
-                qs = get_queryset(org.fashion_snapshots, 'fashion_model__player__username', Snapshot.ORG_PRESTIGE_DIVISOR)
+                qs = get_queryset(org.fashion_snapshots, 'fashion_model__player__username',
+                                  Snapshot.ORG_PRESTIGE_DIVISOR)
             else:
                 pretty_headers[0] = "Organization"
                 qs = get_queryset(Snapshot.objects, 'org__name', Snapshot.ORG_PRESTIGE_DIVISOR)
@@ -241,13 +254,31 @@ class CmdFashionModel(ArxCommand):
         if not qs:
             raise FashionError("Nothing was found.")
         table = PrettyTable(pretty_headers)
+        table.align = "r"
         for q in qs:
+            q = list(q)
+            q[1] = "{:,}".format(q[1])
+            q[3] = "{:,}".format(q[3])
             # for lowercase names, we'll capitalize them
             if q[0] == q[0].lower():
-                q = list(q)
                 q[0] = q[0].capitalize()
+
             table.add_row(q)
         self.msg(str(table))
+
+    def check_recency(self, org=None):
+        """Raises an error if we've modelled too recently"""
+        from evennia.scripts.models import ScriptDB
+        try:
+            last_cron = ScriptDB.objects.get(db_key="Weekly Update").db.run_date - timedelta(days=7)
+        except (ScriptDB.DoesNotExist, ValueError, TypeError):
+            last_cron = datetime.now() - timedelta(days=7)
+        qs = self.caller.dompc.fashion_snapshots
+        if qs.filter(db_date_created__gte=last_cron).count() >= 3:
+            raise FashionError("You may only model up to three items a week before the public tires of you.")
+        if org:
+            if qs.filter(db_date_created__gte=last_cron, org=org):
+                raise FashionError("You have displayed fashion too recently for %s to bring them more acclaim." % org)
 
 
 class CmdAdminFashion(ArxCommand):
