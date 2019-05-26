@@ -106,9 +106,12 @@ class BBoard(Object):
         post.tags.add("%s_comment" % org, category="org_comment")
         post.save()
         poster_obj.msg("{w%s{n successfully declared a stance on '%s'." % (org, post.db_header))
-        self.notify_subs("{w%s has commented upon proclamation %s.{n" % (org, postnum))
+        self.notify_subs("{g%s has commented upon proclamation %s.{n" % (org, postnum))
         from server.utils.arx_utils import inform_staff
         inform_staff("{c%s {whas posted an org stance for %s." % (poster_obj, org))
+        msgs = "{w%s has commented upon proclamation %s.{n\n" % (org, postnum)
+        msgs += "{wComment:{n %s " % msg
+        org.inform(msgs, category='Proclamations')
 
     def has_subscriber(self, pobj):
         if pobj in self.db.subscriber_list:

@@ -1367,7 +1367,9 @@ class CmdCalendar(ArxPlayerCommand):
     def do_display_switches(self,char):
         """Displays our project if we have one"""
         proj = self.caller.ndb.event_creation
-        timezone = char.character.db.timezone
+        timezone = SERVERTZ  # however you get that
+        if char.character is not None:
+            timezone = char.character.db.timezone
         if not timezone:
             timezone = SERVERTZ
         if not self.args and not self.switches and proj:
@@ -1921,8 +1923,9 @@ class CmdPraise(ArxPlayerCommand):
         praise/all <character>[=<message>]
 
     Praises a character, give them the recognition they deserve!
-    Your number of praises per week are based on your social rank
-    and skills. Using praise with no arguments lists your praises.
+    Your number of praises per week are based on your influence
+    +10. Using praise with no arguments lists your praises.
+
     """
     key = "praise"
     locks = "cmd:all()"
