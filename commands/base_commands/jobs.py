@@ -77,7 +77,7 @@ class CmdJob(ArxPlayerCommand):
     To view other queues, use @bug, @code, @typo, or @prp.
     """
     key = "@job"
-    aliases = ["@jobs", "@bug", "@code", "@typo", "@prp"]
+    aliases = ["@jobs", "@code", "@typo", "@prp"]
     help_category = "Admin"
     help_entry_tags = ["requests"]
     locks = "cmd:perm(job) or perm(Builders)"

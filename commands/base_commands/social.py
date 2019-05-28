@@ -1355,9 +1355,9 @@ class CmdCalendar(ArxPlayerCommand):
         """Execute command."""
         try:
             if not self.args and (not self.switches or self.check_switches(self.display_switches)):
-                return self.do_display_switches()
+                return self.do_display_switches(self.caller)
             if not self.switches or self.check_switches(self.target_event_switches):
-                return self.do_target_event_switches()
+                return self.do_target_event_switches(self.caller)
             if self.check_switches(self.form_switches):
                 return self.do_form_switches()
             if self.check_switches(self.attribute_switches):
@@ -1370,12 +1370,12 @@ class CmdCalendar(ArxPlayerCommand):
         except (self.CalCmdError, PayError) as err:
             self.msg(err)
 
-    def do_display_switches(self):
+    def do_display_switches(self, char):
         """Displays our project if we have one"""
         proj = self.caller.ndb.event_creation
-        timezone = SERVERTZ
-        if self.character is not None:
-            timezone = self.character.db.timezone
+        timezone = SERVERTZ  # however you get that
+        if char.character is not None:
+            timezone = char.character.db.timezone
         if not timezone:
             timezone = SERVERTZ
         if not self.args and not self.switches and proj:
@@ -1409,7 +1409,7 @@ class CmdCalendar(ArxPlayerCommand):
             table.add_row([event.id, event.name[:25], displaytime.strftime("%x %H:%M"), host, public])
         return table
 
-    def do_target_event_switches(self):
+    def do_target_event_switches(self, char):
         """Interact with events owned by other players"""
         caller = self.caller
         lhslist = self.lhs.split("/")
@@ -1459,7 +1459,7 @@ class CmdCalendar(ArxPlayerCommand):
             caller.char_ob.move_to(event.location, mapping=mapping)
         # display info on a given event
         if not rhs:
-            caller.msg(event.display(), options={'box': True})
+            caller.msg(event.display(char.character.db.timezone), options={'box': True})
             return
         try:
             num = int(rhs)
@@ -1921,7 +1921,6 @@ class CmdPraise(ArxPlayerCommand):
     Usage:
         praise <character>[,<num praises>][=<message>]
         praise/all <character>[=<message>]
-        praise/org <org>[,<num praises>][=<message>]
 
     Praises a character, give them the recognition they deserve!
     Your number of praises per week are based on your influence
@@ -1989,6 +1988,8 @@ class CmdPraise(ArxPlayerCommand):
                 raise self.PraiseError("You cannot %s yourself." % self.verb)
             if targ.is_staff:
                 raise self.PraiseError("Staff don't need your %s." % self.attr)
+            if not self.rhs:
+                raise self.PraiseError("You must provide a reason for your %s." % self.attr)
             targ = targ.Dominion.assets
         char = caller.char_ob
         current_used = self.current_used
@@ -2009,16 +2010,16 @@ class CmdPraise(ArxPlayerCommand):
         current_used += to_use
         from world.dominion.models import PraiseOrCondemn
         from server.utils.arx_utils import get_week
-        if not caller.pay_action_points(1):
-            raise self.PraiseError("You cannot muster the energy to praise someone at this time.")
+        #if not caller.pay_action_points(1):
+        #    raise self.PraiseError("You cannot muster the energy to praise someone at this time.")
         amount = self.do_praise_roll(base) * to_use
         praise = PraiseOrCondemn.objects.create(praiser=caller.Dominion, target=targ, number_used=to_use,
-                                                message=self.rhs or "", week=get_week(), value=amount)
+                                                message=self.rhs, week=get_week(), value=amount)
         praise.do_prestige_adjustment()
         name = str(targ).capitalize()
         caller.msg("You %s the actions of %s. You have %s %s remaining." %
                    (self.verb, name, self.get_actions_remaining(), self.attr))
-        reasons = ": %s" % self.rhs if self.rhs else "."
+        reasons = ": %s" % self.rhs
         char.location.msg_contents("%s is overheard %s %s%s" % (char.name, self.verbing, name, reasons), exclude=char)
 
     def do_praise_roll(self, base=0):
@@ -2032,8 +2033,7 @@ class CmdPraise(ArxPlayerCommand):
         """Calculates how many praises character has"""
         char = self.caller.char_ob
         clout = char.social_clout
-        s_rank = char.db.social_rank or 10
-        return clout + ((8 - s_rank) / 2)
+        return clout + 10
 
     @property
     def current_used(self):
@@ -2052,12 +2052,12 @@ class CmdPraise(ArxPlayerCommand):
         praises = praises_or_condemns.filter(value__gte=0)
         condemns = praises_or_condemns.filter(value__lt=0)
         msg = "Praises:\n"
-        table = EvTable("Name", "Praises", "Value", "Message", width=78, align="r")
+        table = EvTable("Name", "Praises", "Message", width=78)
         for praise in praises:
-            table.add_row(praise.target, praise.number_used, "{:,}".format(praise.value), praise.message)
+            table.add_row(praise.target, praise.number_used, praise.message)
         msg += str(table)
         msg += "\nCondemns:\n"
-        table = EvTable("Name", "Condemns", "Value", "Message", width=78)
+        table = EvTable("Name", "Condemns", "Message", width=78)
         for pc in condemns:
             table.add_row(pc.capitalize(), condemns[pc][0], condemns[pc][1])
         msg += str(table)
@@ -3774,18 +3774,18 @@ class CmdFirstImpression(ArxCommand):
                                                                                    summary=self.rhs)
             self.msg("{wYou have recorded your first impression on %s:{n\n%s" % (targ, self.rhs))
             if "quiet" not in self.switches:
-                msg = "%s has written their +firstimpression on you, giving you 4 xp." % self.caller.key
+                msg = "%s has written their +firstimpression on you, giving you 1 xp." % self.caller.key
                 if not received:
                     msg += " If you want to return the favor with +firstimpression, you will gain 1 additional xp, and "
-                    msg += "give them 4 in return. You are under no obligation to do so."
+                    msg += "give them 1 in return. You are under no obligation to do so."
                 if "private" not in self.switches:
                     msg += "\nSummary of the scene they gave: %s" % self.rhs
                 targ.inform(msg, category="First Impression")
             inform_staff("%s's first impression of %s: %s" % (self.caller.key, targ, self.rhs))
-            xp = 2 if writer_share else 1
+            xp = 1
             self.caller.adjust_xp(xp)
             self.msg("You have gained %s xp." % xp)
-            targ.char_ob.adjust_xp(4)
+            targ.char_ob.adjust_xp(1)
 
 
 # noinspection PyAttributeOutsideInit

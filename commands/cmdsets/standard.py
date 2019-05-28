@@ -193,7 +193,7 @@ class OOCCmdSet(CmdSet):
         # self.add(social.CmdFavor())
         self.add(overrides.SystemNoMatch())
         self.add(weather_commands.CmdAdminWeather())
-        self.add(roster.CmdPropriety())
+        # self.add(roster.CmdPropriety())
 
         # Exploration!
         self.add(exploration_commands.CmdExplorationCmdSet())
@@ -292,7 +292,7 @@ class MobileCmdSet(CmdSet):
         # self.add(fashion_commands.CmdFashionModel())
         # self.add(fashion_commands.CmdFashionOutfit())
         self.add(petitions_commands.CmdPetition())
-        self.add(condition_commands.CmdKnacks())
+        # self.add(condition_commands.CmdKnacks())
 
 
 class StaffCmdSet(CmdSet):
