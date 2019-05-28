@@ -6,7 +6,7 @@ from evennia.utils.idmapper.models import SharedMemoryModel
 from evennia.utils import create
 from django.db import models
 from . import builder
-from server.utils.arx_utils import inform_staff
+from server.utils.arx_utils import inform_staff, time_now
 import random
 from typeclasses.npcs import npc_types
 from server.utils.picker import WeightedPicker
@@ -843,7 +843,7 @@ class ShardhavenLayoutExit(SharedMemoryModel):
 
     def modify_diff(self, amount=None, reason=None):
         if amount:
-            self.modified_diff_at = datetime.datetime.now()
+            self.modified_diff_at = time_now(aware=True)
             self.modified_diff_by = amount
             self.modified_diff_reason = reason
         else:
@@ -857,7 +857,7 @@ class ShardhavenLayoutExit(SharedMemoryModel):
         if not self.modified_diff_by or not self.modified_diff_at:
             return 0
 
-        delta = datetime.datetime.now() - self.modified_diff_at
+        delta = time_now(aware=True) - self.modified_diff_at
         if delta.total_seconds() > 600:
             return 0
 
@@ -937,7 +937,7 @@ class ShardhavenLayoutSquare(SharedMemoryModel):
             self.visitors.add(character)
 
     def mark_emptied(self):
-        self.last_visited = datetime.datetime.now()
+        self.last_visited = time_now(aware=True)
 
     def has_visited(self, character):
         return character in self.visitors.all()
@@ -947,7 +947,7 @@ class ShardhavenLayoutSquare(SharedMemoryModel):
         if not self.last_visited:
             return False
 
-        now = datetime.datetime.now()
+        now = time_now(aware=True)
         delta = now - self.last_visited
         return delta.total_seconds() < 86400
 

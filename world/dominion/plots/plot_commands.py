@@ -9,7 +9,7 @@ from commands.mixins import RewardRPToolUseMixin
 from server.utils.helpdesk_api import create_ticket, add_followup, resolve_ticket
 from server.utils.prettytable import PrettyTable
 from server.utils.exceptions import CommandError
-from server.utils.arx_utils import dict_from_choices_field
+from server.utils.arx_utils import dict_from_choices_field, time_now
 from web.character.models import StoryEmit, Flashback, Clue, Revelation, Theory
 from web.helpdesk.models import Ticket
 from world.dominion.plots.models import PCPlotInvolvement, PlotUpdate, Plot
@@ -231,7 +231,7 @@ class CmdPlots(RewardRPToolUseMixin, ArxCommand):
         involvement = self.get_involvement_by_plot_id(required_permission=PCPlotInvolvement.GM)
         desc, ooc_notes = self.split_ic_from_ooc()
         plot = involvement.plot
-        beat = plot.updates.create(desc=desc, ooc_notes=ooc_notes, date=datetime.now())
+        beat = plot.updates.create(desc=desc, ooc_notes=ooc_notes, date=time_now(aware=True))
         self.msg("You have created a new beat for %s, ID: %s." % (plot, beat.id))
 
     def edit_beat(self):
@@ -682,7 +682,7 @@ class CmdGMPlots(ArxCommand):
         if self.rhs:
             parent = self.get_by_name_or_id(Plot, self.rhs)
         plot = Plot.objects.create(name=name, desc=desc, parent_plot=parent, usage=Plot.GM_PLOT,
-                                   start_date=datetime.now(), headline=summary)
+                                   start_date=time_now(aware=True), headline=summary)
         if parent:
             self.msg("You have created a new subplot of %s: %s (#%s)." % (parent, plot, plot.id))
         else:
@@ -709,7 +709,7 @@ class CmdGMPlots(ArxCommand):
         if plot.resolved:
             raise CommandError("That plot has already been resolved.")
         plot.resolved = True
-        plot.end_date = datetime.now()
+        plot.end_date = time_now(aware=True)
         plot.save()
         self.msg("You have ended %s." % plot)
 

@@ -2,7 +2,7 @@ from evennia.utils.idmapper.models import SharedMemoryModel
 from django.db import models
 from django.db.models import Q
 from world.dominion.managers import CrisisManager
-from server.utils.arx_utils import inform_staff, passthrough_properties, get_week
+from server.utils.arx_utils import inform_staff, passthrough_properties, get_week, time_now
 from web.character.models import AbstractPlayerAllocations
 from server.utils.exceptions import ActionSubmissionError
 from django.conf import settings
@@ -54,7 +54,7 @@ class Plot(SharedMemoryModel):
     @property
     def time_remaining(self):
         """Returns timedelta of how much time is left before the crisis updates"""
-        now = datetime.now()
+        now = time_now(aware=True)
         if self.end_date and self.end_date > now:
             return self.end_date - now
 
@@ -128,7 +128,7 @@ class Plot(SharedMemoryModel):
         """Raises errors if it's not valid to submit an action for this crisis"""
         if self.resolved:
             raise ActionSubmissionError("%s has been marked as resolved." % self)
-        if self.end_date and datetime.now() > self.end_date:
+        if self.end_date and time_now(aware=True) > self.end_date:
             raise ActionSubmissionError("It is past the deadline for %s." % self)
 
     def raise_creation_errors(self, dompc):
@@ -158,7 +158,7 @@ class Plot(SharedMemoryModel):
             latest_episode = Episode.objects.last()
         else:
             latest_episode = Chapter.objects.last().episodes.create(name=episode_name, synopsis=episode_synopsis)
-        update = self.updates.create(date=datetime.now(), desc=gemit_text, gm_notes=gm_notes, episode=latest_episode)
+        update = self.updates.create(date=time_now(aware=True), desc=gemit_text, gm_notes=gm_notes, episode=latest_episode)
         qs = self.actions.filter(status__in=(PlotAction.PUBLISHED, PlotAction.PENDING_PUBLISH,
                                              PlotAction.CANCELLED), beat__isnull=True)
         pending = []
@@ -522,7 +522,7 @@ class AbstractAction(AbstractPlayerAllocations):
     def on_submit_success(self):
         """If no errors were raised, we mark ourselves as submitted and no longer allow edits."""
         if not self.date_submitted:
-            self.date_submitted = datetime.now()
+            self.date_submitted = time_now(aware=True)
         self.editable = False
         self.save()
         self.post_edit()
@@ -764,8 +764,8 @@ class PlotAction(AbstractAction):
                       (CANCELLED, 'Cancelled'), (PENDING_PUBLISH, 'Pending Resolution'), (PUBLISHED, 'Resolved'))
     status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=DRAFT)
     max_requests = 2
-    num_days = 60
-    attending_limit = 5
+    num_days = 30
+    attending_limit = 4
 
     def __str__(self):
         if self.plot:
@@ -1162,7 +1162,7 @@ class PlotActionAssistant(AbstractAction):
     """An assist for a plot action - a player helping them out and writing how."""
     NOUN = "Assist"
     BASE_AP_COST = 10
-    MAX_ASSISTS = 4
+    MAX_ASSISTS = 2
     plot_action = models.ForeignKey("PlotAction", db_index=True, related_name="assisting_actions")
     dompc = models.ForeignKey("PlayerOrNpc", db_index=True, related_name="assisting_actions")
 

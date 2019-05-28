@@ -6,6 +6,7 @@ from mock import Mock, patch, PropertyMock
 from datetime import datetime, timedelta
 
 from server.utils.test_utils import ArxCommandTest
+from server.utils.arx_utils import time_now
 from world.dominion.models import CrisisAction, Crisis, Army, RPEvent
 from . import story_actions, overrides, social, staff_commands, roster
 
@@ -74,10 +75,10 @@ class StoryActionTests(ArxCommandTest):
         self.call_cmd("/newaction test crisis=testing",
                       "You have already submitted an action for this stage of the crisis.")
         action_2 = self.dompc.actions.create(actions="completed storyaction", status=CrisisAction.PUBLISHED,
-                                             date_submitted=datetime.now())
+                                             date_submitted=time_now(aware=True))
         action_2.assisting_actions.create(dompc=self.dompc2)
         action_3 = self.dompc.actions.create(actions="another completed storyaction", status=CrisisAction.PUBLISHED,
-                                             date_submitted=datetime.now())
+                                             date_submitted=time_now(aware=True))
         action_3.assisting_actions.create(dompc=self.dompc2)
         draft = self.dompc.actions.create(actions="storyaction draft", status=CrisisAction.DRAFT,
                                           category=CrisisAction.RESEARCH,
@@ -88,10 +89,10 @@ class StoryActionTests(ArxCommandTest):
         self.caller = self.account2
         # unused actions can be used as assists. Try with one slot free to be used as an assist
         self.dompc2.actions.create(actions="dompc completed storyaction", status=CrisisAction.PUBLISHED,
-                                   date_submitted=datetime.now())
+                                   date_submitted=time_now(aware=True))
         self.call_cmd("/setaction 4=test assist", 'Action by Testaccount now has your assistance: test assist')
         self.dompc2.actions.create(actions="another dompc completed storyaction", status=CrisisAction.PUBLISHED,
-                                   date_submitted=datetime.now())
+                                   date_submitted=time_now(aware=True))
         # now both slots used up
         self.call_cmd("/setaction 4=test assist", "You are assisting too many actions.")
         # test making an action free
@@ -129,7 +130,7 @@ class StoryActionTests(ArxCommandTest):
     @patch("world.dominion.models.get_week")
     def test_cmd_gm_action(self, mock_get_week, mock_inform_staff):
         from datetime import datetime
-        now = datetime.now()
+        now = time_now(aware=True)
         mock_get_week.return_value = 1
         action = self.dompc2.actions.create(actions="test", status=CrisisAction.NEEDS_GM, editable=False, silver=50,
                                             date_submitted=now, topic="test summary")
@@ -363,7 +364,7 @@ class SocialTests(ArxCommandTest):
         from world.dominion.models import Organization, AssetOwner
         script = create_script(typeclass=EventManager, key="Event Manager")
         script.post_event = Mock()
-        now = datetime.now()
+        now = time_now(aware=True)
         mock_datetime.strptime = datetime.strptime
         mock_datetime.now = Mock(return_value=now)
         mock_get_week.return_value = 1
@@ -511,7 +512,7 @@ class SocialTestsPlus(ArxCommandTest):
         self.setup_cmd(social.CmdRandomScene, self.char1)
         self.char2.sessions.all = Mock(return_value="Meow")
         self.account2.db_is_connected = True
-        self.account2.last_login = datetime.now()
+        self.account2.last_login = time_now(aware=True)
         self.account2.save()
         self.roster_entry2.current_account = PlayerAccount.objects.create(email="foo")
         self.roster_entry2.save()
@@ -553,7 +554,7 @@ class SocialTestsPlus(ArxCommandTest):
 class StaffCommandTests(ArxCommandTest):
     def test_cmd_admin_break(self):
         from server.utils.arx_utils import check_break
-        now = datetime.now()
+        now = time_now(aware=True)
         future = now + timedelta(days=1)
         self.setup_cmd(staff_commands.CmdAdminBreak, self.account)
         self.call_cmd("", "Current end date is: No time set.")

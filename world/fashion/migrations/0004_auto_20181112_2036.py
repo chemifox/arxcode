@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('objects', '0009_remove_objectdb_db_player'),
-        ('fashion', '0003_auto_20180827_1613'),
+        ('fashion', '0004_auto_20181226_0810'),
     ]
 
     operations = [

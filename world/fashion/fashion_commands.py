@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 
 from commands.base import ArxCommand
 from server.utils.prettytable import PrettyTable
+from server.utils.arx_utils import time_now
 from world.dominion.models import Organization
 from world.fashion.exceptions import FashionError
 from world.fashion.models import FashionSnapshot as Snapshot, FashionOutfit as Outfit
@@ -272,7 +273,7 @@ class CmdFashionModel(ArxCommand):
         try:
             last_cron = ScriptDB.objects.get(db_key="Weekly Update").db.run_date - timedelta(days=7)
         except (ScriptDB.DoesNotExist, ValueError, TypeError):
-            last_cron = datetime.now() - timedelta(days=7)
+            last_cron = time_now(aware=True) - timedelta(days=7)
         qs = self.caller.dompc.fashion_snapshots
         if qs.filter(db_date_created__gte=last_cron).count() >= 3:
             raise FashionError("You may only model up to three items a week before the public tires of you.")

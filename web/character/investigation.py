@@ -1459,7 +1459,7 @@ class CmdListClues(ArxPlayerCommand):
         if not self.rhs:
             self.msg("Must contain a note to add.")
             return
-        header = "\n[%s] %s wrote: " % (datetime.now().strftime("%x %X"), self.caller.key)
+        header = "\n[%s] %s wrote: " % (time_now(aware=True).strftime("%x %X"), self.caller.key)
         discovery.message += header + self.rhs
         discovery.save()
         self.msg(discovery.display())

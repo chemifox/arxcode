@@ -11,7 +11,7 @@ from pytz import timezone
 from django.conf import settings
 from django.db.models import Q
 
-from server.utils.arx_utils import list_to_string
+from server.utils.arx_utils import list_to_string, time_now
 from commands.base import ArxCommand, ArxPlayerCommand
 from evennia.objects.models import ObjectDB
 from evennia.typeclasses.tags import Tag
@@ -755,7 +755,7 @@ class CmdJournal(ArxCommand):
             except IndexError:
                 caller.msg("No entry by that number.")
                 return
-            now = datetime.now()
+            now = time_now(aware=True)
             if (now - entry.db_date_created).days > 2:
                 caller.msg("It has been too long to edit that message.")
                 return
@@ -1373,11 +1373,13 @@ class CmdCalendar(ArxPlayerCommand):
     def do_display_switches(self):
         """Displays our project if we have one"""
         proj = self.caller.ndb.event_creation
-        caller_timezone = self.caller.timezone
-        if not caller_timezone:
-            caller_timezone = SERVERTZ
+        timezone = SERVERTZ
+        if self.character is not None:
+            timezone = self.character.db.timezone
+        if not timezone:
+            timezone = SERVERTZ
         if not self.args and not self.switches and proj:
-            self.display_project()
+            self.display_project(timezone)
             return
         if self.caller.check_permstring("builders"):
             qs = RPEvent.objects.all()
@@ -1387,11 +1389,11 @@ class CmdCalendar(ArxPlayerCommand):
         if "old" in self.switches:  # display finished events
             finished = qs.filter(finished=True).distinct().order_by('-date')
             from server.utils import arx_more
-            table = self.display_events(finished, caller_timezone)
+            table = self.display_events(finished, timezone)
             arx_more.msg(self.caller, "{wOld events:\n%s" % table, justify_kwargs=False)
         else:  # display upcoming events
             unfinished = qs.filter(finished=False).distinct().order_by('date')
-            table = self.display_events(unfinished, caller_timezone)
+            table = self.display_events(unfinished, timezone)
             self.msg("{wUpcoming events:\n%s" % table, options={'box': True})
             self.msg("{wEvents displayed in %s" % timezone)
 
@@ -1403,10 +1405,8 @@ class CmdCalendar(ArxPlayerCommand):
             host = event.main_host or "No host"
             host = str(host).capitalize()
             public = "Public" if event.public_event else "Not Public"
-            eventtime = timezone('US/Pacific').localize(event.date)
-            displaytime = eventtime.astimezone(timezone(zone))
-            table.add_row([event.id, event.name[:25], displaytime.strftime("%x %H:%M"),
-                           host, public])
+            displaytime = event.date.astimezone(timezone(zone))
+            table.add_row([event.id, event.name[:25], displaytime.strftime("%x %H:%M"), host, public])
         return table
 
     def do_target_event_switches(self):
@@ -1622,7 +1622,7 @@ class CmdCalendar(ArxPlayerCommand):
             date = datetime.strptime(self.lhs, "%m/%d/%y %H:%M")
         except ValueError:
             raise self.CalCmdError("Date did not match 'mm/dd/yy hh:mm' format. You entered: %s" % self.lhs)
-        now = datetime.now()
+        now = time_now(aware=True)
         if date < now:
             raise self.CalCmdError("You cannot make an event for the past.")
         if event and event.date < now:
@@ -1631,7 +1631,7 @@ class CmdCalendar(ArxPlayerCommand):
         self.msg("Date set to %s." % date.strftime("%x %X"))
         if event:
             self.event_manager.reschedule_event(event)
-        self.msg("Current time is %s for comparison." % (datetime.now().strftime("%x %X")))
+        self.msg("Current time is %s for comparison." % (time_now(aware=True).strftime("%x %X")))
         offset = timedelta(hours=2)
         count = RPEvent.objects.filter(date__lte=date + offset, date__gte=date - offset).count()
         self.msg("Number of events within 2 hours of that date: %s" % count)
@@ -2945,7 +2945,7 @@ class CmdRandomScene(ArxCommand):
             List: valid_choices queryset filtered by new players and
                   returned as a list instead.
         """
-        newness = datetime.now() - timedelta(days=self.DAYS_FOR_NEWBIE_CHECK)
+        newness = time_now(aware=True) - timedelta(days=self.DAYS_FOR_NEWBIE_CHECK)
         newbies = self.valid_choices.filter(Q(roster__accounthistory__start_date__gte=newness) &
                                             Q(roster__accounthistory__end_date__isnull=True)
                                             ).distinct().order_by('db_key')
@@ -2973,7 +2973,7 @@ class CmdRandomScene(ArxCommand):
             queryset: Queryset of Character objects
 
         """
-        last_week = datetime.now() - timedelta(days=self.NUM_DAYS)
+        last_week = time_now(aware=True) - timedelta(days=self.NUM_DAYS)
         return Character.objects.filter(Q(roster__roster__name="Active") &
                                         ~Q(roster__current_account=self.caller.roster.current_account) &
                                         Q(roster__player__last_login__isnull=False) &
@@ -4099,7 +4099,7 @@ class CmdFavor(RewardRPToolUseMixin, ArxPlayerCommand):
         rep, _ = target.Dominion.reputations.get_or_create(organization=org)
         rep.favor = amount
         rep.npc_gossip = gossip
-        rep.date_gossip_set = datetime.now()
+        rep.date_gossip_set = time_now(aware=True)
         rep.save()
         self.msg("Set %s's favor in %s to %s." % (target, org, amount))
         inform_staff("%s set gossip for %s's reputation with %s to: %s" % (self.caller, target, org, gossip))

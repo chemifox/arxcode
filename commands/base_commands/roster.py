@@ -1326,30 +1326,25 @@ class CmdRelationship(ArxPlayerCommand):
     Usage:
         @relationship/sheet <relationship type>=<name>,<desc>
         @relationship/changesheet <oldtype>,<newtype>=<name>,<desc>
-        @relationship/delsheet <name>
+        @relationship/delete <name>
 
-    Displays information on a relationship with another character,
-    written from your character's IC point of view. Descriptions
-    should be written in first person. Old relationships are never
-    erased - when they are changed, the old relationship notes are
-    stored with a timestamp to show how the relationship changed over
-    time. Dates of relationship changes will be noted in a character's
-    timeline to identify significant events for character development.
-    Every relationship that you add should also have a short
-    relationship added to it via @relationship/sheet, with 'secret'
-    being the type for secret relationships. Those are not publicly
-    viewable by other players.
-
-    To list the relationships of other players, use the /list switch.
-    To list your own, simply use @relationship with no arguments.
+    To list the relationships of other players, use @sheet/social <name>
+    To list your own, simply use @sheet/social.
 
     For @relationship/sheet, this builds the {w@sheet/social{n tree
     on a character's sheet, such as friends, family, acquaintances,
-    and enemies. For example:
+    and enemies. These will also show up on your character sheet on
+    the website.
+    For example:
     @relationship/sheet friend=percy,war buddy
 
     To create a new relationship or update an existing one, use
-    @relationship/change.
+    @relationship/changesheet.
+
+    To delete an existing relationship, use @relationship/delete
+
+    Relationships using the type 'secret' will be hidden from the
+    public and visible by only you and the staff.
     """
     key = "relationship"
     aliases = ["relationships"]
@@ -1436,7 +1431,7 @@ class CmdRelationship(ArxPlayerCommand):
             rels[newtype].append((name, desc))
             caller.msg("Relationship changed.")
             return
-        if 'delsheet' in switches:
+        if 'delete' in switches:
             args = self.args.lower()
             rels = charob.db.relationship_sheet
             if not rels:

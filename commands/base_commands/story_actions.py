@@ -159,7 +159,7 @@ class CmdAction(ActionCommandMixin, ArxPlayerCommand):
         max_assists = PlotActionAssistant.MAX_ASSISTS
         recent_assists = caller.recent_assists
         msg += """
-    You are permitted {w%s{n actions and {w%s{n assists every 60 days, and have currently
+    You are permitted {w%s{n actions and {w%s{n assists every 30 days, and have currently
     taken {w%s{n actions and {w%s{n assists. Assists can be made instead of actions, and
     assists over %s count toward the action cap.""" % (max_actions, max_assists, recent_actions.count(),
                                                        recent_assists.count(), max_assists)

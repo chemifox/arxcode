@@ -410,7 +410,7 @@ class PlayerOrNpc(SharedMemoryModel):
         """Returns queryset of recent actions that weren't cancelled and aren't still in draft"""
         from datetime import timedelta
         offset = timedelta(days=-PlotAction.num_days)
-        old = datetime.now() + offset
+        old = time_now(aware=True) + offset
         return self.actions.filter(Q(date_submitted__gte=old) &
                                    ~Q(status__in=(PlotAction.CANCELLED, PlotAction.DRAFT)) &
                                    Q(free_action=False))
@@ -420,7 +420,7 @@ class PlayerOrNpc(SharedMemoryModel):
         """Returns queryset of all assists from the past 30 days"""
         from datetime import timedelta
         offset = timedelta(days=-PlotAction.num_days)
-        old = datetime.now() + offset
+        old = time_now(aware=True) + offset
         actions = PlotAction.objects.filter(Q(date_submitted__gte=old) &
                                             ~Q(status__in=(PlotAction.CANCELLED, PlotAction.DRAFT)) &
                                             Q(free_action=False))
@@ -557,7 +557,7 @@ class PrestigeAdjustment(SharedMemoryModel):
         if self.adjustment_type == PrestigeAdjustment.LEGEND:
             return self.adjusted_by
 
-        now = datetime.now()
+        now = time_now(aware=True)
         weeks = (now - self.adjusted_on).days // 7
         decay_multiplier = PRESTIGE_DECAY_AMOUNT ** weeks
         return int(round(self.adjusted_by * decay_multiplier))
@@ -759,7 +759,7 @@ class AssetOwner(CachedPropertiesMixin, SharedMemoryModel):
     @classproperty
     def AVERAGE_PRESTIGE(cls):
         last_check = cls._AVERAGE_PRESTIGE['last_check']
-        now = datetime.now()
+        now = time_now(aware=True)
         if not last_check or (now - last_check).days >= 1:
             cls._AVERAGE_PRESTIGE['last_check'] = now
             assets = list(
@@ -776,7 +776,7 @@ class AssetOwner(CachedPropertiesMixin, SharedMemoryModel):
     @classproperty
     def MEDIAN_PRESTIGE(cls):
         last_check = cls._MEDIAN_PRESTIGE['last_check']
-        now = datetime.now()
+        now = time_now(aware=True)
         if not last_check or (now - last_check).days >= 1:
             cls._MEDIAN_PRESTIGE['last_check'] = now
             assets = list(
@@ -792,7 +792,7 @@ class AssetOwner(CachedPropertiesMixin, SharedMemoryModel):
     @classproperty
     def AVERAGE_FAME(cls):
         last_check = cls._AVERAGE_FAME['last_check']
-        now = datetime.now()
+        now = time_now(aware=True)
         if not last_check or (now - last_check).days >= 1:
             cls._AVERAGE_FAME['last_check'] = now
             assets = list(
@@ -809,7 +809,7 @@ class AssetOwner(CachedPropertiesMixin, SharedMemoryModel):
     @classproperty
     def MEDIAN_FAME(cls):
         last_check = cls._MEDIAN_FAME['last_check']
-        now = datetime.now()
+        now = time_now(aware=True)
         if not last_check or (now - last_check).days >= 1:
             cls._MEDIAN_FAME['last_check'] = now
             assets = list(
@@ -825,7 +825,7 @@ class AssetOwner(CachedPropertiesMixin, SharedMemoryModel):
     @classproperty
     def AVERAGE_LEGEND(cls):
         last_check = cls._AVERAGE_LEGEND['last_check']
-        now = datetime.now()
+        now = time_now(aware=True)
         if not last_check or (now - last_check).days >= 1:
             cls._AVERAGE_LEGEND['last_check'] = now
             assets = list(
@@ -842,7 +842,7 @@ class AssetOwner(CachedPropertiesMixin, SharedMemoryModel):
     @classproperty
     def MEDIAN_LEGEND(cls):
         last_check = cls._MEDIAN_LEGEND['last_check']
-        now = datetime.now()
+        now = time_now(aware=True)
         if not last_check or (now - last_check).days >= 1:
             cls._MEDIAN_LEGEND['last_check'] = now
             assets = list(
@@ -912,7 +912,7 @@ class AssetOwner(CachedPropertiesMixin, SharedMemoryModel):
         value = int(base * percentage/100.0)
         if self.player:
             # It's not possible to use F expressions on datetime fields so we'll check a range of dates
-            now = datetime.now()
+            now = time_now(aware=True)
             last_week = now - timedelta(days=7)
             two_weeks = now - timedelta(days=14)
             three_weeks = now - timedelta(days=21)
@@ -1697,7 +1697,7 @@ class Reputation(SharedMemoryModel):
         if not self.favor:
             return 0
         try:
-            weeks = ((datetime.now() - (self.date_gossip_set or datetime.now())).days/7) + 1
+            weeks = ((time_now(aware=True) - (self.date_gossip_set or time_now(aware=True))).days/7) + 1
             return self.favor * (self.organization.assets.fame + self.organization.assets.legend)/(20 * weeks)
         except AttributeError:
             return 0

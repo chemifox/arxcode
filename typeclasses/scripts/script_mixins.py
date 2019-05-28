@@ -2,6 +2,7 @@
 Mixins for shared behaviors between scripts
 """
 from datetime import datetime, timedelta
+from server.utils.arx_utils import time_now
 
 
 class RunDateMixin(object):
@@ -15,7 +16,7 @@ class RunDateMixin(object):
                 remaining (Timedelta): remaining time before weekly update will process
         """
         # self.db.run_date is the date we're scheduled to run the weekly update on
-        remaining = self.db.run_date - datetime.now()
+        remaining = self.db.run_date - time_now(aware=True)
         return remaining
 
     def check_event(self):

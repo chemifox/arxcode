@@ -5,11 +5,11 @@
         <table width="100%">
             <tr>
                 <td>
-                    <a class="btn btn-primary" href="{% url "character:list_actions" object_id %}">Back to actions</a>
+                    <a class="btn btn-success" href="{% url "character:list_actions" object_id %}">Back to actions</a>
                 </td>
                 <td align="right">
                     {% if editable %}
-                    <a class="btn btn-primary" href="{% url "character:edit_action" object_id action.id %}">Edit</a>
+                    <a class="btn btn-success" href="{% url "character:edit_action" object_id action.id %}">Edit</a>
                     {% endif %}
                 </td>
             </tr>

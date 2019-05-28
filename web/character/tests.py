@@ -31,7 +31,7 @@ class InvestigationTests(ArxCommandTest):
         from datetime import datetime
         mock_datetime.now = Mock(return_value=self.fake_datetime)
         mock_roster_datetime.now = Mock(return_value=self.fake_datetime)
-        now = mock_datetime.now()
+        now = mock_time_now(aware=True)
         self.setup_cmd(investigation.CmdListClues, self.account)
         self.call_cmd("1", "[test clue] (10 Rating)\ntest clue desc\nadditional text test")
         self.call_cmd("/addnote 1=test note", "[test clue] (10 Rating)\ntest clue desc\nadditional text test"

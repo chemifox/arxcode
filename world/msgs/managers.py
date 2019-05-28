@@ -4,6 +4,7 @@ Managers for Msg app, mostly proxy models for comms.Msg
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from evennia.comms.managers import MsgManager
+from server.utils.arx_utils import time_now
 
 
 WHITE_TAG = "white_journal"
@@ -128,7 +129,7 @@ def q_recent():
     """
     from datetime import datetime, timedelta
     # only display most recent journals
-    delay = datetime.now() - timedelta(hours=6)
+    delay = time_now(aware=True) - timedelta(hours=6)
     return Q(db_date_created__gt=delay)
 
 

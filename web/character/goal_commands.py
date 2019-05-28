@@ -9,6 +9,7 @@ from .models import Goal, GoalUpdate
 from server.utils.helpdesk_api import create_ticket, resolve_ticket
 from web.helpdesk.models import Ticket
 from world.dominion.plots.models import Plot, PlotUpdate
+from server.utils.arx_utils import time_now
 
 
 class CmdGoals(RewardRPToolUseMixin, ArxCommand):
@@ -128,7 +129,7 @@ class CmdGoals(RewardRPToolUseMixin, ArxCommand):
     def request_review(self, goal):
         """Submits a ticket asking for a review of progress toward their goal"""
         from datetime import datetime, timedelta
-        past_thirty_days = datetime.now() - timedelta(days=30)
+        past_thirty_days = time_now(aware=True) - timedelta(days=30)
         recent = GoalUpdate.objects.filter(goal__in=self.goals.all(), db_date_created__gt=past_thirty_days).first()
         beat = None
         if recent:

@@ -6,7 +6,7 @@ from evennia.utils import logger
 from evennia.utils.ansi import strip_ansi
 from evennia.utils.evtable import EvTable
 from world.roll import Roll
-from server.utils.arx_utils import commafy, inform_staff, classproperty
+from server.utils.arx_utils import commafy, inform_staff, classproperty, time_now
 from datetime import datetime, timedelta
 import math
 import json
@@ -519,7 +519,7 @@ class Practitioner(SharedMemoryModel):
             return None
 
         result = SkillNodeResonance.objects.create(practitioner=self, node=node, learned_by=reason,
-                                                   learned_on=datetime.now(), learned_notes=explanation)
+                                                   learned_on=time_now(aware=True), learned_notes=explanation)
 
         inform_string = "just unlocked node |y{}|n in the magic tree by {}"\
             .format(node.name, SkillNodeResonance.reason_string(reason))
@@ -538,7 +538,7 @@ class Practitioner(SharedMemoryModel):
             return
 
         PractitionerSpell.objects.create(practitioner=self, spell=spell,
-                                         learned_by=reason, learned_on=datetime.now(),
+                                         learned_by=reason, learned_on=time_now(aware=True),
                                          learned_notes=explanation)
 
         inform_string = "just learned spell |y{}|n by {}" \
@@ -564,7 +564,7 @@ class Practitioner(SharedMemoryModel):
             return
 
         PractitionerEffect.objects.create(practitioner=self, effect=effect,
-                                          learned_by=reason, learned_on=datetime.now(),
+                                          learned_by=reason, learned_on=time_now(aware=True),
                                           learned_notes=explanation)
 
         inform_string = "just learned effect |y{}|n by {}" \
@@ -709,7 +709,7 @@ class Practitioner(SharedMemoryModel):
         try:
             last_week = script.db.run_date - timedelta(days=7)
         except AttributeError:
-            last_week = datetime.now() - timedelta(days=7)
+            last_week = time_now(aware=True) - timedelta(days=7)
         return self.anima_rituals.filter(finalized_at__gte=last_week)
 
 
@@ -842,7 +842,7 @@ class SkillNodeResonance(SharedMemoryModel):
         teacher_resonance = teacher.resonance_for_node(self.node)
         self.taught_by = teacher.character.name
         self.teaching_multiplier = math.trunc(teacher_resonance ** (1 / 10.))
-        self.taught_on = datetime.now()
+        self.taught_on = time_now(aware=True)
 
 
 class Condition(SharedMemoryModel):
@@ -1846,7 +1846,7 @@ class Working(SharedMemoryModel):
             self.consequence_handler.finalize()
 
         self.finalized = True
-        self.finalized_at = datetime.now()
+        self.finalized_at = time_now(aware=True)
         self.save()
 
         if not gm_override:
