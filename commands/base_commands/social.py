@@ -330,7 +330,7 @@ class CmdFinger(ArxPlayerCommand):
     """
     key = "+finger"
     locks = "cmd:all()"
-    aliases = ["@finger", "finger"]
+    aliases = ["@finger", "finger", "info"]
     help_category = "Social"
 
     def func(self):
@@ -2906,7 +2906,7 @@ class CmdRandomScene(ArxCommand):
     help_category = "Social"
     NUM_SCENES = 3
     NUM_DAYS = 3
-    DAYS_FOR_NEWBIE_CHECK = 14
+    DAYS_FOR_NEWBIE_CHECK = 0
     random_rp_command_keys = ["knock", "shout", "mutter", "petition", "goals", "+plots", "+room_mood", "+roomtitle",
                               "+tempdesc", "flashback", "favor"]
 
