@@ -392,6 +392,9 @@ class CmdFinger(ArxPlayerCommand):
         if show_hidden:
             msg += "{wCharID:{n %s, {wPlayerID:{n %s\n" % (char.id, player.id)
             msg += "{wTotal Posecount:{n %s\n" % char.total_posecount
+        if viewing_own_character or show_hidden:
+            msg += "{wWeekly Posecount:{n %s\n" % char.posecount
+            msg += "{wSocial Room Posecount:{n %s\n" % char.sroom_posecount
         if char.db.obituary:
             msg += "{wObituary:{n %s\n" % char.db.obituary
         else:
@@ -3724,8 +3727,8 @@ class CmdFirstImpression(ArxCommand):
                     return
                 impression.receiver_share = True
                 impression.save()
-                self.caller.adjust_xp(1)
-                self.msg("You have marked %s's impression of you public, and received 1 xp." % targ)
+                self.caller.adjust_xp(0)
+                self.msg("You have marked %s's impression of you public." % targ)
                 return
             try:
                 impression = self.imps_by_me.get(to_account=hist)
@@ -3750,8 +3753,8 @@ class CmdFirstImpression(ArxCommand):
                     return
                 impression.writer_share = True
                 impression.save()
-                self.caller.adjust_xp(1)
-                self.msg("You have marked your impression as publicly viewable and gained 1 xp.")
+                self.caller.adjust_xp(0)
+                self.msg("You have marked your impression as publicly viewable.")
                 return
             return
         # check if the target has written a first impression of us. If not, we'll need to be in the same room
