@@ -1307,7 +1307,9 @@ class CmdCalendar(ArxPlayerCommand):
     level. To see the valid largesse types with their costs and prestige
     values, do '@cal/largesse'. Prestige is divided among hosts present,
     or if no hosts are present goes fully to the main host. Private events
-    give half prestige. All times are in EST.
+    give half prestige. All times are in PST by default. If you have set
+    your timezone, it will show up as your time zone. Use help timezone
+    to set that feature.
 
     To mark an event as a player-run-plot, use /addgm to designate a
     player as the storyteller for the event. Please only use this for a
@@ -1520,8 +1522,10 @@ class CmdCalendar(ArxPlayerCommand):
             if not form.is_valid():
                 raise self.CalCmdError(form.display_errors() + "\n" + form.display(self.caller.timezone))
             event = form.save()
+            zone = self.caller.timezone
+            displaytime = event.date.astimezone(timezone(zone))
             self.caller.ndb.event_creation = None
-            self.msg("New event created: %s at %s." % (event.name, event.date.strftime("%x %X")))
+            self.msg("New event created: %s at %s." % (event.name, displaytime.strftime("%x %X")))
             inform_staff("New event created by %s: %s, scheduled for %s." % (self.caller, event.name,
                                                                              event.date.strftime("%x %X")))
 
@@ -1625,16 +1629,23 @@ class CmdCalendar(ArxPlayerCommand):
             date = datetime.strptime(self.lhs, "%m/%d/%y %H:%M")
         except ValueError:
             raise self.CalCmdError("Date did not match 'mm/dd/yy hh:mm' format. You entered: %s" % self.lhs)
+        """Convert date from player to server time"""
         now = time_now(aware=True)
-        if date < now:
+        zone = self.caller.timezone
+        displaytime = timezone(zone).localize(date)
+        if displaytime < now:
             raise self.CalCmdError("You cannot make an event for the past.")
         if event and event.date < now:
             raise self.CalCmdError("You cannot reschedule an event that's already started.")
+        date = displaytime.astimezone(timezone(SERVERTZ))
         self.set_form_or_event_attribute('date', date, event)
-        self.msg("Date set to %s." % date.strftime("%x %X"))
+        """Display player timezone"""
+        self.msg("Date set to %s." % displaytime.strftime("%x %X"))
         if event:
             self.event_manager.reschedule_event(event)
-        self.msg("Current time is %s for comparison." % (time_now(aware=True).strftime("%x %X")))
+        """display now time in player timezone"""
+        now = now.astimezone(timezone(zone))
+        self.msg("Current time is %s for comparison." % (now.strftime("%x %X")))
         offset = timedelta(hours=2)
         count = RPEvent.objects.filter(date__lte=date + offset, date__gte=date - offset).count()
         self.msg("Number of events within 2 hours of that date: %s" % count)
@@ -2911,7 +2922,7 @@ class CmdRandomScene(ArxCommand):
     NUM_DAYS = 3
     DAYS_FOR_NEWBIE_CHECK = 0
     random_rp_command_keys = ["knock", "shout", "mutter", "petition", "goals", "+plots", "+room_mood", "+roomtitle",
-                              "+tempdesc", "flashback", "favor"]
+                              "+tempdesc", "flashback"]
 
     @property
     def scenelist(self):
@@ -3727,7 +3738,7 @@ class CmdFirstImpression(ArxCommand):
                     return
                 impression.receiver_share = True
                 impression.save()
-                self.caller.adjust_xp(0)
+                # self.caller.adjust_xp(0)
                 self.msg("You have marked %s's impression of you public." % targ)
                 return
             try:
@@ -3753,7 +3764,7 @@ class CmdFirstImpression(ArxCommand):
                     return
                 impression.writer_share = True
                 impression.save()
-                self.caller.adjust_xp(0)
+                #self.caller.adjust_xp(0)
                 self.msg("You have marked your impression as publicly viewable.")
                 return
             return

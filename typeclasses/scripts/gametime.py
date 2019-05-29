@@ -84,7 +84,7 @@ class GameTime(Script):
         The last runtime / gametime / multiplier marker, returned in that order.
         """
         if len(self.intervals) == 0:
-            return 0, 0, 2.0
+            return 0, 0, 3.0
 
         tdict = self.intervals[-1]
         return tdict['run'], tdict['game'], tdict['multiplier']
@@ -266,7 +266,7 @@ def time_factor():
     return multiplier
 
 
-def set_time_factor(factor=2):
+def set_time_factor(factor=3):
     """
     Sets the IC time multiplier going forward.
     :param factor: The new IC time multiplier.
@@ -287,7 +287,7 @@ def runtime_to_gametime(runtime, format=False):
     intervals = time_intervals()
     last_runtime = 0
     last_gametime = 0
-    last_timescale = 2
+    last_timescale = 3
     for interval in reversed(intervals):
         if interval['run'] < runtime:
             last_runtime = interval['run']
@@ -342,11 +342,11 @@ def realtime_to_gametime(realtime_secs, format=False):
             journal_ic_date = journal_ic_date.replace(" AR", "")
             journal_date_elements = journal_ic_date.split("/")
             base_realtime = time.mktime(journal.db_date_created.timetuple())
-            base_gametime = (int(journal_date_elements[2]) - 1001) * YEAR
+            base_gametime = (int(journal_date_elements[2]) - 50) * YEAR
             base_gametime += (int(journal_date_elements[0]) - 1) * MONTH
             base_gametime += (int(journal_date_elements[1]) - 1) * DAY
             timediff = realtime_secs - base_realtime
-            game_time = base_gametime + (timediff * 2)
+            game_time = base_gametime + (timediff * 3)
             if format:
                 return _format(game_time, YEAR, MONTH, WEEK, DAY, HOUR, MIN)
             else:
