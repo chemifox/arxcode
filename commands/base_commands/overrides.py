@@ -515,17 +515,14 @@ class CmdGive(ArxCommand):
 class CmdEmit(ArxCommand):
     """
     @emit
-
     Usage:
       @emit[/switches] [<obj>, <obj>, ... =] <message>
       @remit           [<obj>, <obj>, ... =] <message>
       @pemit           [<obj>, <obj>, ... =] <message>
-
     Switches:
       room : limit emits to rooms only (default)
       players : limit emits to players only
       contents : send to the contents of matched objects too
-
     Emits a message to the selected objects or to
     your immediate surroundings. If the object is a room,
     send to its contents. @remit and @pemit are just
@@ -545,10 +542,8 @@ class CmdEmit(ArxCommand):
             return self.__doc__
         help_string = """
         @emit
-
         Usage :
             @emit <message>
-
         Emits a message to your immediate surroundings. This command is
         used to provide more flexibility than the structure of poses, but
         please remember to indicate your character's name.
@@ -620,7 +615,7 @@ class CmdEmit(ArxCommand):
             gms = [ob for ob in caller.location.contents if ob.check_permstring('builders')]
             non_gms = [ob for ob in caller.location.contents if "emit_label" in ob.tags.all() and ob.player]
             gm_msg = "{w[{c%s{w]{n %s" % (caller.name, message)
-            # caller.location.msg_contents(gm_msg, from_obj=caller, options={'is_pose': True}, gm_msg=True)
+            caller.location.msg_contents(gm_msg, from_obj=caller, options={'is_pose': True}, gm_msg=True)
             for ob in non_gms:
                 ob.msg(gm_msg, from_obj=caller, options={'is_pose': True})
             caller.location.msg_contents(message, exclude=gms + non_gms, from_obj=caller, options={'is_pose': True})

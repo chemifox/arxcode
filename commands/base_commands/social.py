@@ -1384,7 +1384,7 @@ class CmdCalendar(ArxPlayerCommand):
         if not timezone:
             timezone = SERVERTZ
         if not self.args and not self.switches and proj:
-            self.display_project(timezone)
+            self.display_project()
             return
         if self.caller.check_permstring("builders"):
             qs = RPEvent.objects.all()

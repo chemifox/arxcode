@@ -765,7 +765,7 @@ class PlotAction(AbstractAction):
     status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=DRAFT)
     max_requests = 2
     num_days = 30
-    attending_limit = 4
+    attending_limit = 5
 
     def __str__(self):
         if self.plot:
