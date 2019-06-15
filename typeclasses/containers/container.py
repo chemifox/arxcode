@@ -62,8 +62,8 @@ class CmdChestKey(ArxCommand):
 
 class CmdRoot(ArxCommand):
     """
-    Makes a container object immovable or removes the immovable
-    quality of the container object.
+    Makes a container, bauble or place object immovable or removes
+    the immovable quality of the container object.
 
     Usage:
         +root <container>
@@ -90,8 +90,8 @@ class CmdRoot(ArxCommand):
             caller.msg("That object does not exist.")
             return
 
-        if not obj.db.container:
-            caller.msg("Can only target containers!")
+        if not obj.db.container and not obj.db.places and not obj.db.bauble:
+            caller.msg("Can only target containers, places and baubles.")
             return
 
         if verb == "unroot":

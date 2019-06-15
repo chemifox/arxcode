@@ -89,7 +89,7 @@ class WeeklyEvents(RunDateMixin, Script):
         self.interval = 3600
         self.persistent = True
         self.start_delay = True
-        self.attributes.add("run_date", time_now(aware=True) + timedelta(days=7))
+        self.attributes.add("run_date", datetime.now() + timedelta(days=7))
 
     def at_start(self, **kwargs):
         super(WeeklyEvents, self).at_start(**kwargs)

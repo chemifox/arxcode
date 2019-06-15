@@ -8,6 +8,7 @@ from typeclasses.rooms import ArxRoom
 from world.dominion.models import RPEvent, Organization, PlayerOrNpc, PlotRoom
 from world.dominion.plots.models import Plot
 from server.utils.arx_utils import time_now
+from server.conf.production_settings import SERVERTZ
 
 from pytz import timezone
 
@@ -161,6 +162,8 @@ class RPEventCreateForm(forms.ModelForm):
     def display(self, zone):
         """Returns a game-friendly display string"""
         """with date time in proper timezone"""
+        if not zone:
+            zone = SERVERTZ
         msg = "{wName:{n %s\n" % self.data.get('name')
         plot = self.data.get('plot')
         if plot:
