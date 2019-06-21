@@ -88,6 +88,7 @@ class CmdGemit(ArxPlayerCommand):
       @gemit/episode <pre-existing episode name>=<message>
       @gemit <message>
       @gemit/orgs <org>[, <org2>,...]=<message>
+      @gemit/noepisode <message>
 
     Announces a message to all connected players.
     Unlike @wall, this command will only send the text,
@@ -99,6 +100,10 @@ class CmdGemit(ArxPlayerCommand):
     The /episode switch should be used when switching between episodes.
     It is probably safe to use the /episode function for most posts as
     it will ensure you are posting to the correct episode.
+
+    The /noepisode switch will make a post on to the story boards as
+    well as broadcast the message to the whole game. But it will not
+    add it to an existing episode.
 
     """
     key = "@gemit"
@@ -137,6 +142,16 @@ class CmdGemit(ArxPlayerCommand):
                 if not episode_name or not msg:
                     raise CommandError("You must give a name and message for this episode.")
                 create_gemit_and_post(msg, self.caller, episode_name)
+            elif "noepisode" in self.switches:
+                self.msg("Announcing to all connected players ...")
+                if not self.args.startswith("{") and not self.args.startswith("|"):
+                    self.args = "|g" + self.args
+                broadcast(self.args, format_announcement=False)
+                from typeclasses.bulletin_board.bboard import BBoard
+                bboard = BBoard.objects.get(db_key__iexact="story updates")
+                subject = "Story Update"
+                bboard.bb_post(poster_obj=self.caller, msg=self.args, subject=subject, poster_name="Story")
+                return
             else:
                 orgs_list = None
                 if "orgs" in self.switches or "org" in self.switches:
