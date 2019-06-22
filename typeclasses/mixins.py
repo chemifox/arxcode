@@ -917,7 +917,6 @@ class MsgMixins(object):
                 self.ndb.pose_history = []
             else:
                 try:
-                    self.ndb.pose_history.append((str(from_obj), text))
                     origin = from_obj
                     if not from_obj and options.get('is_magic', False):
                         origin = "Magic System"

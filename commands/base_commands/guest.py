@@ -1007,7 +1007,7 @@ class CmdGuestAddInput(ArxPlayerCommand):
         try:
             from world.dominion.setup_utils import starting_money
             money = starting_money()
-            char.db.currency = money/10
+            char.db.currency = 1000
         except (ValueError, TypeError, AttributeError):
             import traceback
             traceback.print_exc()

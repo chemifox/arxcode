@@ -134,6 +134,10 @@ class Army(SharedMemoryModel):
             return True
         if player.Dominion.appointments.filter(category=Minister.WARFARE, ruler__house=self.owner):
             return True
+        dompc = player.Dominion
+        # check if we're appointed as general of this army
+        if dompc == self.general:
+            return True
         return False
 
     def can_order(self, player):
@@ -142,10 +146,6 @@ class Army(SharedMemoryModel):
         """
         # if we can change the army, we can also order it
         if self.can_change(player):
-            return True
-        dompc = player.Dominion
-        # check if we're appointed as general of this army
-        if dompc == self.general:
             return True
         # check player's access because temp owner can also be an org
         if self.temp_owner and self.temp_owner.access(player, "army"):
