@@ -21,6 +21,7 @@ COLOR_ANSI_BRIGHT_BG_EXTRA_MAP = color_markups.CURLY_COLOR_ANSI_XTERM256_BRIGHT_
 PERMISSION_HIERARCHY = ["Guest",  # note-only used if GUEST_ENABLED=True
                         "Player",
                         "Helper",
+                        "Helpers",
                         "Builders",
                         "Builder",
                         "Wizards",

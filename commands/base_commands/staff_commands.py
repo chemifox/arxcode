@@ -586,7 +586,7 @@ class CmdAdjustReputation(ArxPlayerCommand):
     """
     key = "@adjustreputation"
     help_category = "GMing"
-    locks = "cmd:perm(Wizards)"
+    locks = "cmd:perm(Helpers)"
 
     def display_form(self):
         """Displays form for adjusting player reputations"""
@@ -1033,7 +1033,7 @@ class CmdGMNotes(ArxCommand):
     """
     key = "@gmnotes"
     aliases = ["@gmnote"]
-    locks = "cmd: perm(builders)"
+    locks = "cmd: perm(wizards)"
     help_category = "GMing"
     taggables = ("clue", "revelation", "crisis", "action", "gemit", "rpevent", "flashback",
                  "clues", "revelations", "crises", "actions", "gemits", "storyemit", "storyemits", "rpevents",
@@ -1789,7 +1789,7 @@ class CmdAdminBreak(ArxPlayerCommand):
     past.
     """
     key = "@admin_break"
-    locks = "cmd: perm(builders)"
+    locks = "cmd: perm(developer)"
     help_category = "Admin"
 
     def func(self):

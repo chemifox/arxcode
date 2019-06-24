@@ -65,7 +65,7 @@ def sheet(request, object_id):
     # but only other characters can leave IC comments.
     if user.is_authenticated():
         try:
-            if user.char_ob.id == character.id or user.check_permstring("builders"):
+            if user.char_ob.id == character.id or user.check_permstring("wizards"):
                 show_hidden = True
             if user.char_ob.id != character.id:
                 can_comment = True
@@ -218,7 +218,7 @@ class RosterListView(ListView):
         user = self.request.user
         show_hidden = False
         try:
-            if user.is_authenticated() and user.check_permstring("builders"):
+            if user.is_authenticated() and user.check_permstring("wizards"):
                 show_hidden = True
         except Exception:
             import traceback
@@ -251,7 +251,7 @@ class IncompleteRosterListView(RosterListView):
     def get_queryset(self):
         """Only grant permission to see for staff"""
         user = self.request.user
-        if not (user.is_authenticated() and user.check_permstring("builders")):
+        if not (user.is_authenticated() and user.check_permstring("wizards")):
             raise Http404("Not staff")
         return super(IncompleteRosterListView, self).get_queryset()
 
@@ -471,7 +471,7 @@ class ActionListView(ListView):
         user = self.request.user
         if not user or not user.is_authenticated():
             return qs.filter(public=True)
-        if user.is_staff or user.check_permstring("builders") or user.char_ob == self.character:
+        if user.is_staff or user.check_permstring("wizards") or user.char_ob == self.character:
             return qs
         return qs.filter(public=True)
 
@@ -499,7 +499,7 @@ class NewActionListView(ListView, LimitPageMixin):
         user = self.request.user
         if not user or not user.is_authenticated():
             return qs.filter(public=True).filter(status=PlotAction.PUBLISHED)
-        if user.is_staff or user.check_permstring("builders") or user.char_ob == self.character:
+        if user.is_staff or user.check_permstring("wizards") or user.char_ob == self.character:
             return qs
         return qs.filter(public=True).filter(status=PlotAction.PUBLISHED)
 
@@ -524,7 +524,7 @@ def new_action_view(request, object_id, action_id):
 
     if not request.user or not request.user.is_authenticated():
         require_public = True
-    elif request.user.is_staff or request.user.check_permstring("builders") or request.user.char_ob == character():
+    elif request.user.is_staff or request.user.check_permstring("wizards") or request.user.char_ob == character():
         require_public = False
     else:
         require_public = True
@@ -737,7 +737,7 @@ class FlashbackListView(LoginRequiredMixin, CharacterMixin, ListView):
         user = self.request.user
         if not user or not user.is_authenticated():
             raise PermissionDenied
-        if user.char_ob != self.character and not (user.is_staff or user.check_permstring("builders")):
+        if user.char_ob != self.character and not (user.is_staff or user.check_permstring("wizards")):
             raise Http404
         entry = self.character.roster
         return Flashback.objects.filter(Q(owner=entry) | Q(allowed=entry)).distinct()
@@ -759,7 +759,7 @@ class FlashbackCreateView(LoginRequiredMixin, CharacterMixin, CreateView):
         """Checks permission to create a flashback then returns context"""
         try:
             user = self.request.user
-            if user != self.character.player_ob and not (user.is_staff or user.check_permstring("builders")):
+            if user != self.character.player_ob and not (user.is_staff or user.check_permstring("wizards")):
                 raise PermissionDenied
         except AttributeError:
             raise PermissionDenied
@@ -796,7 +796,7 @@ class FlashbackAddPostView(LoginRequiredMixin, CharacterMixin, DetailView):
         """Gets context for template, ensures we have permissions"""
         context = super(FlashbackAddPostView, self).get_context_data(**kwargs)
         user = self.request.user
-        if user not in self.get_object().all_players and not (user.is_staff or user.check_permstring("builders")):
+        if user not in self.get_object().all_players and not (user.is_staff or user.check_permstring("wizards")):
             raise Http404
         context['form'] = FlashbackPostForm()
         return context
@@ -838,7 +838,7 @@ class KnownCluesView(CharacterMixin, LimitPageMixin, ListView):
         user = self.request.user
         if not user or not user.is_authenticated():
             raise PermissionDenied
-        if user.char_ob != self.character and not (user.is_staff or user.check_permstring("builders")):
+        if user.char_ob != self.character and not (user.is_staff or user.check_permstring("wizards")):
             raise PermissionDenied
         entry = self.character.roster
         qs = entry.clue_discoveries.all().order_by('id')

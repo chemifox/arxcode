@@ -80,24 +80,27 @@ class CmdJob(ArxPlayerCommand):
     aliases = ["@jobs", "@code", "@typo", "@prp"]
     help_category = "Admin"
     help_entry_tags = ["requests"]
-    locks = "cmd:perm(job) or perm(Builders)"
+    locks = "cmd:perm(job) or perm(Helper)"
     query_open_switches = ("mine", "all", "low", "only")
 
     @property
     def queues_from_args(self):
         """Get queue based on cmdstring"""
-        if self.cmdstring == "@code":
+        user = self.caller
+        if self.cmdstring == "@code" and user.check_permstring("builders"):
                 queues = Queue.objects.filter(slug="Code")
-        elif self.cmdstring == "@bug":
+        elif self.cmdstring == "@bug" and user.check_permstring("builders"):
             queues = Queue.objects.filter(slug="Bugs")
-        elif self.cmdstring == "@typo":
+        elif self.cmdstring == "@typo" and user.check_permstring("builders"):
             queues = Queue.objects.filter(slug="Typo")
-        elif self.cmdstring == "@prp":
+        elif self.cmdstring == "@prp" and user.check_permstring("builders"):
             queues = Queue.objects.filter(slug="PRP")
-        elif "only" in self.switches:
+        elif "only" in self.switches and user.check_permstring("builders"):
             queues = Queue.objects.filter(slug="Request")
-        else:
+        elif user.check_permstring("builders"):
             queues = Queue.objects.exclude(slug="Story")
+        else:
+            queues = Queue.objects.filter(slug="Helpers")
         return queues
 
     def display_open_tickets(self):
@@ -420,7 +423,7 @@ class CmdApp(ArxPlayerCommand):
     key = "@app"
     aliases = ["@apps"]
     help_category = "Admin"
-    locks = "cmd:perm(request) or perm(Builders)"
+    locks = "cmd:perm(request) or perm(Wizards)"
 
     def func(self):
         """Implement the command"""

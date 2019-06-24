@@ -106,7 +106,7 @@ class Channel(DefaultChannel):
         if org and org.secret:
             # check if list members are players who are non-secret members of the org
             non_secret = [ob.player.player for ob in org.active_members.filter(secret=False)]
-            who_list = [ob for ob in who_list if ob in non_secret or ob.check_permstring("builders")]
+            who_list = [ob for ob in who_list if ob in non_secret or ob.check_permstring("wizards")]
         # pass final list to format_wholist and return it
         return self.format_wholist(who_list)
 

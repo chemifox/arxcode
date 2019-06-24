@@ -130,7 +130,7 @@ class Character(UseEquipmentMixins, NameMixins, MsgMixins, ObjectMixins, MagicMi
         if not pobject:
             return
         # get and identify all objects
-        if pobject is self or pobject.check_permstring("builders"):
+        if pobject is self or pobject.check_permstring("wizards"):
             detailed = True
         strip_ansi = pobject.db.stripansinames
         string = "{c%s{n" % self.get_fancy_name()
@@ -198,7 +198,7 @@ class Character(UseEquipmentMixins, NameMixins, MsgMixins, ObjectMixins, MagicMi
         eyes = eyes.capitalize()
         skin = skin.capitalize()
         gender = gender.capitalize()
-        if pobject.check_permstring("builders"):
+        if pobject.check_permstring("wizards"):
             true_age = self.db.real_age
             if true_age and true_age != age:
                 pobject.msg("{wThis true age is:{n %s" % true_age)

@@ -352,7 +352,7 @@ class CmdFinger(ArxPlayerCommand):
                 caller.attributes.remove("playtimes")
                 self.msg("Note on playtimes removed.")
             return
-        show_hidden = caller.check_permstring("builders")
+        show_hidden = caller.check_permstring("wizards")
         if not self.args:
             caller.msg("You must supply a character name to +finger.")
             return
@@ -1386,7 +1386,7 @@ class CmdCalendar(ArxPlayerCommand):
         if not self.args and not self.switches and proj:
             self.display_project()
             return
-        if self.caller.check_permstring("builders"):
+        if self.caller.check_permstring("wizards"):
             qs = RPEvent.objects.all()
         else:
             dompc = self.caller.Dominion

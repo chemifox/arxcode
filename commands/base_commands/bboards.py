@@ -485,8 +485,8 @@ class CmdBBSub(ArxPlayerCommand):
             self.msg("%s: You are not allowed to listen to this bboard." % bboard.key)
             return
         if 'add' in self.switches:
-            if not caller.check_permstring("builders"):
-                caller.msg("You must be a builder or higher to use that switch.")
+            if not caller.check_permstring("wizards"):
+                caller.msg("You must be a wizard or higher to use that switch.")
                 return
             targ = caller.search(self.rhs)
         else:

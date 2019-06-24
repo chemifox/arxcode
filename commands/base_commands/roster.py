@@ -897,7 +897,7 @@ def display_secrets(caller, character, secret_num):
     if not secret_num:
         caller.msg(character.messages.get_secrets_list_display())
     else:
-        show_notes = caller.check_permstring("builders")
+        show_notes = caller.check_permstring("wizards")
         caller.msg(character.messages.get_secret_display(secret_number=secret_num, show_gm_notes=show_notes))
 
 
@@ -1179,7 +1179,7 @@ class CmdSheet(ArxPlayerCommand):
         caller = self.caller
         args = self.lhs
         show_hidden = False
-        if caller.check_permstring("builders"):
+        if caller.check_permstring("wizards"):
             show_hidden = True
         my_char = caller.char_ob if not caller.is_guest() else caller.db.char
         if not args or args.isdigit():
@@ -1705,7 +1705,7 @@ class CmdAdmRelationship(ArxPlayerCommand):
     key = "@admin_relationship"
     aliases = ["@admin_relationships"]
     help_category = "Builder"
-    locks = "cmd:perm(Builders)"
+    locks = "cmd:perm(Wizards)"
     typelist = ['parent', 'sibling', 'friend', 'enemy', 'frenemy', 'family', 'client', 'patron', 'protege',
                 'acquaintance', 'secret', 'rival', 'ally', 'spouse', 'aaenor', 'aeran', 'lorandi',
                 'duindar', 'thalerith', 'thelos', 'deceased']

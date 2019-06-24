@@ -167,7 +167,7 @@ class CmdGMGoals(ArxCommand):
     """
     key = "gmgoals"
     aliases = ["gmgoal"]
-    locks = "cmd:perm(builders)"
+    locks = "cmd:perm(wizards)"
 
     @property
     def tickets(self):
