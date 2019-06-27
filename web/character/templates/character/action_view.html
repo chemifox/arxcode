@@ -61,7 +61,7 @@
             <hr style="border-bottom: 1px solid black; border-top: none; border-radius: 0; "/>
             <h2>Action by <b>{{ action.dompc }}</b></h2>
             <p>{{ action.actions|mush_to_html }}</p>
-            {% if user.is_staff or user.char_ob.dompc == action.dompc %}
+            {% if user.is_builder or user.char_ob.dompc == action.dompc %}
             {% if action.secret_actions %}
             <h2>Secret Action by <b>{{ action.dompc }}</b></h2>
             <p>{{ action.secret_actions|mush_to_html }}</p>
@@ -80,7 +80,7 @@
             <hr style="border-bottom: 1px solid black; border-top: none; border-radius: 0; "/>
             <h2>Action by <b>{{ assist.dompc }}</b></h2>
             <p>{{ assist.actions|mush_to_html }}</p>
-            {% if user.is_staff or user.char_ob.dompc == assist.dompc %}
+            {% if user.is_builder or user.char_ob.dompc == assist.dompc %}
             {% if assist.secret_actions %}
             <h2>Secret Action by <b>{{ assist.dompc }}</b></h2>
             <p>{{ assist.secret_actions|mush_to_html }}</p>

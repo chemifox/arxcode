@@ -164,7 +164,7 @@ def character_list(request):
     def get_dict(char):
         """Helper function for getting dict of all relevant character information"""
         character = {}
-        if char.player_ob.is_staff or char.db.npc:
+        if char.player_ob.is_builder or char.db.npc:
             return character
         character = {
             'name': char.key,
@@ -271,7 +271,7 @@ def gallery(request, object_id):
     character = get_character_from_ob(object_id)
     user = request.user
     can_upload = False
-    if user.is_authenticated() and (user.char_ob == character or user.is_staff):
+    if user.is_authenticated() and (user.char_ob == character or user.is_builder):
         can_upload = True
     photos = Photo.objects.filter(owner__id=object_id)
     portrait_form = PortraitSelectForm(object_id)
@@ -291,7 +291,7 @@ def edit_photo(request, object_id):
     """View for changing a photo"""
     character = get_character_from_ob(object_id)
     user = request.user
-    if not (user == character.player_ob or user.is_staff):
+    if not (user == character.player_ob or user.is_builder):
         raise Http404("Only owners or staff may edit photos.")
     try:
         photo = Photo.objects.get(pk=request.POST['select_photo'])
@@ -311,7 +311,7 @@ def delete_photo(request, object_id):
     """View for deleting a photo. Calls cloudinary.api to delete it from storage, model deleted after"""
     character = get_character_from_ob(object_id)
     user = request.user
-    if not (user == character.player_ob or user.is_staff):
+    if not (user == character.player_ob or user.is_builder):
         raise Http404("Only owners or staff may delete photos.")
     try:
         photo = Photo.objects.get(pk=request.POST['select_photo'])
@@ -351,7 +351,7 @@ def upload(request, object_id):
     """View for uploading new photo resource to cloudinary and creating model"""
     user = request.user
     character = get_character_from_ob(object_id)
-    if not user.is_authenticated() or (user.char_ob != character and not user.is_staff):
+    if not user.is_authenticated() or (user.char_ob != character and not user.is_builder):
         raise Http404("You are not permitted to upload to this gallery.")
     unsigned = request.GET.get("unsigned") == "true"
 
@@ -471,7 +471,7 @@ class ActionListView(ListView):
         user = self.request.user
         if not user or not user.is_authenticated():
             return qs.filter(public=True)
-        if user.is_staff or user.check_permstring("wizards") or user.char_ob == self.character:
+        if user.is_builder or user.check_permstring("wizards") or user.char_ob == self.character:
             return qs
         return qs.filter(public=True)
 
@@ -499,7 +499,7 @@ class NewActionListView(ListView, LimitPageMixin):
         user = self.request.user
         if not user or not user.is_authenticated():
             return qs.filter(public=True).filter(status=PlotAction.PUBLISHED)
-        if user.is_staff or user.check_permstring("wizards") or user.char_ob == self.character:
+        if user.is_builder or user.check_permstring("wizards") or user.char_ob == self.character:
             return qs
         return qs.filter(public=True).filter(status=PlotAction.PUBLISHED)
 
@@ -524,7 +524,7 @@ def new_action_view(request, object_id, action_id):
 
     if not request.user or not request.user.is_authenticated():
         require_public = True
-    elif request.user.is_staff or request.user.check_permstring("wizards") or request.user.char_ob == character():
+    elif request.user.is_builder or request.user.check_permstring("wizards") or request.user.char_ob == character():
         require_public = False
     else:
         require_public = True
@@ -737,7 +737,7 @@ class FlashbackListView(LoginRequiredMixin, CharacterMixin, ListView):
         user = self.request.user
         if not user or not user.is_authenticated():
             raise PermissionDenied
-        if user.char_ob != self.character and not (user.is_staff or user.check_permstring("wizards")):
+        if user.char_ob != self.character and not (user.is_builder or user.check_permstring("wizards")):
             raise Http404
         entry = self.character.roster
         return Flashback.objects.filter(Q(owner=entry) | Q(allowed=entry)).distinct()
@@ -759,7 +759,7 @@ class FlashbackCreateView(LoginRequiredMixin, CharacterMixin, CreateView):
         """Checks permission to create a flashback then returns context"""
         try:
             user = self.request.user
-            if user != self.character.player_ob and not (user.is_staff or user.check_permstring("wizards")):
+            if user != self.character.player_ob and not (user.is_builder or user.check_permstring("wizards")):
                 raise PermissionDenied
         except AttributeError:
             raise PermissionDenied
@@ -796,7 +796,7 @@ class FlashbackAddPostView(LoginRequiredMixin, CharacterMixin, DetailView):
         """Gets context for template, ensures we have permissions"""
         context = super(FlashbackAddPostView, self).get_context_data(**kwargs)
         user = self.request.user
-        if user not in self.get_object().all_players and not (user.is_staff or user.check_permstring("wizards")):
+        if user not in self.get_object().all_players and not (user.is_builder or user.check_permstring("wizards")):
             raise Http404
         context['form'] = FlashbackPostForm()
         return context
@@ -838,7 +838,7 @@ class KnownCluesView(CharacterMixin, LimitPageMixin, ListView):
         user = self.request.user
         if not user or not user.is_authenticated():
             raise PermissionDenied
-        if user.char_ob != self.character and not (user.is_staff or user.check_permstring("wizards")):
+        if user.char_ob != self.character and not (user.is_builder or user.check_permstring("wizards")):
             raise PermissionDenied
         entry = self.character.roster
         qs = entry.clue_discoveries.all().order_by('id')

@@ -49,7 +49,7 @@ class RPEventListView(LimitPageMixin, ListView):
         """Gets queryset of RPEvents that are not finished"""
         user = self.request.user
         try:
-            if user.is_staff:
+            if user.is_builder:
                 return self.search_filter(RPEvent.objects.filter(finished=False).distinct().order_by('-date'))
         except AttributeError:
             pass
@@ -66,7 +66,7 @@ class RPEventListView(LimitPageMixin, ListView):
         """Gets queryset of RPEvents based on who the user is"""
         user = self.request.user
         try:
-            if user.is_staff:
+            if user.is_builder:
                 return self.search_filter(
                     RPEvent.objects.filter(finished=True, dompcs__isnull=False).distinct().order_by('-date'))
         except AttributeError:
@@ -110,7 +110,7 @@ class RPEventDetailView(DetailView):
         user = self.request.user
         private = not self.get_object().public_event
         if user.is_authenticated():
-            if user.is_staff:
+            if user.is_builder:
                 can_view = True
             else:
                 try:
@@ -173,7 +173,7 @@ def event_calendar(request):
 
     user = request.user
     events = None
-    if user.is_staff:
+    if user.is_builder:
         try:
             events = RPEvent.objects.filter(dompcs__isnull=False).distinct().order_by('-date')
         except AttributeError:
