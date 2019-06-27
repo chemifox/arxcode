@@ -594,3 +594,7 @@ class Account(InformMixin, MsgMixins, DefaultAccount):
             return self.char_ob.timezone
         except AttributeError:
             pass
+
+    @property
+    def is_builder(self):
+        return self.check_permstring("builders")
