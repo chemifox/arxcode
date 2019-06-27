@@ -147,6 +147,7 @@ class Army(SharedMemoryModel):
         # if we can change the army, we can also order it
         if self.can_change(player):
             return True
+        dompc = player.Dominion
         # check player's access because temp owner can also be an org
         if self.temp_owner and self.temp_owner.access(player, "army"):
             return True
@@ -166,7 +167,7 @@ class Army(SharedMemoryModel):
             return True
         # checks if we're part of the org the army belongs to
         if player.Dominion.memberships.filter(Q(deguilded=False) & (
-                    Q(organization__assets=self.owner) | Q(organization__assets=self.temp_owner))):
+                Q(organization__assets=self.owner) | Q(organization__assets=self.temp_owner))):
             return True
 
     @property
