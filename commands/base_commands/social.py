@@ -3570,6 +3570,8 @@ class CmdOath(ArxPlayerCommand):
             msg += "{wOath:{n %s " % notes
             caller = self.caller
             targ = caller.search(self.lhslist[0])
+            if not targ:
+                return
             targ.inform(msg, category="Oaths")
             return
 

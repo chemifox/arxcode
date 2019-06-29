@@ -293,7 +293,7 @@ def list_topics(request):
     secret_orgs = []
     # noinspection PyBroadException
     try:
-        if user.is_staff or user.check_permstring("can_see_secret_orgs"):
+        if user.is_builder or user.check_permstring("can_see_secret_orgs"):
             secret_orgs = Organization.objects.filter(secret=True)
         else:
             secret_orgs = Organization.objects.filter(Q(members__deguilded=False) & Q(secret=True)
