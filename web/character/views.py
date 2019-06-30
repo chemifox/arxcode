@@ -109,7 +109,7 @@ def journals(request, object_id):
     user = request.user
     show_hidden = False
     if user.is_authenticated():
-        if user.char_ob.id == character.id or user.check_permstring("builders"):
+        if user.char_ob.id == character.id or user.check_permstring("wizards"):
             show_hidden = True
     if not show_hidden and (hasattr(character, 'roster') and
                             character.roster.roster.name == "Unavailable"):
@@ -385,7 +385,7 @@ def upload(request, object_id):
         context['posted'] = False
         if form.is_valid():
             # Uploads image and creates a model instance for it
-            if user.is_authenticated() and user.check_permstring("builders"):
+            if user.is_authenticated() and user.check_permstring("wizards"):
                 context['show_hidden'] = True
             context['posted'] = form.instance
             form.save()
@@ -740,7 +740,7 @@ class FlashbackListView(LoginRequiredMixin, CharacterMixin, ListView):
         if user.char_ob != self.character and not (user.is_builder or user.check_permstring("wizards")):
             raise Http404
         entry = self.character.roster
-        return Flashback.objects.filter(Q(owner=entry) | Q(allowed=entry)).distinct()
+        return entry.flashbacks.all()
 
 
 class FlashbackCreateView(LoginRequiredMixin, CharacterMixin, CreateView):
@@ -759,7 +759,7 @@ class FlashbackCreateView(LoginRequiredMixin, CharacterMixin, CreateView):
         """Checks permission to create a flashback then returns context"""
         try:
             user = self.request.user
-            if user != self.character.player_ob and not (user.is_builder or user.check_permstring("wizards")):
+            if user != self.character.player_ob and not (user.is_staff or user.check_permstring("builders")):
                 raise PermissionDenied
         except AttributeError:
             raise PermissionDenied
@@ -768,13 +768,6 @@ class FlashbackCreateView(LoginRequiredMixin, CharacterMixin, CreateView):
     def get_success_url(self):
         """Gets the URL to redirect us to on a successful submission"""
         return reverse('character:list_flashbacks', kwargs={'object_id': self.character.id})
-
-    def form_valid(self, form):
-        """Update newly created flashback with our owner and return appropriate response"""
-        response = super(FlashbackCreateView, self).form_valid(form)
-        self.object.owner = self.character.roster
-        self.object.save()
-        return response
 
 
 class FlashbackAddPostView(LoginRequiredMixin, CharacterMixin, DetailView):
@@ -795,9 +788,19 @@ class FlashbackAddPostView(LoginRequiredMixin, CharacterMixin, DetailView):
     def get_context_data(self, **kwargs):
         """Gets context for template, ensures we have permissions"""
         context = super(FlashbackAddPostView, self).get_context_data(**kwargs)
+        flashback = self.get_object()
         user = self.request.user
-        if user not in self.get_object().all_players and not (user.is_builder or user.check_permstring("wizards")):
+        try:
+            user_is_staff = bool(user.is_staff or user.check_permstring("builders"))
+            timeline = flashback.get_post_timeline(player=user, is_staff=user_is_staff)
+        except AttributeError:
             raise Http404
+        involvement = flashback.get_involvement(user.roster)
+        context['flashback_featuring'] = flashback.owners_and_contributors
+        context['flashback_timeline'] = timeline
+        context['allow_add_post'] = bool(user_is_staff or flashback.posts_allowed_by(user))
+        context['new_post_roll'] = involvement.roll if (context['allow_add_post'] and involvement) else ""
+        context['page_title'] = flashback.title
         context['form'] = FlashbackPostForm()
         return context
 

@@ -421,7 +421,12 @@ class FlashbackAdmin(BaseCharAdmin):
     search_fields = ('id', 'title', 'owner__player__username')
     raw_id_fields = ('owner',)
     inlines = [PostInline]
-    fieldsets = [(None, {'fields': [('owner', 'title'), 'summary']})]
+    fieldsets = [(None, {'fields': ['title', 'summary']})]
+
+    @staticmethod
+    def owner(obj):
+        """List names of our characters for list display"""
+        return str(obj.owner).capitalize()
 
 
 class GoalUpdateInline(admin.StackedInline):

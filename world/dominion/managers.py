@@ -24,7 +24,7 @@ class CrisisManager(Manager):
     def viewable_by_player(self, player):
         if not player or not player.is_authenticated():
             return self.filter(public=True)
-        if player.check_permstring("builders") or player.is_staff:
+        if player.check_permstring("builders") or player.is_builder:
             qs = self.all()
         else:
             from .models import PCPlotInvolvement

@@ -85,7 +85,7 @@
       <h2 class="text-center">Secrets</h2>
       {% for secret in secrets %}
         <p>{{ forloop.counter}} : {{ secret.desc|mush_to_html }}</p>
-        {% if request.user.is_staff %}
+        {% if request.user.is_builder %}
             <h2 class="text-center">GM Notes</h2>
           {{  secret.gm_notes }}
         {% endif %}
