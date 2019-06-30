@@ -2000,7 +2000,7 @@ class CmdPraise(ArxPlayerCommand):
             account = caller.roster.current_account
             if account == targ.roster.current_account:
                 raise self.PraiseError("You cannot %s yourself." % self.verb)
-            if targ.is_staff:
+            if targ.is_builder:
                 raise self.PraiseError("Staff don't need your %s." % self.attr)
             if not self.rhs:
                 raise self.PraiseError("You must provide a reason for your %s." % self.attr)

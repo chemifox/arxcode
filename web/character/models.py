@@ -1870,7 +1870,7 @@ class Flashback(SharedMemoryModel):
             amount (int): number of backposts. None defaults to 'all'.
         """
         posts = self.posts.all().prefetch_related('readable_by')
-        if amount != None:
+        if amount is not None:
             start = len(posts) - amount
             if start > 0:
                 posts = posts[start:amount+start]
