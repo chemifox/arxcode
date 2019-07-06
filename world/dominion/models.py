@@ -1106,7 +1106,7 @@ class AssetOwner(CachedPropertiesMixin, SharedMemoryModel):
         income = 0
         if self.organization_owner:
             income += self.organization_owner.amount
-        for amt in self.incomes.filter(do_weekly=True).exclude(category="vassal taxes"):
+        for amt in self.incomes.filter(do_weekly=True):
             income += amt.weekly_amount
         if not hasattr(self, 'estate'):
             return income

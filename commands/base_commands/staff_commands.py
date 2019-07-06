@@ -422,7 +422,7 @@ class CmdSendVision(ArxPlayerCommand):
     """
     key = "sendvision"
     aliases = ["sendvisions", "sendclue", "giveclue"]
-    locks = "cmd:perm(sendvision) or perm(Wizards)"
+    locks = "cmd:perm(sendvision) or perm(Builders)"
     help_category = "GMing"
 
     def func(self):

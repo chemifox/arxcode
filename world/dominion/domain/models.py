@@ -965,8 +965,8 @@ class Domain(CachedPropertiesMixin, SharedMemoryModel):
         floats, which we'll convert to an int once we're all done.
         """
         from evennia.server.models import ServerConfig
-        amount = self.tax_income
-        amount += self.mining_income
+        #amount = self.tax_income
+        amount = self.mining_income
         amount += self.lumber_income
         amount += self.mill_income
         amount = (amount * self.income_modifier)/100.0
