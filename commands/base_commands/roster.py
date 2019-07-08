@@ -1211,7 +1211,6 @@ class CmdSheet(ArxPlayerCommand):
     def display_storyactions(self, charob):
         """
         Displays a list of story actions or body of specified request
-
             Args:
                 charob (ObjectDB): Character object to retrieve requests from
         """
@@ -1220,10 +1219,15 @@ class CmdSheet(ArxPlayerCommand):
         actions = player.past_participated_actions
         # check self.rhs - if not self.rhs, list # of all of them
         action_num = self.get_num_from_args()
+        from evennia.utils.evtable import EvTable
         if not action_num:
-            table = prettytable.PrettyTable(["{wID", "{wSubmitting Player", "{wTopic{n", "{wCrisis{n"])
+            table = EvTable("{wID", "{wSubmitting Player", "{wTopic{n", "{wCrisis{n", width=78, border="cells")
             for ob in actions:
-                table.add_row([str(ob.id), str(ob.author), str(ob.topic), str(ob.plot)])
+                table.add_row(str(ob.id), str(ob.author), str(ob.topic), str(ob.plot))
+            table.reformat_column(0, width=8)
+            table.reformat_column(1, width=15)
+            table.reformat_column(2, width=34)
+            table.reformat_column(3, width=21)
             # send table to player and return
             self.msg("%s" % table)
             return

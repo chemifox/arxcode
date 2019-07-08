@@ -422,8 +422,8 @@ class CmdGuestLook(ArxPlayerCommand):
                                                                                       unfinished))
             caller.msg("%s can also add these optional fields: {w%s{n" % (char.key.capitalize(), optional))
             mssg = "For clarification on any field and an explanation for just what a field means,"
-            mssg += " type '{whelp character{n' for a list of the fields, and '{whelp <field name>{n'"
-            mssg += " for a detailed explanation on what a field means for your character."
+            mssg += " type '{whelp <field name>{n' for a detailed explanation on what a field"
+            mssg += " means for your character."
             caller.msg(mssg)
             return
         if stage == 4:

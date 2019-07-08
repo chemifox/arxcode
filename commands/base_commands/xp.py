@@ -214,7 +214,7 @@ class CmdUseXP(ArxCommand):
             if stype == "stat":
                 caller.adjust_xp(-cost)
                 stats_and_skills.adjust_stat(caller, args)
-                caller.msg("You have increased your %s to %s." % (cost, current + 1))
+                caller.msg("You have increased your %s to %s." % (args, current + 1))
                 return
             if stype == "skill":
                 caller.adjust_xp(-cost)
