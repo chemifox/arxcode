@@ -1939,11 +1939,6 @@ class CmdPraise(ArxPlayerCommand):
     Praises a character, give them the recognition they deserve!
     Your number of praises per week are based on your influence
     +10. Using praise with no arguments lists your praises.
-
-    Praises for orgs work a little differently. It may only be used
-    for an organization sponsoring an event while you are in attendance,
-    and the amount gained is based on the largesse of the event and the
-    social resources spent by the organization.
     """
     key = "praise"
     locks = "cmd:all()"

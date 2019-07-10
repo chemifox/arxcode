@@ -295,7 +295,8 @@ class Army(SharedMemoryModel):
                 total -= self.domain.stored_food
                 self.domain.stored_food = 0
             self.domain.save()
-        cost = total * 10
+            # cost = total * 10
+        cost = self._get_costs()
         if cost:
             owner = self.temp_owner or self.owner
             if owner:
@@ -896,15 +897,15 @@ class Domain(CachedPropertiesMixin, SharedMemoryModel):
         if tax > 1.00:
             tax = 1.00
         tax *= float(self.total_serfs)
-        if self.ruler:
-            vassals = self.ruler.vassals.all()
-            for vassal in vassals:
-                try:
-                    for domain in vassal.holdings.all():
-                        amt = domain.liege_taxed_amt
-                        tax += amt
-                except (AttributeError, TypeError, ValueError):
-                    pass
+        #if self.ruler:
+            #vassals = self.ruler.vassals.all()
+            #for vassal in vassals:
+                #try:
+                    #for domain in vassal.holdings.all():
+                        #amt = domain.liege_taxed_amt
+                        #tax += amt
+                #except (AttributeError, TypeError, ValueError):
+                    #pass
         return tax
 
     @staticmethod
@@ -965,8 +966,8 @@ class Domain(CachedPropertiesMixin, SharedMemoryModel):
         floats, which we'll convert to an int once we're all done.
         """
         from evennia.server.models import ServerConfig
-        #amount = self.tax_income
-        amount = self.mining_income
+        amount = self.tax_income
+        amount += self.mining_income
         amount += self.lumber_income
         amount += self.mill_income
         amount = (amount * self.income_modifier)/100.0

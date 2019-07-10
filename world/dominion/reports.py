@@ -133,10 +133,10 @@ class WeeklyReport(Report):
         self.projects += 1
         ProjectReport(self.owner, self.week, project, new_total)
 
-    def add_army_consumption_report(self, army, food, silver_upkeep):
+    def add_army_consumption_report(self, army, food, silver):
         s_str = ""
-        if silver_upkeep:
-            s_str = " and cost %s silver" % silver_upkeep
+        if silver:
+            s_str = " and cost %s silver" % silver
         self.army_reports.append("Army %s ate %s food%s." % (army, food, s_str))
 
     # noinspection PyBroadException

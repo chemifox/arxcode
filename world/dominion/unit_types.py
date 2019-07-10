@@ -109,7 +109,7 @@ class UnitStats(PositionActor):
     name = "Default"
     # silver upkeep costs for 1 of a given unit
     silver_upkeep = 10
-    food_upkeep = 1
+    food_upkeep = 0
     hiring_cost = 5
     # how powerful we are in melee combat
     melee_damage = 1
@@ -434,7 +434,7 @@ class Longship(UnitStats):
     id = unit_constants.LONGSHIP
     name = "Longships"
     silver_upkeep = 25
-    food_upkeep = 20
+    food_upkeep = 0
     movement = 6
     melee_damage = 60
     range_damage = 100
@@ -451,7 +451,7 @@ class SiegeWeapon(UnitStats):
     id = unit_constants.SIEGE_WEAPON
     name = "Siege Weapon"
     silver_upkeep = 250
-    food_upkeep = 20
+    food_upkeep = 0
     movement = 1
     melee_damage = 20
     range_damage = 300
@@ -469,7 +469,7 @@ class Corsair(UnitStats):
     id = unit_constants.CORSAIR
     name = "Corsairs"
     silver_upkeep = 50
-    food_upkeep = 60
+    food_upkeep = 0
     movement = 5
     melee_damage = 240
     range_damage = 400
@@ -486,7 +486,7 @@ class Cog(UnitStats):
     id = unit_constants.COG
     name = "Cogs"
     silver_upkeep = 125
-    food_upkeep = 120
+    food_upkeep = 0
     movement = 6
     melee_damage = 700
     range_damage = 2000
@@ -502,7 +502,7 @@ class Dromond(UnitStats):
     id = unit_constants.DROMOND
     name = "Dromonds"
     silver_upkeep = 250
-    food_upkeep = 300
+    food_upkeep = 0
     movement = 3
     melee_damage = 2500
     range_damage = 5000
