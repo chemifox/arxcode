@@ -392,7 +392,7 @@ class CmdManageRoom(ArxCommand):
         ```
         <night>In the darkness, the forest looks foreboding.</night>.
         <morning>Birds are chirping and whatnot.</morning>
-        <afternoon>Birds are no longer chirping.</morning>
+        <afternoon>Birds are no longer chirping.</afternoon>
         <evening>THEY WILL NEVER CHIRP AGAIN.</evening>
         ```
 

@@ -12,4 +12,10 @@ class Bauble(DefaultObject):
     Essentially a placeolder in case we wanna do anything with it
     later.
     """
+
+    def at_object_creation(self):
+        """
+        Run at Bauble creation.
+        """
+        self.db.bauble = True
     pass

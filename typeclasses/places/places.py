@@ -23,7 +23,8 @@ class Place(Object):
         self.desc = "A place for people to privately chat. Dropping it in a room will make it part of the room."
         # locks so characters cannot 'get' it
         self.locks.add(self.PLACE_LOCKS)
-        self.at_init()      
+        self.at_init()
+        self.db.place = True
         
     def leave(self, character):
         """

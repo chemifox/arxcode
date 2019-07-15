@@ -458,7 +458,7 @@ class StoryEmit(SharedMemoryModel):
                              on_delete=models.SET_NULL)
 
     def __str__(self):
-        return "StoryEmit #%d" % self.id
+        return "StoryEmit #%s" % self.id
 
     def broadcast(self):
         """Broadcast a storyemit either to orgs or to the game as a whole"""
@@ -1911,15 +1911,12 @@ class Flashback(SharedMemoryModel):
                                 category="Flashbacks")
             self.delete()
             return
-        elif num_posts >= 10 and len(authors) > 1:
+        elif num_posts >= 5 and len(authors) > 1:
             for roster in authors:
                 player = roster.player
-                val = player.db.event_xp or 0
-                if val < self.MAX_XP:
-                    val += 1
-                    player.char_ob.adjust_xp(1)
-                player.db.event_xp = val
-            msg += " Its authors gained event XP (up to %s weekly)." % self.MAX_XP
+                char = player.char_ob
+                char.adjust_xp(1)
+            msg += " Its authors gained 1 XP."
         self.concluded = True
         self.save()
         self.inform_all_but(None, msg)

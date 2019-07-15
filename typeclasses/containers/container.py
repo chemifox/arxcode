@@ -90,7 +90,7 @@ class CmdRoot(ArxCommand):
             caller.msg("That object does not exist.")
             return
 
-        if not obj.db.container and not obj.db.places and not obj.db.bauble:
+        if not obj.db.bauble and not obj.db.container and not obj.db.place:
             caller.msg("Can only target containers, places and baubles.")
             return
 
