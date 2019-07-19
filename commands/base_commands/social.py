@@ -3591,8 +3591,8 @@ class CmdFirstImpression(ArxCommand):
 
     This allows you to claim an xp reward for the first time you
     have a scene with another player. You receive 1 xp, while the
-    player you write the summary for receives 4 xp. Should they
-    return the favor, you'll receive 4 and they'll receive 1. The other
+    player you write the summary for receives 1 xp. Should they
+    return the favor, you'll receive 1 and they'll receive 1. The other
     player receives an inform of the summary you write, and a prompt
     to let them know they can use the command in return. This command
     requires you to be in the same room, as a small reminder that this
@@ -3614,8 +3614,7 @@ class CmdFirstImpression(ArxCommand):
     grant their consent for it to be a publicly viewable account by using
     the /publish command, which makes it viewable on their character sheet.
 
-    Using the /publish, /share, or /all switch will grant the user 1 xp.
-    They cannot be reversed once set.
+    Using the /publish, /share, or /all switch cannot be reversed once set.
 
     If you wish to /publish or /share a first impression of a character that
     was played by a previous character, you must specify a negative number.

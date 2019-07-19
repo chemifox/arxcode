@@ -27,7 +27,7 @@
         of Ithir and claim their destiny in the Immortal Lands.</center></p></div></div>
     <!-- news app commented out since there are no news in the database originally -->
 <div class="rowOfBoxes dividingBorderAbove">
-   <div class="half noBorderOnLeft">
+   <div class="oneThird noBorderOnLeft">
       <h1>Players</h1>
        <p><center>There are currently <strong>{{num_players_connected}}</strong> connected</center></p>
        <h2>Recent Activity</h2>
@@ -39,7 +39,7 @@
       </ul></div>
       </div>
 
-   <div class="half">
+   <div class="oneThird">
    <h1>Connect to Ithir</h1>
        <br>
        <div style="color:#8c8c8c">
@@ -48,20 +48,21 @@
            <b><center>To play on your own client, the address is:</center></b>
            <p><center>ithirMUSH.org:4000</center></p></div>
    </div>
-   </div>
 
-    <div class="fullWidth noBorderOnLeft dividingBorderAbove">
-      <h1>Latest News</h1>
-      {% for entry in news_entries %}
-         <a href="/news/show/{{entry.id}}" class="newsHeading">{{entry.topic.name}}: {{entry.title}}</a>
-         <p class="newsDate">By {{entry.author.username}} on {{entry.date_posted|date:"SHORT_DATE_FORMAT"}} {{entry.date_posted|time}}</p>
-         <p class="newsSummary">{{entry.body|truncatewords:20}}</p>
-      {% endfor %}
-
-      <div class="more"><a href="/news/archive">More News &raquo;</a></div>
-
-
-
+<div class="container">
+    <div class="oneThird">
+      <h1>Wanted Characters</h1>
+        <center><b>July 2019</b>
+        <p>This is a Top 5 list of wanted characters avaliable for play as of the beginning of the month listed above.</p></center>
+  <div class="button">
+    <center><a href="http://ithirmush.org/character/sheet/731/">High Lord Emyrion</a></center>
+    <center><a href="http://ithirmush.org/character/sheet/1132/">High Priest Tykalos</a></center>
+    <center><a href="http://ithirmush.org/character/sheet/1231/">High Priestess Catlith</a></center>
+    <center><a href="http://ithirmush.org/character/sheet/3119/">Duke Daechir</a></center>
+    <center><a href="http://ithirmush.org/character/sheet/1072/">First Citizen Theleria</a></center>
+  </div>
+</div>
+  </div>
     </div>
     </div>
 {% endblock %}
