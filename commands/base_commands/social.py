@@ -316,21 +316,21 @@ class CmdWatch(ArxPlayerCommand):
 
 class CmdFinger(ArxPlayerCommand):
     """
-    +finger
+    +info
 
     Usage:
-        +finger <character>
-        +finger/preferences <note on RP preferences>
-        +finger/playtimes <note on your playtimes>
+        +info <character>
+        +info/preferences <note on RP preferences>
+        +info/playtimes <note on your playtimes>
 
     Displays information about a given character. To set RP hooks, use the
     +rphooks command. Use the 'preferences' or 'playtimes' switches to add
     information about your RP preferences or your playtimes to your finger
     information.
     """
-    key = "+finger"
+    key = "+info"
     locks = "cmd:all()"
-    aliases = ["@finger", "finger", "info"]
+    aliases = ["@finger", "finger", "info", "+finger"]
     help_category = "Social"
 
     def func(self):
@@ -404,7 +404,7 @@ class CmdFinger(ArxPlayerCommand):
                 idle = "Online and is idle" if idle_time > 1200 else "Online, not idle"
                 msg += "{wStatus:{n %s\n" % idle
             else:
-                last_online = player.last_login and player.last_login.strftime("%m-%d-%y") or "Never"
+                last_online = player.last_login and player.last_login.strftime("%x") or "Never"
                 msg += "{wStatus:{n Last logged in: %s\n" % last_online
         fealty = char.db.fealty or "None"
         msg += "{wFealty:{n %s\n" % fealty
@@ -2988,7 +2988,7 @@ class CmdRandomScene(ArxCommand):
                                         Q(roster__player__last_login__isnull=False) &
                                         Q(Q(roster__player__last_login__gte=last_week) |
                                           Q(roster__player__db_is_connected=True)) &
-                                        Q(roster__player__is_staff=False) &
+                                        ~Q(roster__player__db_tags__db_key="staff") &
                                         ~Q(roster__player__db_tags__db_key="staff_npc")).distinct()
 
     @property

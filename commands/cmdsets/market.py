@@ -76,7 +76,7 @@ class MarketCmdSet(CmdSet):
         """
         from world.petitions.petitions_commands import CmdBroker
         self.add(CmdMarket())
-        # self.add(CmdHaggle())
+        self.add(CmdHaggle())
         self.add(CmdBroker())
 
 
@@ -235,7 +235,7 @@ class CmdMarket(ArxCommand):
             mat.amount -= amt
             mat.save()
             money = caller.db.currency or 0.0
-            sale = amt * material.value/20
+            sale = amt * material.value / 20
             money += sale
             caller.db.currency = money
             caller.msg("You have sold %s %s for %s silver coins." % (amt, material.name, sale))
@@ -276,7 +276,7 @@ class CmdMarket(ArxCommand):
         caller.msg("Invalid switch.")
         return
 
-'''
+
 class HaggleError(Exception):
     """Errors raised when haggling"""
     pass
@@ -346,7 +346,7 @@ class HaggledDeal(object):
         """Alters the terms of our deal. Pray they do not alter it further."""
         if not self.caller.player_ob.pay_action_points(5):
             return
-        self.noble_discovery_check()
+        #self.noble_discovery_check()
         difficulty = randint(-15, 65) - self.roll_bonus
         clout = self.caller.social_clout
         if clout > 0:
@@ -360,26 +360,8 @@ class HaggledDeal(object):
             self.save()
             self.caller.msg("You have found a better deal:\n%s" % self.display())
 
-    def noble_discovery_check(self):
-        """Checks if a noble loses fame for haggling"""
-        rank = self.caller.db.social_rank or 10
-        if rank > 6:
-            return
-        msg = "Engaging in crass mercantile haggling is considered beneath those of high social rank."
-        if do_dice_check(stat="wits", skill="stealth", difficulty=30) < 1:
-            fame_loss = self.caller.player_ob.Dominion.assets.fame // 100
-            if not fame_loss:
-                msg += " You were noticed, but fortunately, so few people know of you that it hardly matters."
-            else:
-                msg += " Unfortunately, you were noticed and lose %d fame." % fame_loss
-                self.caller.player_ob.Dominion.assets.fame -= fame_loss
-                self.caller.player_ob.Dominion.assets.save()
-        else:
-            msg += " Fortunately, no one noticed this time."
-        self.caller.msg(msg)
-
     def save(self):
-        """Saves the deal in the underlying Evennia Attribute so progress is not lost if server restarts"""
+        """saves the deal in the underlying evennia attribute so progress is not lost if the server restarts"""
         self.caller.db.haggling_deal = (self.transaction_type, self.resource_type or self.material.id,
                                         self.amount, self.discount_roll, self.roll_bonus)
 
@@ -413,7 +395,7 @@ class HaggledDeal(object):
     @property
     def base_cost(self):
         if self.resource_type:
-            cost = 500.0
+            cost = 25.0
         else:
             if self.transaction_type == "buy":
                 cost = self.material.value
@@ -476,9 +458,7 @@ class CmdHaggle(ArxCommand):
 
     This can buy/sell materials and resources. You must first attempt to find
     a buyer or seller for your deal. Once found, you can /roll to attempt to
-    negotiate the terms of the deal with them. Nobles should beware - it's
-    considered extremely crass to haggle, and if they are discovered doing
-    so, their reputation will suffer.
+    negotiate the terms of the deal with them.
 
     Both looking for a deal and negotiating the agreement costs 5 AP per
     attempt. A deal can be found for another character to do the haggling
@@ -638,4 +618,3 @@ class CmdHaggle(ArxCommand):
             bonus = min(amount_found - amount, 25)
             self.msg("Due to your success in searching for a deal, haggling rolls will have a bonus of %s." % bonus)
         return min(amount, amount_found), bonus
-'''

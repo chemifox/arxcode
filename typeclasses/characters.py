@@ -376,17 +376,21 @@ class Character(UseEquipmentMixins, NameMixins, MsgMixins, ObjectMixins, MagicMi
         if wound <= 0:
             wound_desc = "no"
         elif wound <= 0.1:
-            wound_desc = "minor"
+            wound_desc = "superficial"
         elif 0.1 < wound <= 0.25:
-            wound_desc = "moderate"
+            wound_desc = "minor"
         elif 0.25 < wound <= 0.5:
+            wound_desc = "moderate"
+        elif 0.5 < wound <= 0.75:
             wound_desc = "serious"
-        elif 0.5 < wound <= 1.00:
+        elif 0.75 < wound <= 1.00:
             wound_desc = "severe"
-        elif 1.00 < wound < 2.0:
+        elif 1.00 < wound < 1.5:
             wound_desc = "grievous"
-        else:
+        elif 1.5 < wound < 2.0:
             wound_desc = "grave"
+        else:
+            wound_desc = "deathly"
         return wound_desc
 
     def sensing_check(self, difficulty=15, invis=False, allow_wake=False):
