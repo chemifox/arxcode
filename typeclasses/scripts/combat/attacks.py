@@ -389,6 +389,7 @@ class Attack(object):
         diff = -2  # base difficulty before mods
         penalty -= defense.defense_modifier
         diff += penalty
+        diff += self.difficulty_mod
         if defense.state:
             defense.state.times_attacked += 1
         total = None

@@ -65,7 +65,7 @@ class Wieldable(Wearable):
     def melee_mode(self):
         self.db.can_be_parried = True
         self.db.can_parry = True
-        self.db.can_parry = True
+        self.db.can_riposte = True
         self.db.attack_type = "melee"
 
     def at_before_move(self, destination, **kwargs):
@@ -190,20 +190,22 @@ class Wieldable(Wearable):
         damage_stat = self.db.damage_stat
         flat_damage_bonus = self.db.flat_damage_bonus or 0
         if self.db.attack_skill == "huge wpn":
-            diffmod += 2
+            diffmod += 3
         elif self.db.attack_skill == "archery":
             self.ranged_mode()
-            diffmod += 1
+            diffmod += 0
         elif self.db.attack_skill == "small wpn":
-            diffmod -= 0
+            diffmod -= 3
+        elif self.db.attack_skill == "medium wpn":
+            diffmod += 0
         elif self.db.attack_skill == "abjuration":
             attack_stat = "intellect"
             damage_stat = "mana"
-            diffmod -= 1
+            diffmod -= 3
         elif self.db.attack_skill == "evocation":
             attack_stat = "intellect"
             damage_stat = "mana"
-            diffmod += 1
+            diffmod += 3
         if not recipe:
             return self.db.damage_bonus or 0, diffmod, flat_damage_bonus
         base = float(recipe.resultsdict.get("baseval", 0))
