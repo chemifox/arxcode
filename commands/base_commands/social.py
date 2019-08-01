@@ -330,7 +330,7 @@ class CmdFinger(ArxPlayerCommand):
     """
     key = "+info"
     locks = "cmd:all()"
-    aliases = ["@finger", "finger", "info", "+finger"]
+    aliases = ["finger"]
     help_category = "Social"
 
     def func(self):

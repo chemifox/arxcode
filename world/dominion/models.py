@@ -1999,7 +1999,7 @@ class Organization(InformMixin, SharedMemoryModel):
     @property
     def default_access_rank(self):
         """What rank to default to if they don't set permission"""
-        return 2 if self.secret else 10
+        return 2 if self.secret else 2
 
     def access(self, accessing_obj, access_type='read', default=False):
         """
