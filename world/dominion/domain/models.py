@@ -105,9 +105,9 @@ class Army(SharedMemoryModel):
         msg += "{wDomain{n: %s {wLocation{n: %s\n" % (self.domain, self.land)
         msg += "{wOwner{n: %s\n" % owner
         msg += "{wDescription{n: %s\n" % self.desc
-        msg += "{wMorale{n: %s {wFood{n: %s {wStarvation Level{n: %s {wPlunder{n: %s\n" % (self.morale, self.plunder,
-                                                                                           self.starvation_level,
-                                                                                           self.plunder)
+        # msg += "{wMorale{n: %s {wFood{n: %s {wStarvation Level{n: %s {wPlunder{n: %s\n" % (self.morale, self.plunder,
+        #                                                                                   self.starvation_level,
+        #                                                                                   self.plunder)
         msg += "{wUnits{n:\n"
         from evennia.utils.evtable import EvTable
         table = EvTable("{wID{n", "{wCommander{n", "{wType{n", "{wAmt{n", "{wLvl{n", "{wEquip{n", "{wXP{n", width=78,
@@ -1298,18 +1298,18 @@ class Domain(CachedPropertiesMixin, SharedMemoryModel):
                                                                           minister.get_category_display(),
                                                                           minister.title)
         mssg += "{wDesc{n: %s\n" % self.desc
-        mssg += "{wArea{n: %s {wFarms{n: %s {wHousing{n: %s " % (self.area, self.num_farms, self.num_housing)
-        mssg += "{wMines{n: %s {wLumber{n: %s {wMills{n: %s\n" % (self.num_mines, self.num_lumber_yards, self.num_mills)
-        mssg += "{wTotal serfs{n: %s " % self.total_serfs
-        mssg += "{wAssignments: Mines{n: %s {wMills{n: %s " % (self.mining_serfs, self.mill_serfs)
-        mssg += "{wLumber yards:{n %s {wFarms{n: %s\n" % (self.lumber_serfs, self.farming_serfs)
-        mssg += "{wTax Rate{n: %s {wLawlessness{n: %s " % (self.tax_rate, self.lawlessness)
+        # mssg += "{wArea{n: %s {wFarms{n: %s {wHousing{n: %s " % (self.area, self.num_farms, self.num_housing)
+        # mssg += "{wMines{n: %s {wLumber{n: %s {wMills{n: %s\n" % (self.num_mines, self.num_lumber_yards, self.num_mills)
+        # mssg += "{wTotal serfs{n: %s " % self.total_serfs
+        # mssg += "{wAssignments: Mines{n: %s {wMills{n: %s " % (self.mining_serfs, self.mill_serfs)
+        # mssg += "{wLumber yards:{n %s {wFarms{n: %s\n" % (self.lumber_serfs, self.farming_serfs)
+        mssg += "{wTax Rate{n: %s " % (self.tax_rate)
         mssg += "{wCosts{n: %s {wIncome{n: %s {wLiege's tax rate{n: %s\n" % (self.costs, self.total_income,
                                                                              self.liege_taxes)
-        mssg += "{wFood Production{n: %s {wFood Consumption{n: %s {wStored Food{n: %s\n" % (self.food_production,
-                                                                                            self.food_consumption,
-                                                                                            self.stored_food)
-        mssg += "\n{wCastles:{n\n"
+        # mssg += "{wFood Production{n: %s {wFood Consumption{n: %s {wStored Food{n: %s\n" % (self.food_production,
+        #                                                                                    self.food_consumption,
+        #                                                                                    self.stored_food)
+        mssg += "\n{wSettlements:{n\n"
         mssg += "{w================================={n\n"
         for castle in self.castles.all():
             mssg += castle.display()
@@ -1425,12 +1425,12 @@ class Castle(SharedMemoryModel):
     EPIC_CASTLE = 6
 
     FORTIFICATION_CHOICES = (
-        (MOTTE_AND_BAILEY, 'Motte and Bailey'),
-        (TIMBER_CASTLE, 'Timber Castle'),
-        (STONE_CASTLE, 'Stone Castle'),
-        (CASTLE_WITH_CURTAIN_WALL, 'Castle with Curtain Wall'),
+        (MOTTE_AND_BAILEY, 'Wood Keep'),
+        (TIMBER_CASTLE, 'Stone Keep'),
+        (STONE_CASTLE, 'Walled City'),
+        (CASTLE_WITH_CURTAIN_WALL, 'Stone Castle'),
         (FORTIFIED_CASTLE, 'Fortified Castle'),
-        (EPIC_CASTLE, 'Epic Castle'))
+        (EPIC_CASTLE, 'Legendary Castle'))
     level = models.PositiveSmallIntegerField(default=MOTTE_AND_BAILEY)
     domain = models.ForeignKey("Domain", related_name="castles", blank=True, null=True)
     damage = models.PositiveSmallIntegerField(default=0, blank=0)

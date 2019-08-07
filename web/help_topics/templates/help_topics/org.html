@@ -73,13 +73,13 @@
           <td width="60%">{{ minister.title }}</td>
           </tr>
           {% endfor %}</table>{% endif %}
-  <h1>Land Holdings</h1>
+  <h1>Settlements</h1>
   
   {% for domain in holdings %}
       <h2>{{ domain.name}}</h2>
-      <p>Description: {{ domain.desc|mush_to_html}}</p>
+      <p>{{ domain.desc|mush_to_html}}</p>
       {% if show_secret < 11  %}
-          <ul class="list-inline text-left">
+          <!---<ul class="list-inline text-left">
           <li>Mines: {{domain.num_mines}}</li>
           <li>Lumber: {{domain.num_lumber_yards}}</li>
           <li>Mills: {{domain.num_mills}}</li>
@@ -90,7 +90,7 @@
           <li>Serfs working in lumber: {{domain.lumber_serfs}}</li>
           <li>Serfs working in farming: {{domain.farming_serfs}}</li>
           <li>Serfs working in mills: {{domain.mill_serfs}}</li>
-          </ul>
+          </ul>--->
       {% endif %}
   {% endfor %}
   {% endif %}
