@@ -1356,7 +1356,7 @@ class CmdRelationship(ArxPlayerCommand):
     locks = "cmd:all()"
     typelist = ['parent', 'sibling', 'friend', 'enemy', 'frenemy', 'family', 'client', 'patron', 'protege',
                 'acquaintance', 'secret', 'rival', 'ally', 'spouse', 'faenor', 'aeran', 'lorandi',
-                'duindar', 'thalerith', 'thelos', 'deceased']
+                'duindar', 'thalerith', 'thelos', 'deceased', 'child']
 
     # noinspection PyUnusedLocal
     def get_help(self, caller, cmdset):
@@ -1712,7 +1712,7 @@ class CmdAdmRelationship(ArxPlayerCommand):
     locks = "cmd:perm(Wizards)"
     typelist = ['parent', 'sibling', 'friend', 'enemy', 'frenemy', 'family', 'client', 'patron', 'protege',
                 'acquaintance', 'secret', 'rival', 'ally', 'spouse', 'aaenor', 'aeran', 'lorandi',
-                'duindar', 'thalerith', 'thelos', 'deceased']
+                'duindar', 'thalerith', 'thelos', 'deceased', 'child']
 
     def func(self):
         """Executes admin_relationship command"""

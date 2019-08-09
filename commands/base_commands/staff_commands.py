@@ -107,7 +107,7 @@ class CmdGemit(ArxPlayerCommand):
 
     """
     key = "@gemit"
-    locks = "cmd:perm(gemit) or perm(Wizards)"
+    locks = "cmd:perm(gemit) or perm(Builders)"
     help_category = "GMing"
 
     # noinspection PyAttributeOutsideInit
