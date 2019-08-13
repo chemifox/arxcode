@@ -1881,14 +1881,14 @@ class Organization(InformMixin, SharedMemoryModel):
                 msg += "{w%s{n (Rank %s):" % (title, rank)
                 firstchar = True
                 for char in chars:
-                    if (char.desc != "True"):
+                    if char.desc != "":
                         if firstchar:
-                            msg += " %s (%s)" % (char_name(char), char.desc)
+                            msg += " %s ({=n%s{n)" % (char_name(char), char.desc)
                             firstchar = False
                         else:
-                            msg += ", %s (%s)" % (char_name(char), char.desc)
+                            msg += ", %s ({=n%s{n)" % (char_name(char), char.desc)
                     elif firstchar:
-                        msg += " %s" % (char_name(char))
+                        msg += "%s" % (char_name(char))
                         firstchar = False
                     else:
                         msg += ", %s" % (char_name(char))
@@ -1903,8 +1903,8 @@ class Organization(InformMixin, SharedMemoryModel):
                     title = male_title
                 else:
                     title = female_title
-                if (chardesc != "True"):
-                    msg += "{w%s{n (Rank %s): %s (%s)\n" % (title, rank, name, chardesc)
+                if chardesc != "":
+                    msg += "{w%s{n (Rank %s): %s ({=n%s{n)\n" % (title, rank, name, chardesc)
                 else:
                     msg += "{w%s{n (Rank %s): %s\n" % (title, rank, name)
         return msg
@@ -1913,10 +1913,10 @@ class Organization(InformMixin, SharedMemoryModel):
         """Public display of this org"""
         msg = "\n{wName{n: %s\n" % self.name
         msg += "{wDesc{n: %s\n" % self.desc
+        msg += "{wWebpage{n: %s\n" % get_full_url(self.get_absolute_url())
         if not self.secret:
             msg += "\n{wLeaders of %s:\n%s\n" % (self.name, self.display_members(end=2, show_all=show_all))
-        msg += "{wWebpage{n: %s\n" % get_full_url(self.get_absolute_url())
-        return msg
+            return msg
 
     def display(self, viewing_member=None, display_clues=False, show_all=False):
         """Returns string display of org"""

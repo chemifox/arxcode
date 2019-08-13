@@ -95,6 +95,8 @@ class CmdAction(ActionCommandMixin, ArxPlayerCommand):
         @action/toggletraitor <action #>
         @action/toggleattend <action #>
         @action/noscene <action #>
+    Remaining Count:
+        @action/remaining
         
     Creating /newaction costs Action Points (ap). Requires 'tldr' which is a
     short summary in a few words of the action, a category, stat/skill for
@@ -125,6 +127,8 @@ class CmdAction(ActionCommandMixin, ArxPlayerCommand):
 
     Actions are private by default, but there's a small xp reward for marking
     a completed action as public with the /makepublic switch.
+
+    To see your current action availability, please use action/remaining.
     """
     key = "@action"
     locks = "cmd:all()"
@@ -151,24 +155,13 @@ class CmdAction(ActionCommandMixin, ArxPlayerCommand):
             status=PlotAction.CANCELLED).distinct()
 
     # noinspection PyUnusedLocal
-    def get_help(self, caller, cmdset):
-        """Overrides basic help, which defaults to the __doc__ string"""
-        msg = self.__doc__
-        recent_actions = caller.recent_actions
-        max_actions = PlotAction.max_requests
-        max_assists = PlotActionAssistant.MAX_ASSISTS
-        recent_assists = caller.recent_assists
-        msg += """
-    You are permitted {w%s{n actions and {w%s{n assists every 30 days, and have currently
-    taken {w%s{n actions and {w%s{n assists. Assists can be made instead of actions, and
-    assists over %s count toward the action cap.""" % (max_actions, max_assists, recent_actions.count(),
-                                                       recent_assists.count(), max_assists)
-        return msg
-    
+
     def func(self):
         """Executes @action command"""
         if not self.args and not self.switches:
             return self.list_actions()
+        if "remaining" in self.switches:
+            return self.remaining()
         if "newaction" in self.switches:
             return self.new_action()
         action = self.get_action(self.lhs)
@@ -191,6 +184,19 @@ class CmdAction(ActionCommandMixin, ArxPlayerCommand):
             return self.do_requires_unpublished_switches(action)
         else:
             self.msg("Invalid switch. See 'help @action'.")
+
+    def remaining(self):
+        """Overrides basic help, which defaults to the __doc__ string"""
+        recent_actions = self.dompc.recent_actions
+        max_actions = PlotAction.max_requests
+        max_assists = PlotActionAssistant.MAX_ASSISTS
+        recent_assists = self.dompc.recent_assists
+        self.msg("{wActions Remianing:{n\n"
+                 "You are permitted {w%s{n actions and {w%s{n assists every 30 days, and have currently\n"
+                 "taken {w%s{n actions and {w%s{n assists. Assists can be made instead of actions, and\n"
+                 "assists over %s count toward the action cap." % (max_actions, max_assists, recent_actions.count(),
+                                                                  recent_assists.count(), max_assists))
+        return
             
     def check_valid_switch_for_action_type(self, action):
         """

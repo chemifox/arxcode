@@ -2988,7 +2988,7 @@ class CmdRandomScene(ArxCommand):
                                         Q(roster__player__last_login__isnull=False) &
                                         Q(Q(roster__player__last_login__gte=last_week) |
                                           Q(roster__player__db_is_connected=True)) &
-                                        ~Q(roster__player__db_tags__db_key="staff") &
+                                        #Q(roster__player__is_staff=False) &
                                         ~Q(roster__player__db_tags__db_key="staff_npc")).distinct()
 
     @property
