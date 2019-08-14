@@ -1926,7 +1926,6 @@ class Organization(InformMixin, SharedMemoryModel):
                 display_money = not viewing_member or self.assets.can_be_viewed_by(viewing_member.player.player)
             except AttributeError:
                 display_money = False
-            prestige = self.assets.prestige
             if hasattr(self.assets, 'estate'):
                 holdings = self.assets.estate.holdings.all()
             else:
@@ -1934,7 +1933,6 @@ class Organization(InformMixin, SharedMemoryModel):
         else:
             money = 0
             display_money = False
-            prestige = 0
             holdings = []
         msg = self.display_public(show_all=show_all)
         if self.secret:
@@ -1945,19 +1943,10 @@ class Organization(InformMixin, SharedMemoryModel):
             start = 3
         members = self.display_members(start=start, viewing_member=viewing_member, show_all=show_all)
         if members:
-            members = "{wMembers of %s:\n%s" % (self.name, members)
-        msg += members
+            msg = "{wMembers of %s:\n%s" % (self.name, members)
+            #msg += members
         if display_money:
             msg += "\n{wMoney{n: %s" % money
-            prestige_mod = self.assets.prestige_mod
-            resource_mod = int(prestige_mod)
-
-            def mod_string(amount):
-                """Helper function to format resource modifier string"""
-                return "%s%s%%" % ("+" if amount > 0 else "", amount)
-
-            income_mod = int(prestige_mod/4)
-            # msg += " {wResource Mod:{n %s {wIncome Mod:{n %s" % (mod_string(resource_mod), mod_string(income_mod))
             msg += "\n{wResources{n: Economic: %s, Military: %s, Social: %s" % (self.assets.economic,
                                                                                 self.assets.military,
                                                                                 self.assets.social)
@@ -1967,8 +1956,6 @@ class Organization(InformMixin, SharedMemoryModel):
         msg += "\n{wMods: Economic:{n %s (%s/100), {wMilitary:{n %s (%s/100), {wSocial:{n %s (%s/100)\n" % (
             self.economic_modifier, int(econ_progress), self.military_modifier, int(mil_progress),
             self.social_modifier, int(soc_progress))
-        # msg += "{wSpheres of Influence:{n %s\n" % ", ".join("{w%s{n: %s" % (ob.category, ob.rating)
-        #                                                     for ob in self.spheres.all())
         msg += self.display_work_settings()
         clues = self.clues.all()
         if display_clues:
